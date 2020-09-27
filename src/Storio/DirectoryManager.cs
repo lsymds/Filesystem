@@ -7,6 +7,10 @@ namespace Storio
     {
         private readonly IAdapterManager _adapterManager;
 
+        /// <summary>
+        /// Initialises a new <see cref="DirectoryManager" /> instance with all of its required dependencies.
+        /// </summary>
+        /// <param name="adapterManager">An adapter manager implementation.</param>
         public DirectoryManager(IAdapterManager adapterManager)
         {
             _adapterManager = adapterManager;

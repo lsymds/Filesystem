@@ -10,7 +10,6 @@ namespace Storio
         /// <summary>
         /// The name of the adapter that has previously been registered.
         /// </summary>
-        /// <value></value>
         public string AdapterName { get; }
 
         /// <summary>
