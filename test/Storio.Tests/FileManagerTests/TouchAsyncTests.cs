@@ -39,7 +39,7 @@ namespace Storio.Tests.FileManagerTests
             var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsStorioPath();
             
             Func<Task> func = async () => await FileManager.TouchAsync(new TouchFileRequest { PathToTouch = path });
-            await func.Should().ThrowExactlyAsync<AttemptToPerformFileOperationOnDirectoryException>();
+            await func.Should().ThrowExactlyAsync<PathIsADirectoryException>();
         }
         
         [Fact]

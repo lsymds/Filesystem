@@ -22,7 +22,7 @@ namespace Storio.Internal.Validators
                 throw new ArgumentNullException(nameof(request.PathToTouch));
             
             if (request.PathToTouch.FinalPathPartIsObviouslyADirectory)
-                throw new AttemptToPerformFileOperationOnDirectoryException(request.PathToTouch.OriginalPath);
+                throw new PathIsADirectoryException(request.PathToTouch.OriginalPath);
         }
     }
 }
