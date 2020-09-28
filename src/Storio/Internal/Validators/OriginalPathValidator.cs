@@ -14,8 +14,19 @@ namespace Storio.Internal.Validators
         /// <param name="originalPath">The original path to validate.</param>
         public static void ValidateAndThrowIfUnsuccessful(string originalPath)
         {
+            ThrowForBlankPath(originalPath);
             ThrowForInvalidCharacters(originalPath);
             ThrowForRelativePath(originalPath);
+        }
+
+        /// <summary>
+        /// Checks the path and throws an exception if it is empty or whitespace.
+        /// </summary>
+        /// <param name="path">The path to check.</param>
+        private static void ThrowForBlankPath(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                throw new PathIsBlankException();
         }
 
         /// <summary>

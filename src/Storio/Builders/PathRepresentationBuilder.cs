@@ -49,6 +49,7 @@ namespace Storio
                 DirectoryTree = DirectoryTreeFromDirectories(directories),
                 Extension = ExtensionFromFinalPathPart(finalPathPart),
                 FinalPathPart = finalPathPart,
+                FinalPathPartIsObviouslyADirectory = path.EndsWith("/"),
                 NormalisedPath = normalisedPath,
                 OriginalPath = path
             };
@@ -61,7 +62,15 @@ namespace Storio
         /// <returns>A normalised version of the original path specified.</returns>
         private static string NormalisePath(string path)
         {
-            return path.StartsWith("/") ? path.Substring(1) : path;
+            var normalisedPath = path;
+
+            if (normalisedPath.StartsWith("/"))
+                normalisedPath = normalisedPath.Substring(1);
+
+            if (normalisedPath.EndsWith("/"))
+                normalisedPath = normalisedPath.Substring(0, normalisedPath.Length - 1);
+
+            return normalisedPath;
         }
 
         /// <summary>
@@ -88,10 +97,10 @@ namespace Storio
         {
             var set = new SortedSet<string>();
             var workingDirectory = string.Empty;
-            
-            foreach (var directory in directories)
+
+            for (var i = 0; i < directories.Count; i++)
             {
-                workingDirectory += $"{directory}/";
+                workingDirectory += $"{(i == 0 ? string.Empty : "/")}{directories.ElementAt(i)}";
                 set.Add(workingDirectory);
             }
 
@@ -105,7 +114,7 @@ namespace Storio
         /// <returns>The full directory path including a trailing separator.</returns>
         private static string DirectoryPathFromDirectories(IReadOnlyCollection<string> directories)
         {
-            return $"{string.Join("/", directories)}/";
+            return directories.Any() ? $"{string.Join("/", directories)}" : null;
         }
 
         /// <summary>

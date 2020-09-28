@@ -39,6 +39,12 @@ namespace Storio
         public string FinalPathPart { get; internal set; }
         
         /// <summary>
+        /// Gets whether or not the final path part was obviously intended to be a directory (i.e. it ended with a
+        /// terminating slash).
+        /// </summary>
+        public bool FinalPathPartIsObviouslyADirectory { get; internal set; }
+        
+        /// <summary>
         /// Gets the normalised version of the path used throughout Storio.
         /// </summary>
         public string NormalisedPath { get; internal set; }

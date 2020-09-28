@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Storio.Requests.Files;
+using Storio.Internal.Extensions;
+using Storio.Internal.Validators;
 
 namespace Storio
 {
@@ -27,9 +28,12 @@ namespace Storio
             CancellationToken cancellationToken = default
         )
         {
-            var theAdapter = _adapterManager.Get(adapter);
+            TouchFileRequestValidator.ValidateAndThrowIfUnsuccessful(touchFileRequest);
             
-            throw new System.NotImplementedException();
+            return _adapterManager
+                .Get(adapter)
+                .TouchFileAsync(touchFileRequest, cancellationToken)
+                .AsAdapterAwareRepresentation(adapter);
         }
     }
 }
