@@ -74,6 +74,22 @@ namespace Storio
         );
 
         /// <summary>
+        /// Moves a file from one path in an adapter's storage to another, returning the information about the newly
+        /// created destination file.
+        /// </summary>
+        /// <param name="moveFileRequest">The requesting containing information about the file to move.</param>
+        /// <param name="adapter">The adapter to move the file in.</param>
+        /// <param name="cancellationToken">
+        /// The cancellation token used to cancel asynchronous requests if required.
+        /// </param>
+        /// <returns>The newly created destination file's information.</returns>
+        Task<AdapterAwareFileRepresentation> MoveAsync(
+            MoveFileRequest moveFileRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        );
+
+        /// <summary>
         /// Reads a file's contents into a string.
         /// </summary>
         /// <param name="readFileAsStringRequest">

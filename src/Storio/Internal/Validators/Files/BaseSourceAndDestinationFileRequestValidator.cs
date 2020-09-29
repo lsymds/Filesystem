@@ -17,8 +17,8 @@ namespace Storio.Internal.Validators.Files
             if (fileRequest == null)
                 throw new ArgumentNullException(nameof(fileRequest));
 
-            BaseFilePathValidator.ValidateAndThrowIfUnsuccessful(fileRequest.SourceFilePath);
-            BaseFilePathValidator.ValidateAndThrowIfUnsuccessful(fileRequest.DestinationFilePath);
+            FilePathValidator.ValidateAndThrowIfUnsuccessful(fileRequest.SourceFilePath);
+            FilePathValidator.ValidateAndThrowIfUnsuccessful(fileRequest.DestinationFilePath);
         }
     }
 }

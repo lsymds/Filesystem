@@ -5,7 +5,7 @@ namespace Storio.Internal.Validators.Files
     /// <summary>
     /// Validation methods for paths in file related requests.
     /// </summary>
-    public static class BaseFilePathValidator
+    public static class FilePathValidator
     {
         /// <summary>
         /// Validates the path in a file related request and throws if any of the validation criteria fail.

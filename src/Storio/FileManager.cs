@@ -80,6 +80,21 @@ namespace Storio
         }
 
         /// <inheritdoc />
+        public Task<AdapterAwareFileRepresentation> MoveAsync(
+            MoveFileRequest moveFileRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        )
+        {
+            BaseSourceAndDestinationFileRequestValidator.ValidateAndThrowIfUnsuccessful(moveFileRequest);
+
+            return _adapterManager
+                .Get(adapter)
+                .MoveFileAsync(moveFileRequest, cancellationToken)
+                .AsAdapterAwareRepresentation(adapter);
+        }
+
+        /// <inheritdoc />
         public Task<string> ReadAsStringAsync(
             ReadFileAsStringRequest readFileAsStringRequest,
             string adapter = "default",

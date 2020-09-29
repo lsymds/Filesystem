@@ -42,6 +42,16 @@ namespace Storio
         Task<FileRepresentation> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Moves a file from one location in the adapter's data store to another.
+        /// </summary>
+        /// <param name="moveFileRequest">
+        /// The request containing information about the file to move and where to move it to.
+        /// </param>
+        /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
+        /// <returns>The information about the destination file of the move request.</returns>
+        Task<FileRepresentation> MoveFileAsync(MoveFileRequest moveFileRequest, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Retrieves a file from the adapter's data store and reads its contents as a string.
         /// </summary>
         /// <param name="readFileAsStringRequest">

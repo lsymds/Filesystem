@@ -25,6 +25,11 @@ namespace Storio.Tests.Fixtures
             return Task.FromResult(new FileRepresentation());
         }
 
+        public Task<FileRepresentation> MoveFileAsync(MoveFileRequest moveFileRequest, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(new FileRepresentation());
+        }
+
         public Task<string> ReadFileAsStringAsync(
             ReadFileAsStringRequest readFileAsStringRequest,
             CancellationToken cancellationToken
