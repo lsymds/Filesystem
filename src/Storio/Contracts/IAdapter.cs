@@ -10,6 +10,14 @@ namespace Storio
     public interface IAdapter
     {
         /// <summary>
+        /// Deletes a file from the adapter's data store.
+        /// </summary>
+        /// <param name="deleteFileRequest">The request containing information about the file to delete.</param>
+        /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
+        /// <returns>An awaitable task.</returns>
+        Task DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken);
+        
+        /// <summary>
         /// Checks whether a file exists or not in the adapter's data store.
         /// </summary>
         /// <param name="fileExistsRequest">The request containing information about the file to check.</param>

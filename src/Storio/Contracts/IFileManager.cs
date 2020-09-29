@@ -9,6 +9,21 @@ namespace Storio
     public interface IFileManager
     {
         /// <summary>
+        /// Deletes a file from the relevant adapter's file system.
+        /// </summary>
+        /// <param name="deleteFileRequest">The request containing information about the file to delete.</param>
+        /// <param name="adapter">The adapter to delete the file from.</param>
+        /// <param name="cancellationToken">
+        /// The cancellation token used to cancel asynchronous requests if required.
+        /// </param>
+        /// <returns>An awaitable task.</returns>
+        Task DeleteAsync(
+            DeleteFileRequest deleteFileRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        );
+        
+        /// <summary>
         /// Gets whether or not the file defined by the request exists in the relevant adapter's file system.
         /// </summary>
         /// <param name="fileExistsRequest">

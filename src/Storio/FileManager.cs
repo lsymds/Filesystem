@@ -22,6 +22,20 @@ namespace Storio
         }
 
         /// <inheritdoc />
+        public Task DeleteAsync(
+            DeleteFileRequest deleteFileRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        )
+        {
+            BaseFileRequestValidator.ValidateAndThrowIfUnsuccessful(deleteFileRequest);
+
+            return _adapterManager
+                .Get(adapter)
+                .DeleteFileAsync(deleteFileRequest, cancellationToken);
+        }
+
+        /// <inheritdoc />
         public Task<bool> ExistsAsync(
             FileExistsRequest fileExistsRequest,
             string adapter = "default",
