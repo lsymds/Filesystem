@@ -8,17 +8,14 @@ namespace Storio
     /// <summary>
     /// Provides a way to manage files within a number of registered adapters.
     /// </summary>
-    public class FileManager : IFileManager
+    public class FileManager : BaseAdapterWrapperManager, IFileManager
     {
-        private readonly IAdapterManager _adapterManager;
-
         /// <summary>
         /// Initialises a new <see cref="FileManager" /> instance with all of its required dependencies.
         /// </summary>
         /// <param name="adapterManager">An adapter manager implementation.</param>
-        public FileManager(IAdapterManager adapterManager)
+        public FileManager(IAdapterManager adapterManager) : base(adapterManager)
         {
-            _adapterManager = adapterManager;
         }
 
         /// <inheritdoc />
@@ -30,8 +27,7 @@ namespace Storio
         {
             BaseSourceAndDestinationFileRequestValidator.ValidateAndThrowIfUnsuccessful(copyFileRequest);
             
-            return _adapterManager
-                .Get(adapter)
+            return GetAdapter(adapter)
                 .CopyFileAsync(copyFileRequest, cancellationToken)
                 .AsAdapterAwareRepresentation(adapter);
         }
@@ -45,9 +41,7 @@ namespace Storio
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(deleteFileRequest);
 
-            return _adapterManager
-                .Get(adapter)
-                .DeleteFileAsync(deleteFileRequest, cancellationToken);
+            return GetAdapter(adapter).DeleteFileAsync(deleteFileRequest, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -59,9 +53,7 @@ namespace Storio
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(fileExistsRequest);
 
-            return _adapterManager
-                .Get(adapter)
-                .FileExistsAsync(fileExistsRequest, cancellationToken);
+            return GetAdapter(adapter).FileExistsAsync(fileExistsRequest, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -73,8 +65,7 @@ namespace Storio
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(getFileRequest);
     
-            return _adapterManager
-                .Get(adapter)
+            return GetAdapter(adapter)
                 .GetFileAsync(getFileRequest, cancellationToken)
                 .AsAdapterAwareRepresentation(adapter);
         }
@@ -88,8 +79,7 @@ namespace Storio
         {
             BaseSourceAndDestinationFileRequestValidator.ValidateAndThrowIfUnsuccessful(moveFileRequest);
 
-            return _adapterManager
-                .Get(adapter)
+            return GetAdapter(adapter)
                 .MoveFileAsync(moveFileRequest, cancellationToken)
                 .AsAdapterAwareRepresentation(adapter);
         }
@@ -103,9 +93,7 @@ namespace Storio
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(readFileAsStringRequest);
 
-            return _adapterManager
-                .Get(adapter)
-                .ReadFileAsStringAsync(readFileAsStringRequest, cancellationToken);
+            return GetAdapter(adapter).ReadFileAsStringAsync(readFileAsStringRequest, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -117,8 +105,7 @@ namespace Storio
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(touchFileRequest);
             
-            return _adapterManager
-                .Get(adapter)
+            return GetAdapter(adapter)
                 .TouchFileAsync(touchFileRequest, cancellationToken)
                 .AsAdapterAwareRepresentation(adapter);
         }
@@ -132,9 +119,7 @@ namespace Storio
         {
             WriteTextToFileRequestValidator.ValidateAndThrowIfUnsuccessful(writeTextToFileRequest);
 
-            return _adapterManager
-                .Get(adapter)
-                .WriteTextToFileAsync(writeTextToFileRequest, cancellationToken);
+            return GetAdapter(adapter).WriteTextToFileAsync(writeTextToFileRequest, cancellationToken);
         }
     }
 }
