@@ -32,6 +32,19 @@ namespace Storio
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
         /// <returns>The information about the requested file.</returns>
         Task<FileRepresentation> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Retrieves a file from the adapter's data store and reads its contents as a string.
+        /// </summary>
+        /// <param name="readFileAsStringRequest">
+        /// The request containing information about the file to read the contents of.
+        /// </param>
+        /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
+        /// <returns>The file's contents.</returns>
+        Task<string> ReadFileAsStringAsync(
+            ReadFileAsStringRequest readFileAsStringRequest,
+            CancellationToken cancellationToken
+        );
         
         /// <summary>
         /// Touches (creates without content) a file in the adapter's data store.

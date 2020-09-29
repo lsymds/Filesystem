@@ -55,6 +55,23 @@ namespace Storio
             string adapter = "default",
             CancellationToken cancellationToken = default
         );
+
+        /// <summary>
+        /// Reads a file's contents into a string.
+        /// </summary>
+        /// <param name="readFileAsStringRequest">
+        /// The request containing information about the file to read the contents of.
+        /// </param>
+        /// <param name="adapter">The adapter where the file to read the contents of is stored.</param>
+        /// <param name="cancellationToken">
+        /// The cancellation token used to cancel asynchronous requests if required.
+        /// </param>
+        /// <returns>The file's contents.</returns>
+        Task<string> ReadAsStringAsync(
+            ReadFileAsStringRequest readFileAsStringRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        );
         
         /// <summary>
         /// Touches (creates without content) a file in the relevant adapter's file system.

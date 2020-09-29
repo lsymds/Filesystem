@@ -20,6 +20,14 @@ namespace Storio.Tests.Fixtures
             return Task.FromResult(new FileRepresentation());
         }
 
+        public Task<string> ReadFileAsStringAsync(
+            ReadFileAsStringRequest readFileAsStringRequest,
+            CancellationToken cancellationToken
+        )
+        {
+            return Task.FromResult("file contents");
+        }
+
         public Task<FileRepresentation> TouchFileAsync(
             TouchFileRequest touchFileRequest,
             CancellationToken cancellationToken
