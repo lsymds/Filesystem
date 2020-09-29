@@ -9,6 +9,23 @@ namespace Storio
     public interface IFileManager
     {
         /// <summary>
+        /// Gets whether or not the file defined by the request exists in the relevant adapter's file system.
+        /// </summary>
+        /// <param name="fileExistsRequest">
+        /// The request containing information about the file to perform an existence check on.
+        /// </param>
+        /// <param name="adapter">The adapter to check the file's existence in.</param>
+        /// <param name="cancellationToken">
+        /// The cancellation token used to cancel asynchronous requests if required.
+        /// </param>
+        /// <returns>Whether or not the file defined by the request exists.</returns>
+        Task<bool> ExistsAsync(
+            FileExistsRequest fileExistsRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        );
+        
+        /// <summary>
         /// Gets a file's information from the relevant adapter's file system. This method does NOT retrieve the file's
         /// contents. Instead, you should use one of the more appropriate methods to do that.
         /// </summary>

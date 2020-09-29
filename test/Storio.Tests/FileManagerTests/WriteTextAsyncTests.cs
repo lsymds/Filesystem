@@ -20,21 +20,21 @@ namespace Storio.Tests.FileManagerTests
         }
 
         [Fact]
-        public async Task It_Throws_An_Exception_If_The_WriteTextToFileRequest_Was_Null()
+        public async Task It_Throws_An_Exception_If_The_Request_Was_Null()
         {
             Func<Task> func = async () => await FileManager.WriteTextAsync(null);
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
 
         [Fact]
-        public async Task It_Throws_An_Exception_If_The_Path_For_The_WriteTextToFileRequest_Was_Null()
+        public async Task It_Throws_An_Exception_If_The_Path_For_The_Request_Was_Null()
         {
             Func<Task> func = async () => await FileManager.WriteTextAsync(new WriteTextToFileRequest());
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
 
         [Fact]
-        public async Task It_Throws_An_Exception_If_The_TextToWrite_For_The_WriteTextToFileRequest_Was_Null()
+        public async Task It_Throws_An_Exception_If_The_TextToWrite_For_The_Request_Was_Null()
         {
             Func<Task> func = async () => await FileManager.WriteTextAsync(
                 new WriteTextToFileRequest { FilePath = "a".AsStorioPath() }

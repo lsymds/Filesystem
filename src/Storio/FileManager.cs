@@ -20,7 +20,21 @@ namespace Storio
         {
             _adapterManager = adapterManager;
         }
-        
+
+        /// <inheritdoc />
+        public Task<bool> ExistsAsync(
+            FileExistsRequest fileExistsRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        )
+        {
+            BaseFileRequestValidator.ValidateAndThrowIfUnsuccessful(fileExistsRequest);
+
+            return _adapterManager
+                .Get(adapter)
+                .FileExistsAsync(fileExistsRequest, cancellationToken);
+        }
+
         /// <inheritdoc />
         public Task<AdapterAwareFileRepresentation> GetAsync(
             GetFileRequest getFileRequest,
@@ -29,7 +43,7 @@ namespace Storio
         )
         {
             BaseFileRequestValidator.ValidateAndThrowIfUnsuccessful(getFileRequest);
-
+    
             return _adapterManager
                 .Get(adapter)
                 .GetFileAsync(getFileRequest, cancellationToken)

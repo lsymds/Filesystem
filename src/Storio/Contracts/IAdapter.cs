@@ -10,6 +10,14 @@ namespace Storio
     public interface IAdapter
     {
         /// <summary>
+        /// Checks whether a file exists or not in the adapter's data store.
+        /// </summary>
+        /// <param name="fileExistsRequest">The request containing information about the file to check.</param>
+        /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
+        /// <returns>Whether or not the file defined in the request exists.</returns>
+        Task<bool> FileExistsAsync(FileExistsRequest fileExistsRequest, CancellationToken cancellationToken);
+        
+        /// <summary>
         /// Gets a file's information (i.e. the name, path, extension, size etc) from the adapter's data store.
         /// </summary>
         /// <param name="getFileRequest">The request containing information about the file to retrieve.</param>
