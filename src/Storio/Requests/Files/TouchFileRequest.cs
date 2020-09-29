@@ -3,11 +3,7 @@ namespace Storio
     /// <summary>
     /// Request used to touch (create without content) a file.
     /// </summary>
-    public class TouchFileRequest
+    public class TouchFileRequest : BaseFileRequest
     {
-        /// <summary>
-        /// Gets or sets the path to touch.
-        /// </summary>
-        public PathRepresentation PathToTouch { get; set; }
     }
 }

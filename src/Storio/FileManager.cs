@@ -20,6 +20,21 @@ namespace Storio
         {
             _adapterManager = adapterManager;
         }
+        
+        /// <inheritdoc />
+        public Task<AdapterAwareFileRepresentation> GetAsync(
+            GetFileRequest getFileRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        )
+        {
+            BaseFileRequestValidator.ValidateAndThrowIfUnsuccessful(getFileRequest);
+
+            return _adapterManager
+                .Get(adapter)
+                .GetFileAsync(getFileRequest, cancellationToken)
+                .AsAdapterAwareRepresentation(adapter);
+        }
 
         /// <inheritdoc />
         public Task<AdapterAwareFileRepresentation> TouchAsync(
@@ -28,12 +43,26 @@ namespace Storio
             CancellationToken cancellationToken = default
         )
         {
-            TouchFileRequestValidator.ValidateAndThrowIfUnsuccessful(touchFileRequest);
+            BaseFileRequestValidator.ValidateAndThrowIfUnsuccessful(touchFileRequest);
             
             return _adapterManager
                 .Get(adapter)
                 .TouchFileAsync(touchFileRequest, cancellationToken)
                 .AsAdapterAwareRepresentation(adapter);
+        }
+
+        /// <inheritdoc />
+        public Task WriteTextAsync(
+            WriteTextToFileRequest writeTextToFileRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        )
+        {
+            WriteTextToFileRequestValidator.ValidateAndThrowIfUnsuccessful(writeTextToFileRequest);
+
+            return _adapterManager
+                .Get(adapter)
+                .WriteTextToFileAsync(writeTextToFileRequest, cancellationToken);
         }
     }
 }

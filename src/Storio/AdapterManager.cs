@@ -16,9 +16,7 @@ namespace Storio
             var normalisedName = NormaliseAdapterName(name);
 
             if (!AdapterAlreadyRegistered(normalisedName))
-            {
                 throw new AdapterNotFoundException(name);
-            }
             
             return _adapters[normalisedName];
         }
@@ -29,9 +27,7 @@ namespace Storio
             var normalisedName = NormaliseAdapterName(name);
 
             if (AdapterAlreadyRegistered(normalisedName))
-            {
                 throw new AdapterAlreadyRegisteredException(normalisedName);
-            }
 
             _adapters[normalisedName] = adapter;
         }
