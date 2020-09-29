@@ -1,0 +1,24 @@
+using System;
+
+namespace Storio.Internal.Validators.Files
+{
+    /// <summary>
+    /// Validation methods for the <see cref="BaseSourceAndDestinationFileRequest" /> class.
+    /// </summary>
+    public static class BaseSourceAndDestinationFileRequestValidator
+    {
+        /// <summary>
+        /// Validates the request and throws exceptions if the validation is unsuccessful.
+        /// </summary>
+        /// <param name="fileRequest">The request to validate.</param>
+        /// <exception cref="ArgumentNullException" />
+        public static void ValidateAndThrowIfUnsuccessful(BaseSourceAndDestinationFileRequest fileRequest)
+        {
+            if (fileRequest == null)
+                throw new ArgumentNullException(nameof(fileRequest));
+
+            BaseFilePathValidator.ValidateAndThrowIfUnsuccessful(fileRequest.SourceFilePath);
+            BaseFilePathValidator.ValidateAndThrowIfUnsuccessful(fileRequest.DestinationFilePath);
+        }
+    }
+}

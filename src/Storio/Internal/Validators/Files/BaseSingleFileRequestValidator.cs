@@ -1,11 +1,11 @@
 using System;
 
-namespace Storio.Internal.Validators
+namespace Storio.Internal.Validators.Files
 {
     /// <summary>
-    /// Validation methods for the <see cref="BaseFileRequest" /> class.
+    /// Validation methods for the <see cref="BaseSingleFileRequest" /> class.
     /// </summary>
-    public class BaseFileRequestValidator
+    public static class BaseSingleFileRequestValidator
     {
         /// <summary>
         /// Validates the base file request class by ensuring it contains information that is required regardless of
@@ -14,16 +14,12 @@ namespace Storio.Internal.Validators
         /// <param name="request">The base file request.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="PathIsADirectoryException"></exception>
-        public static void ValidateAndThrowIfUnsuccessful(BaseFileRequest request)
+        public static void ValidateAndThrowIfUnsuccessful(BaseSingleFileRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
             
-            if (request.FilePath == null)
-                throw new ArgumentNullException(nameof(request.FilePath));
-            
-            if (request.FilePath.FinalPathPartIsObviouslyADirectory)
-                throw new PathIsADirectoryException(request.FilePath.OriginalPath);
+            BaseFilePathValidator.ValidateAndThrowIfUnsuccessful(request.FilePath);
         }
     }
 }

@@ -1,5 +1,4 @@
 using Moq;
-using Storio.Tests.Fixtures;
 
 namespace Storio.Tests.FileManagerTests
 {

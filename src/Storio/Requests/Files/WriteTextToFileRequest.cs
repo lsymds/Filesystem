@@ -3,7 +3,7 @@ namespace Storio
     /// <summary>
     /// Request used to write text to a particular file path.
     /// </summary>
-    public class WriteTextToFileRequest : BaseFileRequest
+    public class WriteTextToFileRequest : BaseSingleFileRequest
     {
         /// <summary>
         /// Gets or sets the text to write to the file defined by the <see cref="FilePath" /> property.

@@ -9,6 +9,23 @@ namespace Storio
     public interface IFileManager
     {
         /// <summary>
+        /// Copies a folder from one location in the relevant adapter's file system to another location.
+        /// </summary>
+        /// <param name="copyFileRequest">
+        /// The request containing information about the source file to copy from and where to copy it to.
+        /// </param>
+        /// <param name="adapter">The adapter to copy the file in.</param>
+        /// <param name="cancellationToken">
+        /// The cancellation token used to cancel asynchronous requests if required.
+        /// </param>
+        /// <returns>The adapter aware file representation of the newly copied file.</returns>
+        Task<AdapterAwareFileRepresentation> CopyAsync(
+            CopyFileRequest copyFileRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        );
+        
+        /// <summary>
         /// Deletes a file from the relevant adapter's file system.
         /// </summary>
         /// <param name="deleteFileRequest">The request containing information about the file to delete.</param>

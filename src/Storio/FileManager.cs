@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Storio.Internal.Extensions;
-using Storio.Internal.Validators;
+using Storio.Internal.Validators.Files;
 
 namespace Storio
 {
@@ -22,13 +22,28 @@ namespace Storio
         }
 
         /// <inheritdoc />
+        public Task<AdapterAwareFileRepresentation> CopyAsync(
+            CopyFileRequest copyFileRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        )
+        {
+            BaseSourceAndDestinationFileRequestValidator.ValidateAndThrowIfUnsuccessful(copyFileRequest);
+            
+            return _adapterManager
+                .Get(adapter)
+                .CopyFileAsync(copyFileRequest, cancellationToken)
+                .AsAdapterAwareRepresentation(adapter);
+        }
+
+        /// <inheritdoc />
         public Task DeleteAsync(
             DeleteFileRequest deleteFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
         )
         {
-            BaseFileRequestValidator.ValidateAndThrowIfUnsuccessful(deleteFileRequest);
+            BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(deleteFileRequest);
 
             return _adapterManager
                 .Get(adapter)
@@ -42,7 +57,7 @@ namespace Storio
             CancellationToken cancellationToken = default
         )
         {
-            BaseFileRequestValidator.ValidateAndThrowIfUnsuccessful(fileExistsRequest);
+            BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(fileExistsRequest);
 
             return _adapterManager
                 .Get(adapter)
@@ -56,7 +71,7 @@ namespace Storio
             CancellationToken cancellationToken = default
         )
         {
-            BaseFileRequestValidator.ValidateAndThrowIfUnsuccessful(getFileRequest);
+            BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(getFileRequest);
     
             return _adapterManager
                 .Get(adapter)
@@ -71,7 +86,7 @@ namespace Storio
             CancellationToken cancellationToken = default
         )
         {
-            BaseFileRequestValidator.ValidateAndThrowIfUnsuccessful(readFileAsStringRequest);
+            BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(readFileAsStringRequest);
 
             return _adapterManager
                 .Get(adapter)
@@ -85,7 +100,7 @@ namespace Storio
             CancellationToken cancellationToken = default
         )
         {
-            BaseFileRequestValidator.ValidateAndThrowIfUnsuccessful(touchFileRequest);
+            BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(touchFileRequest);
             
             return _adapterManager
                 .Get(adapter)

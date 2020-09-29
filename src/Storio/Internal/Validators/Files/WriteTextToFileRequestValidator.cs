@@ -1,11 +1,11 @@
 using System;
 
-namespace Storio.Internal.Validators
+namespace Storio.Internal.Validators.Files
 {
     /// <summary>
     /// Validation methods for the <see cref="WriteTextToFileRequest" /> class.
     /// </summary>
-    public class WriteTextToFileRequestValidator
+    public static class WriteTextToFileRequestValidator
     {
         /// <summary>
         /// Validates the request and throws any related exceptions if that validation fails.
@@ -14,7 +14,7 @@ namespace Storio.Internal.Validators
         /// <exception cref="ArgumentNullException" />
         public static void ValidateAndThrowIfUnsuccessful(WriteTextToFileRequest request)
         {
-            BaseFileRequestValidator.ValidateAndThrowIfUnsuccessful(request);
+            BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(request);
 
             if (request.TextToWrite == null)
                 throw new ArgumentNullException(nameof(request.TextToWrite));

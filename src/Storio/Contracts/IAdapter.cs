@@ -10,6 +10,14 @@ namespace Storio
     public interface IAdapter
     {
         /// <summary>
+        /// Copies a file from one location in the adapter's data store to another.
+        /// </summary>
+        /// <param name="copyFileRequest">The request containing information about the file to copy.</param>
+        /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
+        /// <returns>The information about the file that was created (the destination file).</returns>
+        Task<FileRepresentation> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken);
+        
+        /// <summary>
         /// Deletes a file from the adapter's data store.
         /// </summary>
         /// <param name="deleteFileRequest">The request containing information about the file to delete.</param>

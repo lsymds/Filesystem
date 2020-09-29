@@ -5,6 +5,11 @@ namespace Storio.Tests.Fixtures
 {
     public class SuccessfulOutcomeAdapter : IAdapter
     {
+        public Task<FileRepresentation> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(new FileRepresentation());
+        }
+
         public Task DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;

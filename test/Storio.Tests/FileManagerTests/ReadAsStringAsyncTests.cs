@@ -45,7 +45,7 @@ namespace Storio.Tests.FileManagerTests
         }
         
         [Fact]
-        public async Task It_Invokes_The_Matching_Adapters_Get_File_Method_And_Wraps_The_Response()
+        public async Task It_Invokes_The_Matching_Adapters_ReadFileAsString_Method()
         {
             Adapter
                 .Setup(x => x.ReadFileAsStringAsync(It.IsAny<ReadFileAsStringRequest>(), It.IsAny<CancellationToken>()))
