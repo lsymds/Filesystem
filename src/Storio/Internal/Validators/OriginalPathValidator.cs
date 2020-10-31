@@ -36,7 +36,7 @@ namespace Storio.Internal.Validators
         /// <exception cref="PathContainsInvalidCharacterException" />
         private static void ThrowForInvalidCharacters(string path)
         {
-            const string invalidCharactersRegexString = @"[\*\""\\\[\]\:\;\|\,\<\>\'\$\£\%\^\(\)\+\=\!]";
+            const string invalidCharactersRegexString = @"[\*\""\\\[\]\;\|\,\<\>\'\$\£\%\^\(\)\+\=\!]";
             
             var invalidCharactersRegex = new Regex(invalidCharactersRegexString);
             if (invalidCharactersRegex.IsMatch(path))

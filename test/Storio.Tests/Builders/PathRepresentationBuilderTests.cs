@@ -24,7 +24,6 @@ namespace Storio.Tests.Builders
         [InlineData("\\")]
         [InlineData("[")]
         [InlineData("]")]
-        [InlineData(":")]
         [InlineData(";")]
         [InlineData("|")]
         [InlineData(",")]
