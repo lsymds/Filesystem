@@ -29,7 +29,8 @@ namespace Storio.Tests.Adapters.S3.Unit.Files
             await func
                 .Should()
                 .ThrowExactlyAsync<AdapterProviderOperationException>()
-                .WithMessage("Unexpected exception thrown when communicating with the Amazon S3 endpoint.");
+                .WithMessage("Unexpected exception thrown when communicating with the Amazon S3 endpoint. " +
+                             "See inner exception for details.");
         }
     }
 }

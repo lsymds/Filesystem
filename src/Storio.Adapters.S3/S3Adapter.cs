@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -86,9 +87,21 @@ namespace Storio.Adapters.S3
         }
 
         /// <inheritdoc />
-        public Task<string> ReadFileAsStringAsync(ReadFileAsStringRequest readFileAsStringRequest, CancellationToken cancellationToken)
+        public async Task<string> ReadFileAsStringAsync(
+            ReadFileAsStringRequest readFileAsStringRequest,
+            CancellationToken cancellationToken
+        )
         {
-            throw new NotImplementedException();
+            await CheckFileExistsAsync(readFileAsStringRequest.FilePath, cancellationToken);
+
+            var file = await CatchAndWrapProviderExceptions(
+                () => _s3Client.GetObjectAsync(
+                    _adapterConfiguration.BucketName,
+                    CombineRootAndRequestedPath(readFileAsStringRequest.FilePath).NormalisedPath,
+                    cancellationToken
+                )
+            );
+            return await new StreamReader(file.ResponseStream).ReadToEndAsync();
         }
 
         /// <inheritdoc />
@@ -98,7 +111,7 @@ namespace Storio.Adapters.S3
         )
         {
             await CatchAndWrapProviderExceptions(
-                async () => await _s3Client.PutObjectAsync(
+                () => _s3Client.PutObjectAsync(
                     new PutObjectRequest
                     {
                         BucketName = _adapterConfiguration.BucketName,
@@ -123,7 +136,7 @@ namespace Storio.Adapters.S3
         )
         {
             await CatchAndWrapProviderExceptions(
-                async () => await _s3Client.PutObjectAsync(
+                () => _s3Client.PutObjectAsync(
                     new PutObjectRequest
                     {
                         BucketName = _adapterConfiguration.BucketName,
@@ -137,13 +150,30 @@ namespace Storio.Adapters.S3
         }
 
         /// <summary>
+        /// Used only in methods inside of this class, CheckFileExistsAsync checks if the requested file exists and, if
+        /// it doesn't, throws a <see cref="FileNotFoundException"/>.
+        /// </summary>
+        /// <param name="path">The path to check exists.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>An awaitable <see cref="Task"/>.</returns>
+        private async Task CheckFileExistsAsync(PathRepresentation path, CancellationToken cancellationToken)
+        {
+            var fileExists = await FileExistsAsync(new FileExistsRequest {FilePath = path}, cancellationToken);
+            if (!fileExists)
+            {
+                throw new FileNotFoundException(
+                    CombineRootAndRequestedPath(path).NormalisedPath,
+                    path.NormalisedPath
+                );
+            }
+        }
+
+        /// <summary>
         /// Executes the function that communicates with the adapter's provider and, if an exception is thrown, wraps
         /// it into one that is easily communicable 
         /// </summary>
-        /// <param name="action"></param>
-        /// <typeparam name="TResponse"></typeparam>
-        /// <returns></returns>
-        /// <exception cref="AdapterProviderOperationException"></exception>
+        /// <param name="action">The function that communicates with this adapter's provider.</param>
+        /// <returns>An awaitable task.</returns>
         private static async Task<TResponse> CatchAndWrapProviderExceptions<TResponse>(Func<Task<TResponse>> action)
         {
             try
@@ -165,7 +195,8 @@ namespace Storio.Adapters.S3
         private static AdapterProviderOperationException ExceptionForS3Exception(Exception e)
         {
             return new AdapterProviderOperationException(
-                "Unexpected exception thrown when communicating with the Amazon S3 endpoint.",
+                "Unexpected exception thrown when communicating with the Amazon S3 endpoint. " +
+                "See inner exception for details.",
                 e
             );
         }
