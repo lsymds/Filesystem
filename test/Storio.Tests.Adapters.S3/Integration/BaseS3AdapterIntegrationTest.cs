@@ -45,5 +45,15 @@ namespace Storio.Tests.Adapters.S3.Integration
         {
             await S3Client.DeleteBucketAsync(GeneratedBucketName);
         }
+        
+        protected Task<bool> FileExistsAsync(PathRepresentation path)
+        {
+            return FileManager.ExistsAsync(new FileExistsRequest {FilePath = path});
+        }
+
+        protected Task<string> ReadFileAsStringAsync(PathRepresentation path)
+        {
+            return FileManager.ReadAsStringAsync(new ReadFileAsStringRequest {FilePath = path});
+        }
     }
 }

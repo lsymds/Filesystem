@@ -14,12 +14,7 @@ namespace Storio.Tests.Adapters.S3.Integration.Files
         [Fact]
         public async Task It_Throws_An_Exception_If_File_Does_Not_Exist()
         {
-            Func<Task> func = async () => await FileManager.ReadAsStringAsync(
-                new ReadFileAsStringRequest
-                {
-                    FilePath = "ab-i-dont-exist".AsStorioPath()
-                }
-            );
+            Func<Task> func = async () => await ReadFileAsStringAsync("ab-i-dont-exist".AsStorioPath());
             await func.Should().ThrowExactlyAsync<FileNotFoundException>();
         }
 
@@ -35,12 +30,7 @@ namespace Storio.Tests.Adapters.S3.Integration.Files
                 }
             );
 
-            var fileContents = await FileManager.ReadAsStringAsync(
-                new ReadFileAsStringRequest
-                {
-                    FilePath = "i-do-exist-this-time.txt".AsStorioPath()
-                }
-            );
+            var fileContents = await ReadFileAsStringAsync("i-do-exist-this-time.txt".AsStorioPath());
             fileContents.Should().Be("you should check these contents");
         }
     }

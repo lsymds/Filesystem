@@ -36,15 +36,36 @@ namespace Storio.Adapters.S3
         }
 
         /// <inheritdoc />
-        public Task<FileRepresentation> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken)
+        public async Task<FileRepresentation> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await CheckFileExistsAsync(copyFileRequest.SourceFilePath, cancellationToken);
+            await CheckFileDoesNotExistAsync(copyFileRequest.DestinationFilePath, cancellationToken);
+
+            await CatchAndWrapProviderExceptions(
+                () => _s3Client.CopyObjectAsync(
+                    _adapterConfiguration.BucketName,
+                    CombineRootAndRequestedPath(copyFileRequest.SourceFilePath).NormalisedPath,
+                    _adapterConfiguration.BucketName,
+                    CombineRootAndRequestedPath(copyFileRequest.DestinationFilePath).NormalisedPath,
+                    cancellationToken
+                )
+            );
+
+            return new FileRepresentation {Path = copyFileRequest.DestinationFilePath};
         }
 
         /// <inheritdoc />
-        public Task DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken)
+        public async Task DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await CheckFileExistsAsync(deleteFileRequest.FilePath, cancellationToken);
+
+            await CatchAndWrapProviderExceptions(
+                () => _s3Client.DeleteObjectAsync(
+                    _adapterConfiguration.BucketName,
+                    CombineRootAndRequestedPath(deleteFileRequest.FilePath).NormalisedPath,
+                    cancellationToken
+                )
+            );
         }
 
         /// <inheritdoc />
@@ -147,6 +168,25 @@ namespace Storio.Adapters.S3
                     cancellationToken
                 )
             );
+        }
+
+        /// <summary>
+        /// Used only in methods inside of this class, CheckFileDoesNotExistAsync does the opposite of
+        /// <see cref="CheckFileExistsAsync" /> and verifies that the file DOES NOT exist, or it throws an exception.
+        /// </summary>
+        /// <param name="path">The path to the file that should not exist.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>An awaitable <see cref="Task"/>.</returns>
+        private async Task CheckFileDoesNotExistAsync(PathRepresentation path, CancellationToken cancellationToken)
+        {
+            var fileExists = await FileExistsAsync(new FileExistsRequest {FilePath = path}, cancellationToken);
+            if (fileExists)
+            {
+                throw new FileAlreadyExistsException(
+                    CombineRootAndRequestedPath(path).NormalisedPath,
+                    path.NormalisedPath
+                );
+            }
         }
 
         /// <summary>
