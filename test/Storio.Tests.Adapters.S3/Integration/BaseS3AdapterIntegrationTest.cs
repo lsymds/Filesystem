@@ -6,13 +6,13 @@ using Storio.Adapters.S3;
 
 namespace Storio.Tests.Adapters.S3.Integration
 {
-    public abstract class BaseS3AdapterTest : IAsyncDisposable
+    public abstract class BaseS3AdapterIntegrationTest : IAsyncDisposable
     {
         protected readonly string GeneratedBucketName;
         protected readonly IAmazonS3 S3Client;
         protected readonly IFileManager FileManager;
 
-        protected BaseS3AdapterTest(bool useRootPath = false)
+        protected BaseS3AdapterIntegrationTest(bool useRootPath = false)
         {
             GeneratedBucketName = Guid.NewGuid().ToString();
             

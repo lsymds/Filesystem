@@ -107,7 +107,9 @@ namespace Storio
         );
         
         /// <summary>
-        /// Touches (creates without content) a file in the relevant adapter's file system.
+        /// Touches (creates without content) a file in the relevant adapter's file system. BEWARE: In some adapters
+        /// this will overwrite your files without throwing any exception about the file existing. In others, it will.
+        /// We're aiming to normalise this behavior in a future release.
         /// </summary>
         /// <param name="touchFileRequest">The request containing information about the file to create.</param>
         /// <param name="adapter">The adapter in which to touch the file.</param>

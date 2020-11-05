@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.Runtime;
@@ -46,9 +47,30 @@ namespace Storio.Adapters.S3
         }
 
         /// <inheritdoc />
-        public Task<bool> FileExistsAsync(FileExistsRequest fileExistsRequest, CancellationToken cancellationToken)
+        public async Task<bool> FileExistsAsync(
+            FileExistsRequest fileExistsRequest,
+            CancellationToken cancellationToken
+        )
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _s3Client.GetObjectMetadataAsync(
+                    _adapterConfiguration.BucketName,
+                    CombineRootAndRequestedPath(fileExistsRequest.FilePath).NormalisedPath,
+                    cancellationToken
+                );
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                if (e is AmazonS3Exception s3Exception && s3Exception.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+
+                throw ExceptionForS3Exception(e);
+            }
         }
 
         /// <inheritdoc />
@@ -70,40 +92,82 @@ namespace Storio.Adapters.S3
         }
 
         /// <inheritdoc />
-        public Task<FileRepresentation> TouchFileAsync(TouchFileRequest touchFileRequest, CancellationToken cancellationToken)
+        public async Task<FileRepresentation> TouchFileAsync(
+            TouchFileRequest touchFileRequest,
+            CancellationToken cancellationToken
+        )
         {
-            throw new NotImplementedException();
+            await CatchAndWrapProviderExceptions(
+                async () => await _s3Client.PutObjectAsync(
+                    new PutObjectRequest
+                    {
+                        BucketName = _adapterConfiguration.BucketName,
+                        ContentBody = "",
+                        ContentType = "text/plain",
+                        Key = CombineRootAndRequestedPath(touchFileRequest.FilePath).NormalisedPath
+                    },
+                    cancellationToken
+                )
+            );
+
+            return new FileRepresentation
+            {
+                Path = touchFileRequest.FilePath
+            };
         }
 
         /// <inheritdoc />
-        public async Task WriteTextToFileAsync(WriteTextToFileRequest writeTextToFileRequest, CancellationToken cancellationToken)
+        public async Task WriteTextToFileAsync(
+            WriteTextToFileRequest writeTextToFileRequest,
+            CancellationToken cancellationToken
+        )
         {
-            var response = await _s3Client.PutObjectAsync(
-                new PutObjectRequest
-                {
-                    BucketName = _adapterConfiguration.BucketName,
-                    ContentBody = writeTextToFileRequest.TextToWrite,
-                    ContentType = writeTextToFileRequest.ContentType,
-                    Key = CombineRootAndRequestedPath(writeTextToFileRequest.FilePath).NormalisedPath
-                },
-                cancellationToken
+            await CatchAndWrapProviderExceptions(
+                async () => await _s3Client.PutObjectAsync(
+                    new PutObjectRequest
+                    {
+                        BucketName = _adapterConfiguration.BucketName,
+                        ContentBody = writeTextToFileRequest.TextToWrite,
+                        ContentType = writeTextToFileRequest.ContentType,
+                        Key = CombineRootAndRequestedPath(writeTextToFileRequest.FilePath).NormalisedPath
+                    },
+                    cancellationToken
+                )
             );
-            
-            ValidateBasicResponse(response);
         }
 
         /// <summary>
-        /// Validates the base response that is received from all S3 client calls.
+        /// Executes the function that communicates with the adapter's provider and, if an exception is thrown, wraps
+        /// it into one that is easily communicable 
         /// </summary>
-        /// <param name="response">The response to validate.</param>
-        private static void ValidateBasicResponse(AmazonWebServiceResponse response)
+        /// <param name="action"></param>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="AdapterProviderOperationException"></exception>
+        private static async Task<TResponse> CatchAndWrapProviderExceptions<TResponse>(Func<Task<TResponse>> action)
         {
-            if (!response.HttpStatusCode.IsSuccessStatusCode())
+            try
             {
-                throw new WriteTextToFileException(
-                    $"HttpStatusCode response from AWS S3 was not successful (received {response.HttpStatusCode})."
-                );
+                return await action();
             }
+            catch (Exception e)
+            {
+                throw ExceptionForS3Exception(e);
+            }    
+        }
+
+        /// <summary>
+        /// Gets a <see cref="AdapterProviderOperationException" /> detailing that an unhandled exception occurred
+        /// when calling a provider endpoint.
+        /// </summary>
+        /// <param name="e">The exception to wrap.</param>
+        /// <returns>The wrapped exception that should be thrown.</returns>
+        private static AdapterProviderOperationException ExceptionForS3Exception(Exception e)
+        {
+            return new AdapterProviderOperationException(
+                "Unexpected exception thrown when communicating with the Amazon S3 endpoint.",
+                e
+            );
         }
 
         /// <summary>

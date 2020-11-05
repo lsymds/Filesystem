@@ -1,0 +1,22 @@
+﻿using System;
+
+namespace Storio
+{
+    /// <summary>
+    /// Wrapped, generic exception that is thrown when an adapter's provider (for example S3) throws an exception during
+    /// an operation (i.e. writing a file) that isn't otherwise handled by Storio (i.e. files not being found throwing a
+    /// FileNotFoundException). Prevents you from having to reference the provider's SDK just to catch any exceptions.
+    /// </summary>
+    public class AdapterProviderOperationException : Exception
+    {
+        /// <summary>
+        /// Initialises a new instance of the <see cref="AdapterProviderOperationException" />.
+        /// </summary>
+        /// <param name="message">The reason why the exception was thrown.</param>
+        /// <param name="innerException">The exception that caused this wrapped one to be thrown (if any).</param>
+        public AdapterProviderOperationException(string message, Exception innerException = null)
+            : base(message, innerException)
+        {
+        }
+    }
+}
