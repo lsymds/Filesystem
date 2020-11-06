@@ -1,5 +1,4 @@
-﻿using System;
-using Amazon.S3;
+﻿using Amazon.S3;
 
 namespace Storio.Adapters.S3
 {

@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.Runtime;
 using Amazon.S3;
-using Amazon.S3.Model;
 using FluentAssertions;
 using Moq;
 using Xunit;

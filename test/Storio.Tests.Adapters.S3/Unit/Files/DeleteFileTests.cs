@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Amazon.S3.Model;
 using FluentAssertions;
 using Moq;
 using Xunit;

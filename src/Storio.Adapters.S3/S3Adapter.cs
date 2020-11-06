@@ -3,10 +3,8 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Storio.Adapters.S3.Internal.Extensions;
 
 namespace Storio.Adapters.S3
 {

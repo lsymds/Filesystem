@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Amazon.S3.Model;
+﻿using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
