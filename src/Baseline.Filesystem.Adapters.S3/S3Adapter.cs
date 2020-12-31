@@ -107,9 +107,23 @@ namespace Baseline.Filesystem.Adapters.S3
         }
 
         /// <inheritdoc />
-        public Task<FileRepresentation> MoveFileAsync(MoveFileRequest moveFileRequest, CancellationToken cancellationToken)
+        public async Task<FileRepresentation> MoveFileAsync(MoveFileRequest moveFileRequest, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var copiedFileResult = await CopyFileAsync(
+                new CopyFileRequest
+                {
+                    SourceFilePath = moveFileRequest.SourceFilePath,
+                    DestinationFilePath = moveFileRequest.DestinationFilePath
+                },
+                cancellationToken
+            );
+
+            await DeleteFileAsync(
+                new DeleteFileRequest {FilePath = moveFileRequest.SourceFilePath},
+                cancellationToken
+            );
+
+            return copiedFileResult;
         }
 
         /// <inheritdoc />

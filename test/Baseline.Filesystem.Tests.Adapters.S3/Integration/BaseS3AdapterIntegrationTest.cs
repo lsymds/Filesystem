@@ -8,6 +8,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
 {
     public abstract class BaseS3AdapterIntegrationTest : IAsyncDisposable
     {
+        private static readonly Random Random = new Random();
+        
         protected readonly string GeneratedBucketName;
         protected readonly IAmazonS3 S3Client;
         protected readonly IFileManager FileManager;
@@ -45,6 +47,11 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
         {
             await S3Client.DeleteBucketAsync(GeneratedBucketName);
         }
+
+        protected Task CreateFileAndWriteTextAsync(PathRepresentation path, string contents = "")
+        {
+            return FileManager.WriteTextAsync(new WriteTextToFileRequest {FilePath = path, TextToWrite = contents });
+        }
         
         protected Task<bool> FileExistsAsync(PathRepresentation path)
         {
@@ -54,6 +61,21 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
         protected Task<string> ReadFileAsStringAsync(PathRepresentation path)
         {
             return FileManager.ReadAsStringAsync(new ReadFileAsStringRequest {FilePath = path});
+        }
+
+        protected static PathRepresentation RandomFilePath()
+        {
+            var directories = new[] {"", "a/b", "a/b/c/d", "d/e/f/g/h", "longer", "longer-still"};
+            var extensions = new[] {"txt", "", "jpg", "pdf", ".config.json" };
+            var fileNames = new[]
+            {
+                ".npmrc", 
+                ".npmrc.config", 
+                $"{Guid.NewGuid().ToString()}.{extensions[Random.Next(extensions.Length)]}"
+            };
+
+            var combinedPath = $"{directories[Random.Next(directories.Length)]}/{fileNames[Random.Next(fileNames.Length)]}";
+            return combinedPath.AsBaselineFilesystemPath();
         }
     }
 }

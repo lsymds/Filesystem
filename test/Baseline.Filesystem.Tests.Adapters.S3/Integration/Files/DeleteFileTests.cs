@@ -13,7 +13,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             Func<Task> func = async () => await FileManager.DeleteAsync(
                 new DeleteFileRequest
                 {
-                    FilePath = "/some/flash/directory/i-do-not-be-delete-for-i-do-not-exist.swf".AsBaselineFilesystemPath()
+                    FilePath = RandomFilePath()
                 }
             );
 
@@ -23,16 +23,9 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         [Fact]
         public async Task It_Deletes_A_File()
         {
-            var filePath = "/some/flash/directory/i-do-exist-this-time.swf".AsBaselineFilesystemPath();
-            
-            await FileManager.WriteTextAsync(
-                new WriteTextToFileRequest
-                {
-                    FilePath = filePath,
-                    ContentType = "text/plain",
-                    TextToWrite = string.Empty
-                }
-            );
+            var filePath = RandomFilePath();
+
+            await CreateFileAndWriteTextAsync(filePath);
 
             (await FileExistsAsync(filePath)).Should().BeTrue();
 

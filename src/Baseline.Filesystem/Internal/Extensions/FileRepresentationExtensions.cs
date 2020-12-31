@@ -35,7 +35,7 @@ namespace Baseline.Filesystem.Internal.Extensions
         /// </param>
         /// <param name="adapterName">The adapter's name to associate with the file representation.</param>
         /// <returns>The now adapter aware version of the file representation passed in.</returns>
-        public static async Task<AdapterAwareFileRepresentation> AsAdapterAwareRepresentation(
+        public static async Task<AdapterAwareFileRepresentation> AsAdapterAwareRepresentationAsync(
             this Task<FileRepresentation> fileRepresentation,
             string adapterName
         )

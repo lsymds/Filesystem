@@ -7,8 +7,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
 {
     public class CopyFileTests : BaseS3AdapterIntegrationTest
     {
-        private static readonly PathRepresentation SourceFilePath = "/a-file/in-the-woods/src.json".AsBaselineFilesystemPath();
-        private static readonly PathRepresentation DestinationFilePath = "a-file/in-the-woods/dest.json".AsBaselineFilesystemPath();
+        private readonly PathRepresentation _sourceFilePath = RandomFilePath();
+        private readonly PathRepresentation _destinationFilePath = RandomFilePath();
         
         [Fact]
         public async Task It_Throws_An_Exception_If_Source_Path_Does_Not_Exist()
@@ -16,8 +16,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             Func<Task> func = async () => await FileManager.CopyAsync(
                 new CopyFileRequest
                 {
-                    SourceFilePath = SourceFilePath,
-                    DestinationFilePath = DestinationFilePath
+                    SourceFilePath = _sourceFilePath,
+                    DestinationFilePath = _destinationFilePath
                 }
             );
             await func.Should().ThrowExactlyAsync<FileNotFoundException>();
@@ -26,29 +26,14 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         [Fact]
         public async Task It_Throws_An_Exception_If_Destination_Path_Already_Exists()
         {
-            await FileManager.WriteTextAsync(
-                new WriteTextToFileRequest
-                {
-                    FilePath = SourceFilePath,
-                    ContentType = "application/json",
-                    TextToWrite = "[ 1, 2, 3 ]"
-                }
-            );
-            
-            await FileManager.WriteTextAsync(
-                new WriteTextToFileRequest
-                {
-                    FilePath = DestinationFilePath,
-                    ContentType = "application/json",
-                    TextToWrite = "[ 1, 2, 3 ]"
-                }
-            );
+            await CreateFileAndWriteTextAsync(_sourceFilePath);
+            await CreateFileAndWriteTextAsync(_destinationFilePath);
             
             Func<Task> func = async () => await FileManager.CopyAsync(
                 new CopyFileRequest
                 {
-                    SourceFilePath = SourceFilePath,
-                    DestinationFilePath = DestinationFilePath
+                    SourceFilePath = _sourceFilePath,
+                    DestinationFilePath = _destinationFilePath
                 }
             );
             await func.Should().ThrowExactlyAsync<FileAlreadyExistsException>();
@@ -57,27 +42,20 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         [Fact]
         public async Task It_Successfully_Copies_A_File()
         {
-            await FileManager.WriteTextAsync(
-                new WriteTextToFileRequest
-                {
-                    FilePath = SourceFilePath,
-                    ContentType = "application/json",
-                    TextToWrite = "[ 1, 2, 3 ]"
-                }
-            );
+            await CreateFileAndWriteTextAsync(_sourceFilePath, "[ 1, 2, 3 ]");
             
             await FileManager.CopyAsync(
                 new CopyFileRequest
                 {
-                    SourceFilePath = SourceFilePath,
-                    DestinationFilePath = DestinationFilePath
+                    SourceFilePath = _sourceFilePath,
+                    DestinationFilePath = _destinationFilePath
                 }
             );
 
-            (await FileExistsAsync(SourceFilePath)).Should().BeTrue();
-            (await FileExistsAsync(DestinationFilePath)).Should().BeTrue();
+            (await FileExistsAsync(_sourceFilePath)).Should().BeTrue();
+            (await FileExistsAsync(_destinationFilePath)).Should().BeTrue();
 
-            var destinationContents = await ReadFileAsStringAsync(DestinationFilePath);
+            var destinationContents = await ReadFileAsStringAsync(_destinationFilePath);
             destinationContents.Should().Be("[ 1, 2, 3 ]");
         }
     }

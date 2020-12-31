@@ -11,14 +11,13 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         [Fact]
         public async Task It_Successfully_Touches_A_File_In_S3()
         {
-            await FileManager.TouchAsync(new TouchFileRequest
-            {
-                FilePath = "/tests/simple-text-to-file/simple-file.txt".AsBaselineFilesystemPath(),
-            });
+            var path = RandomFilePath();
+
+            await CreateFileAndWriteTextAsync(path);
 
             var fileInS3 = await S3Client.GetObjectAsync(
                 GeneratedBucketName, 
-                "tests/simple-text-to-file/simple-file.txt"
+                path.NormalisedPath
             );
             fileInS3.HttpStatusCode.Should().Be(HttpStatusCode.OK);
             

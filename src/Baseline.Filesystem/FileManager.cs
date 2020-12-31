@@ -29,7 +29,7 @@ namespace Baseline.Filesystem
             
             return GetAdapter(adapter)
                 .CopyFileAsync(copyFileRequest, cancellationToken)
-                .AsAdapterAwareRepresentation(adapter);
+                .AsAdapterAwareRepresentationAsync(adapter);
         }
 
         /// <inheritdoc />
@@ -67,7 +67,7 @@ namespace Baseline.Filesystem
     
             return GetAdapter(adapter)
                 .GetFileAsync(getFileRequest, cancellationToken)
-                .AsAdapterAwareRepresentation(adapter);
+                .AsAdapterAwareRepresentationAsync(adapter);
         }
 
         /// <inheritdoc />
@@ -81,7 +81,7 @@ namespace Baseline.Filesystem
 
             return GetAdapter(adapter)
                 .MoveFileAsync(moveFileRequest, cancellationToken)
-                .AsAdapterAwareRepresentation(adapter);
+                .AsAdapterAwareRepresentationAsync(adapter);
         }
 
         /// <inheritdoc />
@@ -107,7 +107,7 @@ namespace Baseline.Filesystem
             
             return GetAdapter(adapter)
                 .TouchFileAsync(touchFileRequest, cancellationToken)
-                .AsAdapterAwareRepresentation(adapter);
+                .AsAdapterAwareRepresentationAsync(adapter);
         }
 
         /// <inheritdoc />
