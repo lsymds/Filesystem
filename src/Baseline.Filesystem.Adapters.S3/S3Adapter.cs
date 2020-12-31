@@ -74,11 +74,13 @@ namespace Baseline.Filesystem.Adapters.S3
         {
             try
             {
-                await _s3Client.GetObjectMetadataAsync(
-                    _adapterConfiguration.BucketName,
-                    CombineRootAndRequestedPath(fileExistsRequest.FilePath).NormalisedPath,
-                    cancellationToken
-                );
+                await _s3Client
+                    .GetObjectMetadataAsync(
+                        _adapterConfiguration.BucketName,
+                        CombineRootAndRequestedPath(fileExistsRequest.FilePath).NormalisedPath,
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
 
                 return true;
             }
@@ -94,9 +96,14 @@ namespace Baseline.Filesystem.Adapters.S3
         }
 
         /// <inheritdoc />
-        public Task<FileRepresentation> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken)
+        public async Task<FileRepresentation> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var fileExists = await FileExistsAsync(
+                new FileExistsRequest { FilePath = getFileRequest.FilePath },
+                cancellationToken
+            );
+            
+            return fileExists ? new FileRepresentation {Path = getFileRequest.FilePath} : null;
         }
 
         /// <inheritdoc />
@@ -216,7 +223,7 @@ namespace Baseline.Filesystem.Adapters.S3
         {
             try
             {
-                return await action();
+                return await action().ConfigureAwait(false);
             }
             catch (Exception e)
             {

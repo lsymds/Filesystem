@@ -11,8 +11,7 @@ namespace Baseline.Filesystem.Adapters.S3.Internal.Extensions
         /// <summary>
         /// Array containing a collection of successful HTTP status codes.
         /// </summary>
-        private static readonly HttpStatusCode[] SuccessfulStatusCodes = new[]
-        {
+        private static readonly HttpStatusCode[] SuccessfulStatusCodes = {
             HttpStatusCode.Accepted,
             HttpStatusCode.Created,
             HttpStatusCode.NoContent,
