@@ -10,19 +10,49 @@ namespace Baseline.Filesystem
     public interface IAdapter
     {
         /// <summary>
+        /// Copies a directory from one location in the adapter's data store to another.
+        /// </summary>
+        /// <param name="copyDirectoryRequest">The request containing information about the directory to copy.</param>
+        /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
+        /// <returns>The information about the directory that was created (the destination directory).</returns>
+        Task<DirectoryRepresentation> CopyDirectoryAsync(
+            CopyDirectoryRequest copyDirectoryRequest,
+            CancellationToken cancellationToken
+        );
+        
+        /// <summary>
         /// Copies a file from one location in the adapter's data store to another.
         /// </summary>
         /// <param name="copyFileRequest">The request containing information about the file to copy.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
         /// <returns>The information about the file that was created (the destination file).</returns>
         Task<FileRepresentation> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Creates a directory in an adapter's data store.
+        /// </summary>
+        /// <param name="createDirectoryRequest">
+        /// The request containing information about the directory to create.
+        /// </param>
+        /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
+        /// <returns>The information about the directory that was created (the destination directory).</returns>
+        Task<DirectoryRepresentation> CreateDirectoryAsync(
+            CreateDirectoryRequest createDirectoryRequest,
+            CancellationToken cancellationToken
+        );
+
+        /// <summary>
+        /// Deletes a directory from an adapter's data store.
+        /// </summary>
+        /// <param name="deleteDirectoryRequest">The request containing information about the directory to delete.</param>
+        /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
+        Task DeleteDirectoryAsync(DeleteDirectoryRequest deleteDirectoryRequest, CancellationToken cancellationToken);
         
         /// <summary>
         /// Deletes a file from the adapter's data store.
         /// </summary>
         /// <param name="deleteFileRequest">The request containing information about the file to delete.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        /// <returns>An awaitable task.</returns>
         Task DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken);
         
         /// <summary>
@@ -40,6 +70,17 @@ namespace Baseline.Filesystem
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
         /// <returns>The information about the requested file.</returns>
         Task<FileRepresentation> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Moves a directory from one location in the adapter's data store to another.
+        /// </summary>
+        /// <param name="moveDirectoryRequest">The request containing information about the directory to move.</param>
+        /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
+        /// <returns>The information about the directory that was created (the destination directory).</returns>
+        Task<DirectoryRepresentation> MoveDirectoryAsync(
+            MoveDirectoryRequest moveDirectoryRequest,
+            CancellationToken cancellationToken
+        );
 
         /// <summary>
         /// Moves a file from one location in the adapter's data store to another.

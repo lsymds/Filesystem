@@ -1,3 +1,6 @@
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Baseline.Filesystem
 {
     /// <summary>
@@ -5,5 +8,67 @@ namespace Baseline.Filesystem
     /// </summary>
     public interface IDirectoryManager
     {
+        /// <summary>
+        /// Copies a directory from one location to another. Please note: some adapters require the entire directory
+        /// tree to be traversed in order to copy a directory and all of its contained files. This could have
+        /// unintended performance consequences, so be careful in its use. Consider doing this manually.
+        /// </summary>
+        /// <param name="copyDirectoryRequest">
+        /// The request which contains information about the directory to copy.
+        /// </param>
+        /// <param name="adapter">The adapter in which to perform the action.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The representation of the directory the requested source directory was copied to.</returns>
+        Task<AdapterAwareDirectoryRepresentation> CopyAsync(
+            CopyDirectoryRequest copyDirectoryRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        );
+
+        /// <summary>
+        /// Creates a directory within the chosen adapter.
+        /// </summary>
+        /// <param name="createDirectoryRequest">
+        /// The request which contains information about the directory to copy.
+        /// </param>
+        /// <param name="adapter">The adapter in which to perform the action.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The representation of the directory that was created.</returns>
+        Task<AdapterAwareDirectoryRepresentation> CreateAsync(
+            CreateDirectoryRequest createDirectoryRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        ); 
+        
+        /// <summary>
+        /// Deletes a directory within the chosen adapter.
+        /// </summary>
+        /// <param name="deleteDirectoryRequest">
+        /// The request which contains information about the directory to delete.
+        /// </param>
+        /// <param name="adapter">The adapter in which to perform the action.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        Task DeleteAsync(
+            DeleteDirectoryRequest deleteDirectoryRequest, 
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        );
+
+        /// <summary>
+        /// Moves a directory from one location to another. Please note: some adapters require the entire directory
+        /// tree to be traversed in order to copy a directory and all of its contained files. This could have
+        /// unintended performance consequences, so be careful in its use. Consider doing this manually.
+        /// </summary>
+        /// <param name="moveDirectoryRequest">
+        /// The request which contains information about the directory to move.
+        /// </param>
+        /// <param name="adapter">The adapter in which to perform the action.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The representation of the directory the requested source directory was moved to.</returns>
+        Task<AdapterAwareDirectoryRepresentation> MoveAsync(
+            MoveDirectoryRequest moveDirectoryRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        );
     }
 }

@@ -1,3 +1,6 @@
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Baseline.Filesystem
 {
     /// <summary>
@@ -11,6 +14,44 @@ namespace Baseline.Filesystem
         /// <param name="adapterManager">An adapter manager implementation.</param>
         public DirectoryManager(IAdapterManager adapterManager) : base(adapterManager)
         {
+        }
+
+        /// <inheritdoc />
+        public Task<AdapterAwareDirectoryRepresentation> CopyAsync(
+            CopyDirectoryRequest copyDirectoryRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task<AdapterAwareDirectoryRepresentation> CreateAsync(
+            CreateDirectoryRequest createDirectoryRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task DeleteAsync(
+            DeleteDirectoryRequest deleteDirectoryRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task<AdapterAwareDirectoryRepresentation> MoveAsync(
+            MoveDirectoryRequest moveDirectoryRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
