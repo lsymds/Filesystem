@@ -1,3 +1,4 @@
+using Baseline.Filesystem.Internal.Contracts;
 using Moq;
 
 namespace Baseline.Filesystem.Tests.FileManagerTests

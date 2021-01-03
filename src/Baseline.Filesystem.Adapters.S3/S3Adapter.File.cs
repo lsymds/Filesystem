@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Baseline.Filesystem.Internal.Contracts;
 
 namespace Baseline.Filesystem.Adapters.S3
 {

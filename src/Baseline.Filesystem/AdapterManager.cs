@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using Baseline.Filesystem.Internal.Contracts;
 
 namespace Baseline.Filesystem
 {

@@ -1,3 +1,5 @@
+using Baseline.Filesystem.Internal.Contracts;
+
 namespace Baseline.Filesystem
 {
     /// <summary>
