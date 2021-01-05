@@ -11,7 +11,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         [Fact]
         public async Task It_Successfully_Touches_A_File_In_S3()
         {
-            var path = RandomFilePath();
+            var path = RandomFilePath().AsBaselineFilesystemPath();
 
             await CreateFileAndWriteTextAsync(path);
 

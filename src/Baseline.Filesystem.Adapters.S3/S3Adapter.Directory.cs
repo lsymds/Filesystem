@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,10 +36,10 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
+            await CheckDirectoryExistsAsync(deleteDirectoryRequest.DirectoryPath, cancellationToken);
+            
             await CatchAndWrapProviderExceptions(async () =>
             {
-                await CheckDirectoryExistsAsync(deleteDirectoryRequest.DirectoryPath, cancellationToken);
-                
                 await ListFilesUnderPathAndPerformActionUntilEmptyAsync(
                     deleteDirectoryRequest.DirectoryPath,
                     response => _s3Client.DeleteObjectsAsync(
@@ -66,6 +67,30 @@ namespace Baseline.Filesystem.Adapters.S3
         }
 
         /// <summary>
+        /// Identifies whether a directory (which don't really exist in S3) exists by finding out if there are any
+        /// files under a directory styled prefix. Designed to be called outside of a CatchAndWrapProviderExceptions
+        /// call.
+        /// </summary>
+        /// <param name="directoryPath">The directory path to check.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>Whether the 'directory' exists or not.</returns>
+        private async Task<bool> DirectoryExistsAsync(
+            PathRepresentation directoryPath,
+            CancellationToken cancellationToken
+        )
+        {
+            try
+            {
+                var files = await ListFilesUnderPath(directoryPath, cancellationToken);
+                return files.S3Objects != null && files.S3Objects.Any();
+            }
+            catch (Exception e)
+            {
+                throw ExceptionForS3Exception(e);
+            }
+        }
+
+        /// <summary>
         /// Checks a directory exists within the adapter's S3 bucket.
         /// </summary>
         /// <param name="directoryPath">The directory path to be checked.</param>
@@ -75,9 +100,7 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            var files = await ListFilesUnderPath(directoryPath, cancellationToken);
-
-            if (files.S3Objects == null || !files.S3Objects.Any())
+            if (!await DirectoryExistsAsync(directoryPath, cancellationToken))
             {
                 throw new DirectoryNotFoundException(
                     CombineRootAndRequestedPath(directoryPath).NormalisedPath,

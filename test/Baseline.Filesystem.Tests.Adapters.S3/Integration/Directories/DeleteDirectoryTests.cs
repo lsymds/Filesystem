@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Amazon.S3.Model;
 using FluentAssertions;
@@ -74,6 +75,16 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
                 Prefix = "prefixed/"
             });
             objectsLeftWithPrefix.S3Objects.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task It_Throws_An_Exception_If_The_Directory_To_Delete_Does_Not_Exist()
+        {
+            Func<Task> func = async () => await DirectoryManager.DeleteAsync(new DeleteDirectoryRequest
+            {
+                DirectoryPath = RandomDirectoryPath().AsBaselineFilesystemPath()
+            });
+            await func.Should().ThrowExactlyAsync<DirectoryNotFoundException>();
         }
     }
 }

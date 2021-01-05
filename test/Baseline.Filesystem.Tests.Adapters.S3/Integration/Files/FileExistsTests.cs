@@ -9,7 +9,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         [Fact]
         public async Task It_Returns_True_When_A_File_Does_Exist()
         {
-            var path = RandomFilePath();
+            var path = RandomFilePath().AsBaselineFilesystemPath();
 
             await CreateFileAndWriteTextAsync(path);
 
@@ -28,7 +28,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             var response = await FileManager.ExistsAsync(
                 new FileExistsRequest
                 {
-                    FilePath = RandomFilePath()
+                    FilePath = RandomFilePath().AsBaselineFilesystemPath()
                 }
             );
             response.Should().BeFalse();

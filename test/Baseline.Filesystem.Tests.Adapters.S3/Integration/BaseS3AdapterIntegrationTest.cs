@@ -65,9 +65,14 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
             return FileManager.ReadAsStringAsync(new ReadFileAsStringRequest {FilePath = path});
         }
 
-        protected static PathRepresentation RandomFilePath()
+        protected static string RandomDirectoryPath(bool includeBlank = false)
         {
-            var directories = new[] {"", "a/b", "a/b/c/d", "d/e/f/g/h", "longer", "longer-still"};
+            var directories = new[] {includeBlank ? "" : "c", "a/b", "a/b/c/d", "d/e/f/g/h", "longer", "longer-still"};
+            return $"{directories[Random.Next(directories.Length)]}/";
+        }
+
+        protected static string RandomFilePath()
+        {
             var extensions = new[] {"txt", "", "jpg", "pdf", ".config.json" };
             var fileNames = new[]
             {
@@ -76,13 +81,12 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
                 $"{Guid.NewGuid().ToString()}.{extensions[Random.Next(extensions.Length)]}"
             };
 
-            var combinedPath = $"{directories[Random.Next(directories.Length)]}/{fileNames[Random.Next(fileNames.Length)]}";
-            return combinedPath.AsBaselineFilesystemPath();
+            return $"{RandomDirectoryPath(true)}{fileNames[Random.Next(fileNames.Length)]}";
         }
 
         protected static PathRepresentation RandomFilePathWithPrefix(string prefix)
         {
-            return $"{prefix}/{RandomFilePath().NormalisedPath}".AsBaselineFilesystemPath();
+            return $"{prefix}/{RandomFilePath()}".AsBaselineFilesystemPath();
         }
     }
 }
