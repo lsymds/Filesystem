@@ -13,6 +13,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
         protected readonly string GeneratedBucketName;
         protected readonly IAmazonS3 S3Client;
         protected readonly IFileManager FileManager;
+        protected readonly IDirectoryManager DirectoryManager;
 
         protected BaseS3AdapterIntegrationTest(bool useRootPath = false)
         {
@@ -41,6 +42,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
             adapterManager.Register(adapter);
             
             FileManager = new FileManager(adapterManager);
+            DirectoryManager = new DirectoryManager(adapterManager);
         }
 
         public async ValueTask DisposeAsync()
@@ -76,6 +78,11 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
 
             var combinedPath = $"{directories[Random.Next(directories.Length)]}/{fileNames[Random.Next(fileNames.Length)]}";
             return combinedPath.AsBaselineFilesystemPath();
+        }
+
+        protected static PathRepresentation RandomFilePathWithPrefix(string prefix)
+        {
+            return $"{prefix}/{RandomFilePath().NormalisedPath}".AsBaselineFilesystemPath();
         }
     }
 }

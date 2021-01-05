@@ -5,7 +5,7 @@ namespace Baseline.Filesystem.Internal.Validators.Files
     /// <summary>
     /// Validation methods for the <see cref="WriteTextToFileRequest" /> class.
     /// </summary>
-    public static class WriteTextToFileRequestValidator
+    internal static class WriteTextToFileRequestValidator
     {
         /// <summary>
         /// Validates the request and throws any related exceptions if that validation fails.
@@ -17,7 +17,9 @@ namespace Baseline.Filesystem.Internal.Validators.Files
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(request);
 
             if (request.TextToWrite == null)
+            {
                 throw new ArgumentNullException(nameof(request.TextToWrite));
+            }
         }
     }
 }

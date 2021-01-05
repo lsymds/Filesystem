@@ -5,7 +5,7 @@ namespace Baseline.Filesystem.Internal.Validators.Files
     /// <summary>
     /// Validation methods for the <see cref="BaseSourceAndDestinationFileRequest" /> class.
     /// </summary>
-    public static class BaseSourceAndDestinationFileRequestValidator
+    internal static class BaseSourceAndDestinationFileRequestValidator
     {
         /// <summary>
         /// Validates the request and throws exceptions if the validation is unsuccessful.
@@ -15,7 +15,9 @@ namespace Baseline.Filesystem.Internal.Validators.Files
         public static void ValidateAndThrowIfUnsuccessful(BaseSourceAndDestinationFileRequest fileRequest)
         {
             if (fileRequest == null)
+            {
                 throw new ArgumentNullException(nameof(fileRequest));
+            }
 
             FilePathValidator.ValidateAndThrowIfUnsuccessful(fileRequest.SourceFilePath);
             FilePathValidator.ValidateAndThrowIfUnsuccessful(fileRequest.DestinationFilePath);

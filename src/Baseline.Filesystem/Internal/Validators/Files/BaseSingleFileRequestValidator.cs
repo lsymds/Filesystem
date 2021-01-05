@@ -5,7 +5,7 @@ namespace Baseline.Filesystem.Internal.Validators.Files
     /// <summary>
     /// Validation methods for the <see cref="BaseSingleFileRequest" /> class.
     /// </summary>
-    public static class BaseSingleFileRequestValidator
+    internal static class BaseSingleFileRequestValidator
     {
         /// <summary>
         /// Validates the base file request class by ensuring it contains information that is required regardless of
@@ -17,8 +17,10 @@ namespace Baseline.Filesystem.Internal.Validators.Files
         public static void ValidateAndThrowIfUnsuccessful(BaseSingleFileRequest request)
         {
             if (request == null)
+            {
                 throw new ArgumentNullException(nameof(request));
-            
+            }
+
             FilePathValidator.ValidateAndThrowIfUnsuccessful(request.FilePath);
         }
     }

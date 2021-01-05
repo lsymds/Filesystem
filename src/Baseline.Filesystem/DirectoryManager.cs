@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Baseline.Filesystem.Internal.Validators.Directories;
 
 namespace Baseline.Filesystem
 {
@@ -41,7 +42,9 @@ namespace Baseline.Filesystem
             string adapter = "default",
             CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(deleteDirectoryRequest);
+            
+            return GetAdapter(adapter).DeleteDirectoryAsync(deleteDirectoryRequest, cancellationToken);
         }
 
         /// <inheritdoc />

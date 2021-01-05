@@ -9,8 +9,8 @@ namespace Baseline.Filesystem
     public interface IDirectoryManager
     {
         /// <summary>
-        /// Copies a directory from one location to another. Please note: some adapters require the entire directory
-        /// tree to be traversed in order to copy a directory and all of its contained files. This could have
+        /// Copies a directory from one location to another. Please note: some adapters require each file within the
+        /// directory tree to be copied in order to copy a directory and all of its contained files. This could have
         /// unintended performance consequences, so be careful in its use. Consider doing this manually.
         /// </summary>
         /// <param name="copyDirectoryRequest">
@@ -41,7 +41,9 @@ namespace Baseline.Filesystem
         ); 
         
         /// <summary>
-        /// Deletes a directory within the chosen adapter.
+        /// Deletes a directory within the chosen adapter. Please note: some adapters require each file within the
+        /// directory tree to be deleted in order to delete a directory and all of its contained files. This could have
+        /// unintended performance consequences, so be careful in its use. Consider doing this manually.
         /// </summary>
         /// <param name="deleteDirectoryRequest">
         /// The request which contains information about the directory to delete.
@@ -55,8 +57,8 @@ namespace Baseline.Filesystem
         );
 
         /// <summary>
-        /// Moves a directory from one location to another. Please note: some adapters require the entire directory
-        /// tree to be traversed in order to copy a directory and all of its contained files. This could have
+        /// Moves a directory from one location to another. Please note: some adapters require each file within the
+        /// directory tree to be moved in order to move a directory and all of its contained files. This could have
         /// unintended performance consequences, so be careful in its use. Consider doing this manually.
         /// </summary>
         /// <param name="moveDirectoryRequest">

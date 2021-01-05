@@ -5,7 +5,7 @@ namespace Baseline.Filesystem.Internal.Validators.Files
     /// <summary>
     /// Validation methods for paths in file related requests.
     /// </summary>
-    public static class FilePathValidator
+    internal static class FilePathValidator
     {
         /// <summary>
         /// Validates the path in a file related request and throws if any of the validation criteria fail.
@@ -16,10 +16,14 @@ namespace Baseline.Filesystem.Internal.Validators.Files
         public static void ValidateAndThrowIfUnsuccessful(PathRepresentation filePath)
         {
             if (filePath == null)
+            {
                 throw new ArgumentNullException(nameof(filePath));
-            
+            }
+
             if (filePath.FinalPathPartIsObviouslyADirectory)
+            {
                 throw new PathIsADirectoryException(filePath.OriginalPath);
+            }
         }
     }
 }

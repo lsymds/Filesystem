@@ -1,10 +1,12 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Baseline.Filesystem.Adapters.S3.Internal.Extensions;
 using Baseline.Filesystem.Internal.Contracts;
 
 namespace Baseline.Filesystem.Adapters.S3
@@ -205,6 +207,56 @@ namespace Baseline.Filesystem.Adapters.S3
                     CombineRootAndRequestedPath(path).NormalisedPath,
                     path.NormalisedPath
                 );
+            }
+        }
+        
+        /// <summary>
+        /// Lists all of the files under a particular path prefix within S3.
+        /// </summary>
+        /// <param name="path">The path to use as a prefix.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>The response from S3 containing the files (if there are any) for the prefix.</returns>
+        private Task<ListObjectsResponse> ListFilesUnderPath(
+            PathRepresentation path, 
+            CancellationToken cancellationToken
+        )
+        {
+            return _s3Client.ListObjectsAsync(
+                new ListObjectsRequest
+                {
+                    BucketName = _adapterConfiguration.BucketName,
+                    Prefix = CombineRootAndRequestedPath(path).S3SafeDirectoryPath()
+                },
+                cancellationToken
+            );
+        }
+        
+        /// <summary>
+        /// Retrieves all of the files under a particular path prefix and performs an action until that path prefix
+        /// no longer returns files.
+        /// </summary>
+        /// <param name="path">The path prefix to retrieve files under.</param>
+        /// <param name="action">The action to perform on the returned response.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        private async Task ListFilesUnderPathAndPerformActionUntilEmptyAsync(
+            PathRepresentation path,
+            Func<ListObjectsResponse, Task> action,
+            CancellationToken cancellationToken
+        )
+        {
+            while (true)
+            {
+                var objectsInPrefix = await ListFilesUnderPath(
+                    CombineRootAndRequestedPath(path),
+                    cancellationToken
+                );
+
+                if (objectsInPrefix.S3Objects == null || !objectsInPrefix.S3Objects.Any())
+                {
+                    break;
+                }
+
+                await action(objectsInPrefix).ConfigureAwait(false);
             }
         }
     }
