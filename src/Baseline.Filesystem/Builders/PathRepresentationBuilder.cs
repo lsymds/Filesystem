@@ -40,14 +40,10 @@ namespace Baseline.Filesystem
         private static PathRepresentation BuildPathRepresentation(string path)
         {
             var normalisedPath = NormalisePath(path);
-            var (directories, finalPathPart) = DirectoriesAndFinalPathPartFromSplitPath(normalisedPath.Split('/'));
+            var (_, finalPathPart) = DirectoriesAndFinalPathPartFromSplitPath(normalisedPath.Split('/'));
 
             return new PathRepresentation
             {
-                DirectoryLevels = (uint) directories.Count,
-                DirectoryPath = DirectoryPathFromDirectories(directories),
-                DirectoryTree = DirectoryTreeFromDirectories(directories),
-                Extension = ExtensionFromFinalPathPart(finalPathPart),
                 FinalPathPart = finalPathPart,
                 FinalPathPartIsObviouslyADirectory = path.EndsWith("/"),
                 NormalisedPath = normalisedPath,
@@ -85,56 +81,6 @@ namespace Baseline.Filesystem
         )
         {
             return (splitPath.Take(splitPath.Count - 1).ToList(), splitPath.Last());
-        }
-
-        /// <summary>
-        /// Retrieves the directory tree (i.e. users, users/Foo, users/Foo/Bar) from a collection of directory parts.
-        /// This is useful for adapters that have to create each directory and subdirectory serially.
-        /// </summary>
-        /// <param name="directories">The collection of directory parts.</param>
-        /// <returns>The sorted directory tree.</returns>
-        private static SortedSet<string> DirectoryTreeFromDirectories(IReadOnlyCollection<string> directories)
-        {
-            var set = new SortedSet<string>();
-            var workingDirectory = string.Empty;
-
-            for (var i = 0; i < directories.Count; i++)
-            {
-                workingDirectory += $"{(i == 0 ? string.Empty : "/")}{directories.ElementAt(i)}";
-                set.Add(workingDirectory);
-            }
-
-            return set;
-        }
-
-        /// <summary>
-        /// Retrieves the full directory path (including a trailing separator) from a collection of directory parts.
-        /// </summary>
-        /// <param name="directories">The collection of directory parts.</param>
-        /// <returns>The full directory path including a trailing separator.</returns>
-        private static string DirectoryPathFromDirectories(IReadOnlyCollection<string> directories)
-        {
-            return directories.Any() ? $"{string.Join("/", directories)}" : null;
-        }
-
-        /// <summary>
-        /// Extracts the assumed file extension from a final path part.
-        ///
-        /// Where a file begins with a . and contains no further .s, it's likely just a hidden file or folder with
-        /// no extension, for example .npmrc.
-        ///
-        /// Where a file begins with a . and contains further s', it's likely it's an actual file, for example
-        /// .nuget.config.
-        /// </summary>
-        /// <param name="finalPathPart">The final path part from the original, now normalised path.</param>
-        /// <returns>The assumed file extension.</returns>
-        private static string ExtensionFromFinalPathPart(string finalPathPart)
-        {
-            var numberOfExtensionSeparators = finalPathPart.Count(x => x == '.');
-            if (numberOfExtensionSeparators == 0 || numberOfExtensionSeparators == 1 && finalPathPart.StartsWith("."))
-                return null;
-
-            return finalPathPart.Split('.').Last();
         }
     }
 }

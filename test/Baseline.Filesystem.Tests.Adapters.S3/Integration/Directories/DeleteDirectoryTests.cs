@@ -82,7 +82,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
         {
             Func<Task> func = async () => await DirectoryManager.DeleteAsync(new DeleteDirectoryRequest
             {
-                DirectoryPath = RandomDirectoryPath().AsBaselineFilesystemPath()
+                DirectoryPath = RandomDirectoryPath()
             });
             await func.Should().ThrowExactlyAsync<DirectoryNotFoundException>();
         }

@@ -22,12 +22,22 @@ namespace Baseline.Filesystem.Adapters.S3
         }
 
         /// <inheritdoc />
-        public Task<DirectoryRepresentation> CreateDirectoryAsync(
+        public async Task<DirectoryRepresentation> CreateDirectoryAsync(
             CreateDirectoryRequest createDirectoryRequest,
             CancellationToken cancellationToken
         )
         {
-            throw new System.NotImplementedException();
+            await CheckDirectoryDoesNotExistAsync(createDirectoryRequest.DirectoryPath, cancellationToken);
+
+            // Directories in S3 don't really exist. In order to fake the existence of one, we need to create a
+            // temporary file underneath it which causes that path to appear in the S3 browser.
+            var pathToCreate = new PathCombinationBuilder(
+                createDirectoryRequest.DirectoryPath,
+                ".keep".AsBaselineFilesystemPath()
+            ).Build();
+            await TouchFileAsync(new TouchFileRequest {FilePath = pathToCreate}, cancellationToken);
+
+            return new DirectoryRepresentation {Path = createDirectoryRequest.DirectoryPath};
         }
 
         /// <inheritdoc />
@@ -41,7 +51,7 @@ namespace Baseline.Filesystem.Adapters.S3
             await CatchAndWrapProviderExceptions(async () =>
             {
                 await ListFilesUnderPathAndPerformActionUntilEmptyAsync(
-                    deleteDirectoryRequest.DirectoryPath,
+                     deleteDirectoryRequest.DirectoryPath,
                     response => _s3Client.DeleteObjectsAsync(
                         new DeleteObjectsRequest
                         {
@@ -91,7 +101,26 @@ namespace Baseline.Filesystem.Adapters.S3
         }
 
         /// <summary>
-        /// Checks a directory exists within the adapter's S3 bucket.
+        /// Checks a directory does not exist within the adapter's S3 bucket, and throws an exception if it does.
+        /// </summary>
+        /// <param name="directoryPath">The directory path to be checked.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        private async Task CheckDirectoryDoesNotExistAsync(
+            PathRepresentation directoryPath,
+            CancellationToken cancellationToken
+        )
+        {
+            if (await DirectoryExistsAsync(directoryPath, cancellationToken))
+            {
+                throw new DirectoryAlreadyExistsException(
+                    CombineRootAndRequestedPath(directoryPath).NormalisedPath,
+                    directoryPath.NormalisedPath
+                );
+            }
+        }
+
+        /// <summary>
+        /// Checks a directory exists within the adapter's S3 bucket, and throws an exception if it doesn't.
         /// </summary>
         /// <param name="directoryPath">The directory path to be checked.</param>
         /// <param name="cancellationToken">A cancellation token.</param>

@@ -13,7 +13,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             Func<Task> func = async () => await FileManager.DeleteAsync(
                 new DeleteFileRequest
                 {
-                    FilePath = RandomFilePath().AsBaselineFilesystemPath()
+                    FilePath = RandomFilePath()
                 }
             );
 
@@ -23,7 +23,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         [Fact]
         public async Task It_Deletes_A_File()
         {
-            var filePath = RandomFilePath().AsBaselineFilesystemPath();
+            var filePath = RandomFilePath();
 
             await CreateFileAndWriteTextAsync(filePath);
 

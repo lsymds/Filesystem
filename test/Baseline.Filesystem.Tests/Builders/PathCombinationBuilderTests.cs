@@ -22,23 +22,25 @@ namespace Baseline.Filesystem.Tests.Builders
             var thirdPath = new PathRepresentationBuilder("image.jpeg").Build();
             
             var combinedPath = new PathCombinationBuilder(firstPath, secondPath, thirdPath).Build();
-            combinedPath.DirectoryLevels.Should().Be(8);
-            combinedPath.DirectoryPath.Should().Be("C:/users/foo/bar/another/simple/directory/structure");
-            combinedPath.DirectoryTree.Should().BeEquivalentTo(
-                "C:",
-                "C:/users",
-                "C:/users/foo",
-                "C:/users/foo/bar",
-                "C:/users/foo/bar/another",
-                "C:/users/foo/bar/another/simple",
-                "C:/users/foo/bar/another/simple/directory",
-                "C:/users/foo/bar/another/simple/directory/structure"
-            );
-            combinedPath.Extension.Should().Be("jpeg");
             combinedPath.FinalPathPart.Should().Be("image.jpeg");
             combinedPath.FinalPathPartIsObviouslyADirectory.Should().BeFalse();
             combinedPath.OriginalPath.Should().Be("C:/users/foo/bar/another/simple/directory/structure/image.jpeg");
             combinedPath.NormalisedPath.Should().Be("C:/users/foo/bar/another/simple/directory/structure/image.jpeg");
+        }
+
+        [Fact]
+        public void It_Combines_Directories_And_Configures_Them_Correctly()
+        {
+            var combinedPath = new PathCombinationBuilder(
+                "a".AsBaselineFilesystemPath(), 
+                "b/c/d".AsBaselineFilesystemPath(), 
+                "e/f/g/".AsBaselineFilesystemPath()
+            ).Build();
+
+            combinedPath.FinalPathPart.Should().Be("g");
+            combinedPath.FinalPathPartIsObviouslyADirectory.Should().BeTrue();
+            combinedPath.OriginalPath.Should().Be("a/b/c/d/e/f/g/");
+            combinedPath.NormalisedPath.Should().Be("a/b/c/d/e/f/g");
         }
     }
 }

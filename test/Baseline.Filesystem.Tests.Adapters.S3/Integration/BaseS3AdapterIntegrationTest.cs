@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Amazon.Runtime;
 using Amazon.S3;
+using Amazon.S3.Model;
 using Baseline.Filesystem.Adapters.S3;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
@@ -9,6 +11,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
     public abstract class BaseS3AdapterIntegrationTest : IAsyncDisposable
     {
         private static readonly Random Random = new Random();
+
+        private readonly bool _useRootPath;
         
         protected readonly string GeneratedBucketName;
         protected readonly IAmazonS3 S3Client;
@@ -17,6 +21,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
 
         protected BaseS3AdapterIntegrationTest(bool useRootPath = false)
         {
+            _useRootPath = useRootPath;
+            
             GeneratedBucketName = Guid.NewGuid().ToString();
             
             S3Client = new AmazonS3Client(
@@ -65,13 +71,23 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
             return FileManager.ReadAsStringAsync(new ReadFileAsStringRequest {FilePath = path});
         }
 
-        protected static string RandomDirectoryPath(bool includeBlank = false)
+        protected async Task<bool> DirectoryExistsAsync(PathRepresentation path)
         {
-            var directories = new[] {includeBlank ? "" : "c", "a/b", "a/b/c/d", "d/e/f/g/h", "longer", "longer-still"};
-            return $"{directories[Random.Next(directories.Length)]}/";
+            var objects = await S3Client.ListObjectsAsync(new ListObjectsRequest
+            {
+                BucketName = GeneratedBucketName,
+                Prefix = $"{(_useRootPath ? "root/path" : string.Empty)}/{path.NormalisedPath}/"
+            });
+            return objects != null && objects.S3Objects.Any();
         }
 
-        protected static string RandomFilePath()
+        protected static PathRepresentation RandomDirectoryPath(bool includeBlank = false)
+        {
+            var directories = new[] {includeBlank ? "" : "c", "a/b", "a/b/c/d", "d/e/f/g/h", "longer", "longer-still"};
+            return $"{directories[Random.Next(directories.Length)]}/".AsBaselineFilesystemPath();
+        }
+
+        protected static PathRepresentation RandomFilePath()
         {
             var extensions = new[] {"txt", "", "jpg", "pdf", ".config.json" };
             var fileNames = new[]
@@ -81,12 +97,13 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
                 $"{Guid.NewGuid().ToString()}.{extensions[Random.Next(extensions.Length)]}"
             };
 
-            return $"{RandomDirectoryPath(true)}{fileNames[Random.Next(fileNames.Length)]}";
+            return $"{RandomDirectoryPath(true).OriginalPath}{fileNames[Random.Next(fileNames.Length)]}"
+                .AsBaselineFilesystemPath();
         }
 
         protected static PathRepresentation RandomFilePathWithPrefix(string prefix)
         {
-            return $"{prefix}/{RandomFilePath()}".AsBaselineFilesystemPath();
+            return $"{prefix}/{RandomFilePath().OriginalPath}".AsBaselineFilesystemPath();
         }
     }
 }

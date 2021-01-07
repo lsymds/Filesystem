@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Baseline.Filesystem.Internal.Extensions;
 using Baseline.Filesystem.Internal.Validators.Directories;
 
 namespace Baseline.Filesystem
@@ -33,7 +34,11 @@ namespace Baseline.Filesystem
             string adapter = "default",
             CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(createDirectoryRequest);
+
+            return GetAdapter(adapter)
+                .CreateDirectoryAsync(createDirectoryRequest, cancellationToken)
+                .AsAdapterAwareRepresentationAsync(adapter);
         }
 
         /// <inheritdoc />

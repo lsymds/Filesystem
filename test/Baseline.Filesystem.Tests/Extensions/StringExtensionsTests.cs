@@ -11,16 +11,6 @@ namespace Baseline.Filesystem.Tests.Extensions
             const string originalPath = "/users/foo/bar/xyz/Documents/my-DOCUmenT.xslx";
             
             var pathRepresentation = originalPath.AsBaselineFilesystemPath();
-            pathRepresentation.DirectoryLevels.Should().Be(5);
-            pathRepresentation.DirectoryPath.Should().Be("users/foo/bar/xyz/Documents");
-            pathRepresentation.DirectoryTree.Should().BeEquivalentTo(
-                "users",
-                "users/foo",
-                "users/foo/bar",
-                "users/foo/bar/xyz",
-                "users/foo/bar/xyz/Documents"
-            );
-            pathRepresentation.Extension.Should().Be("xslx");
             pathRepresentation.FinalPathPart.Should().Be("my-DOCUmenT.xslx");
             pathRepresentation.OriginalPath.Should().Be(originalPath);
             pathRepresentation.NormalisedPath.Should().Be("users/foo/bar/xyz/Documents/my-DOCUmenT.xslx");

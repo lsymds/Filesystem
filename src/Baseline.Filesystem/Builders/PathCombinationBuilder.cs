@@ -27,6 +27,11 @@ namespace Baseline.Filesystem
         public PathRepresentation Build()
         {
             var combinedPath = string.Join("/", _paths.Select(x => x.NormalisedPath));
+            if (_paths.Last().FinalPathPartIsObviouslyADirectory)
+            {
+                combinedPath += "/";
+            }
+            
             return new PathRepresentationBuilder(combinedPath).Build();
         }
     }
