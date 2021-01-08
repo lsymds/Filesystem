@@ -19,11 +19,8 @@ namespace Baseline.Filesystem.Adapters.S3
         /// <inheritdoc />
         public async Task<FileRepresentation> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken)
         {
-            await CheckFileExistsAsync(copyFileRequest.SourceFilePath, cancellationToken)
-                .ConfigureAwait(false);
-            
-            await CheckFileDoesNotExistAsync(copyFileRequest.DestinationFilePath, cancellationToken)
-                .ConfigureAwait(false);
+            await CheckFileExistsAsync(copyFileRequest.SourceFilePath, cancellationToken).ConfigureAwait(false);
+            await CheckFileDoesNotExistAsync(copyFileRequest.DestinationFilePath, cancellationToken).ConfigureAwait(false);
 
             await CatchAndWrapProviderExceptions(
                 () => _s3Client.CopyObjectAsync(
@@ -127,6 +124,7 @@ namespace Baseline.Filesystem.Adapters.S3
                     cancellationToken
                 )
             ).ConfigureAwait(false);
+
             return await new StreamReader(file.ResponseStream).ReadToEndAsync().ConfigureAwait(false);
         }
 
@@ -184,9 +182,7 @@ namespace Baseline.Filesystem.Adapters.S3
         /// <returns>An awaitable <see cref="Task"/>.</returns>
         private async Task CheckFileDoesNotExistAsync(PathRepresentation path, CancellationToken cancellationToken)
         {
-            var fileExists = await FileExistsAsync(new FileExistsRequest {FilePath = path}, cancellationToken)
-                .ConfigureAwait(false);
-            
+            var fileExists = await FileExistsAsync(new FileExistsRequest {FilePath = path}, cancellationToken).ConfigureAwait(false);
             if (fileExists)
             {
                 throw new FileAlreadyExistsException(
@@ -205,9 +201,7 @@ namespace Baseline.Filesystem.Adapters.S3
         /// <returns>An awaitable <see cref="Task"/>.</returns>
         private async Task CheckFileExistsAsync(PathRepresentation path, CancellationToken cancellationToken)
         {
-            var fileExists = await FileExistsAsync(new FileExistsRequest {FilePath = path}, cancellationToken)
-                .ConfigureAwait(false);
-            
+            var fileExists = await FileExistsAsync(new FileExistsRequest {FilePath = path}, cancellationToken).ConfigureAwait(false);
             if (!fileExists)
             {
                 throw new FileNotFoundException(
@@ -253,11 +247,7 @@ namespace Baseline.Filesystem.Adapters.S3
         {
             while (true)
             {
-                var objectsInPrefix = await ListFilesUnderPath(
-                    CombineRootAndRequestedPath(path),
-                    cancellationToken
-                ).ConfigureAwait(false);
-
+                var objectsInPrefix = await ListFilesUnderPath(CombineRootAndRequestedPath(path), cancellationToken).ConfigureAwait(false);
                 if (objectsInPrefix.S3Objects == null || !objectsInPrefix.S3Objects.Any())
                 {
                     break;

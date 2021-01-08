@@ -36,6 +36,7 @@ namespace Baseline.Filesystem.Adapters.S3
                 createDirectoryRequest.DirectoryPath,
                 ".keep".AsBaselineFilesystemPath()
             ).Build();
+            
             await TouchFileAsync(new TouchFileRequest {FilePath = pathToCreate}, cancellationToken)
                 .ConfigureAwait(false);
 
