@@ -14,14 +14,14 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         [Fact]
         public async Task It_Throws_An_Exception_If_File_Does_Not_Exist()
         {
-            Func<Task> func = async () => await ReadFileAsStringAsync(RandomFilePath());
+            Func<Task> func = async () => await ReadFileAsStringAsync(RandomFilePathRepresentation());
             await func.Should().ThrowExactlyAsync<FileNotFoundException>();
         }
 
         [Fact]
         public async Task It_Retrieves_File_Contents_If_File_Does_Exist()
         {
-            var path = RandomFilePath();
+            var path = RandomFilePathRepresentation();
             
             await FileManager.WriteTextAsync(
                 new WriteTextToFileRequest

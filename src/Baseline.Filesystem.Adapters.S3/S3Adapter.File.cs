@@ -205,50 +205,61 @@ namespace Baseline.Filesystem.Adapters.S3
         /// </summary>
         /// <param name="path">The path to use as a prefix.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
+        /// <param name="marker">
+        /// A point at which the listing should continue. Useful for paginating large directories as S3 is limited
+        /// to 1000 objects returned from the list endpoint.
+        /// </param>
         /// <returns>The response from S3 containing the files (if there are any) for the prefix.</returns>
         private Task<ListObjectsResponse> ListFilesUnderPath(
             PathRepresentation path, 
-            CancellationToken cancellationToken
+            CancellationToken cancellationToken,
+            string marker = null
         )
         {
             return _s3Client.ListObjectsAsync(
                 new ListObjectsRequest
                 {
                     BucketName = _adapterConfiguration.BucketName,
-                    Prefix = CombineRootAndRequestedPath(path).S3SafeDirectoryPath()
+                    Prefix = CombineRootAndRequestedPath(path).S3SafeDirectoryPath(),
+                    Marker = marker
                 },
                 cancellationToken
             );
         }
         
         /// <summary>
-        /// Retrieves all of the files under a particular path prefix and performs an action until that path prefix
-        /// no longer returns files.
+        /// Retrieves all of the files under a particular path prefix and performs an action until actions are performed
+        /// on each page within the paginated result set.
         /// </summary>
         /// <param name="path">The path prefix to retrieve files under.</param>
         /// <param name="action">The action to perform on the returned response.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The S3 objects listed under the path for any bulk remedial actions.</returns>
-        private async Task<List<S3Object>> ListFilesUnderPathAndPerformActionUntilEmptyAsync(
+        private async Task<List<S3Object>> ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
             PathRepresentation path,
             Func<ListObjectsResponse, Task> action,
             CancellationToken cancellationToken
         )
         {
+            string marker = null;
             var objects = new List<S3Object>();
             
-            while (true)
+            ListObjectsResponse objectsInPrefix;
+            do
             {
-                var objectsInPrefix = await ListFilesUnderPath(CombineRootAndRequestedPath(path), cancellationToken).ConfigureAwait(false);
+                objectsInPrefix = await ListFilesUnderPath(CombineRootAndRequestedPath(path), cancellationToken, marker)
+                    .ConfigureAwait(false);
+                
                 if (objectsInPrefix.S3Objects == null || !objectsInPrefix.S3Objects.Any())
                 {
                     break;
                 }
-                
+
+                marker = objectsInPrefix.NextMarker;
                 objects.AddRange(objectsInPrefix.S3Objects);
 
                 await action(objectsInPrefix).ConfigureAwait(false);
-            }
+            } while (objectsInPrefix.IsTruncated);
 
             return objects;
         }

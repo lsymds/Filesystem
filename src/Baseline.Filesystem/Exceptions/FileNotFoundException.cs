@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Baseline.Filesystem
+﻿namespace Baseline.Filesystem
 {
     /// <summary>
     /// Thrown when an operation that requires a file to be present is performed on a file that isn't present.

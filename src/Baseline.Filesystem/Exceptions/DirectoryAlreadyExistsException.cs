@@ -1,5 +1,3 @@
-using System;
-
 namespace Baseline.Filesystem
 {
     /// <summary>

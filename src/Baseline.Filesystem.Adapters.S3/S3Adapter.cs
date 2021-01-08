@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Amazon.S3;
 using Baseline.Filesystem.Internal.Contracts;
 

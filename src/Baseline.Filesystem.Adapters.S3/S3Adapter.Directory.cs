@@ -1,9 +1,10 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.S3.Model;
+using Baseline.Filesystem.Adapters.S3.Internal.Extensions;
 using Baseline.Filesystem.Internal.Contracts;
+using Baseline.Filesystem.Internal.Extensions;
 
 namespace Baseline.Filesystem.Adapters.S3
 {
@@ -21,7 +22,30 @@ namespace Baseline.Filesystem.Adapters.S3
             await CheckDirectoryExistsAsync(copyDirectoryRequest.SourceDirectoryPath, cancellationToken).ConfigureAwait(false);
             await CheckDirectoryDoesNotExistAsync(copyDirectoryRequest.DestinationDirectoryPath, cancellationToken).ConfigureAwait(false);
 
-            throw new Exception();
+            await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
+                copyDirectoryRequest.SourceDirectoryPath,
+                async objects =>
+                {
+                    foreach (var obj in objects.S3Objects)
+                    {
+                        var newFileLocation = obj.Key.ReplaceFirstOccurrence(
+                            CombineRootAndRequestedPath(copyDirectoryRequest.SourceDirectoryPath).S3SafeDirectoryPath(),
+                            CombineRootAndRequestedPath(copyDirectoryRequest.DestinationDirectoryPath).S3SafeDirectoryPath()
+                        );
+                        
+                        await _s3Client.CopyObjectAsync(
+                            _adapterConfiguration.BucketName,
+                            obj.Key,
+                            _adapterConfiguration.BucketName,
+                            newFileLocation,
+                            cancellationToken
+                        ).ConfigureAwait(false);
+                    }
+                },
+                cancellationToken
+            ).ConfigureAwait(false);
+            
+            return new DirectoryRepresentation {Path = copyDirectoryRequest.DestinationDirectoryPath};
         }
 
         /// <inheritdoc />
@@ -52,7 +76,7 @@ namespace Baseline.Filesystem.Adapters.S3
         {
             await CheckDirectoryExistsAsync(deleteDirectoryRequest.DirectoryPath, cancellationToken).ConfigureAwait(false);
 
-            await ListFilesUnderPathAndPerformActionUntilEmptyAsync(
+            await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 deleteDirectoryRequest.DirectoryPath,
                 response => _s3Client.DeleteObjectsAsync(
                     new DeleteObjectsRequest

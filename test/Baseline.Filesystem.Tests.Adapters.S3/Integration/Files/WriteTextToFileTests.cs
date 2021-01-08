@@ -11,7 +11,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         [Fact]
         public async Task It_Successfully_Writes_Simple_File_To_S3()
         {
-            var path = RandomFilePath();
+            var path = RandomFilePathRepresentation();
             
             await FileManager.WriteTextAsync(new WriteTextToFileRequest
             {

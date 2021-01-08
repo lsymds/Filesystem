@@ -7,8 +7,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
 {
     public class CopyFileTests : BaseS3AdapterIntegrationTest
     {
-        private readonly PathRepresentation _sourceFilePath = RandomFilePath();
-        private readonly PathRepresentation _destinationFilePath = RandomFilePath();
+        private readonly PathRepresentation _sourceFilePath = RandomFilePathRepresentation();
+        private readonly PathRepresentation _destinationFilePath = RandomFilePathRepresentation();
         
         [Fact]
         public async Task It_Throws_An_Exception_If_Source_Path_Does_Not_Exist()

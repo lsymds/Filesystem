@@ -81,13 +81,20 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
             return objects != null && objects.S3Objects.Any();
         }
 
-        protected static PathRepresentation RandomDirectoryPath(bool includeBlank = false)
+        protected static string RandomDirectoryPath(bool includeBlank = false)
         {
             var directories = new[] {includeBlank ? "" : "c", "a/b", "a/b/c/d", "d/e/f/g/h", "longer", "longer-still"};
-            return $"{directories[Random.Next(directories.Length)]}/".AsBaselineFilesystemPath();
+            var randomDirectory = directories[Random.Next(directories.Length)];
+
+            return string.IsNullOrWhiteSpace(randomDirectory) ? randomDirectory : $"{randomDirectory}/";
         }
 
-        protected static PathRepresentation RandomFilePath()
+        protected static PathRepresentation RandomDirectoryPathRepresentation()
+        {
+            return RandomDirectoryPath().AsBaselineFilesystemPath();
+        }
+
+        protected static PathRepresentation RandomFilePathRepresentation()
         {
             var extensions = new[] {"txt", "", "jpg", "pdf", ".config.json" };
             var fileNames = new[]
@@ -97,13 +104,13 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
                 $"{Guid.NewGuid().ToString()}.{extensions[Random.Next(extensions.Length)]}"
             };
 
-            return $"{RandomDirectoryPath(true).OriginalPath}{fileNames[Random.Next(fileNames.Length)]}"
+            return $"{RandomDirectoryPath(true)}{fileNames[Random.Next(fileNames.Length)]}"
                 .AsBaselineFilesystemPath();
         }
 
-        protected static PathRepresentation RandomFilePathWithPrefix(string prefix)
+        protected static PathRepresentation RandomFilePathRepresentationWithPrefix(string prefix)
         {
-            return $"{prefix}/{RandomFilePath().OriginalPath}".AsBaselineFilesystemPath();
+            return $"{prefix}/{RandomFilePathRepresentation().OriginalPath}".AsBaselineFilesystemPath();
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Baseline.Filesystem
+﻿namespace Baseline.Filesystem
 {
     /// <summary>
     /// Thrown when an operation is performed (or attempted) on a file that already exists.
