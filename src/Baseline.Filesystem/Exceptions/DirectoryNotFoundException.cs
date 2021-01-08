@@ -5,7 +5,7 @@ namespace Baseline.Filesystem
     /// <summary>
     /// Exception that is thrown when a directory is not found.
     /// </summary>
-    public class DirectoryNotFoundException : Exception
+    public class DirectoryNotFoundException : BaselineFilesystemException
     {
         /// <summary>
         /// Initialises a new instance of the <see cref="DirectoryNotFoundException"/> class.

@@ -5,7 +5,7 @@ namespace Baseline.Filesystem
     /// <summary>
     /// Thrown when an adapter with the same normalised (lowercased) name has been registered.
     /// </summary>
-    public class AdapterAlreadyRegisteredException : Exception
+    public class AdapterAlreadyRegisteredException : BaselineFilesystemException
     {
         /// <summary>
         /// The name of the adapter that has previously been registered.

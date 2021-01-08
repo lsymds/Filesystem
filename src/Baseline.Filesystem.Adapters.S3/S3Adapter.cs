@@ -32,24 +32,6 @@ namespace Baseline.Filesystem.Adapters.S3
         }
 
         /// <summary>
-        /// Executes the function that communicates with the adapter's provider and, if an exception is thrown, wraps
-        /// it into one that is easily communicable 
-        /// </summary>
-        /// <param name="action">The function that communicates with this adapter's provider.</param>
-        /// <returns>An awaitable task.</returns>
-        private static async Task<TResponse> CatchAndWrapProviderExceptions<TResponse>(Func<Task<TResponse>> action)
-        {
-            try
-            {
-                return await action().ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                throw ExceptionForS3Exception(e);
-            }    
-        }
-
-        /// <summary>
         /// Gets a <see cref="AdapterProviderOperationException" /> detailing that an unhandled exception occurred
         /// when calling a provider endpoint.
         /// </summary>

@@ -13,12 +13,15 @@ namespace Baseline.Filesystem.Adapters.S3
     public partial class S3Adapter
     {
         /// <inheritdoc />
-        public Task<DirectoryRepresentation> CopyDirectoryAsync(
+        public async Task<DirectoryRepresentation> CopyDirectoryAsync(
             CopyDirectoryRequest copyDirectoryRequest,
             CancellationToken cancellationToken
         )
         {
-            throw new System.NotImplementedException();
+            await CheckDirectoryExistsAsync(copyDirectoryRequest.SourceDirectoryPath, cancellationToken).ConfigureAwait(false);
+            await CheckDirectoryDoesNotExistAsync(copyDirectoryRequest.DestinationDirectoryPath, cancellationToken).ConfigureAwait(false);
+
+            throw new Exception();
         }
 
         /// <inheritdoc />
@@ -27,8 +30,7 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            await CheckDirectoryDoesNotExistAsync(createDirectoryRequest.DirectoryPath, cancellationToken)
-                .ConfigureAwait(false);
+            await CheckDirectoryDoesNotExistAsync(createDirectoryRequest.DirectoryPath, cancellationToken).ConfigureAwait(false);
 
             // Directories in S3 don't really exist. In order to fake the existence of one, we need to create a
             // temporary file underneath it which causes that path to appear in the S3 browser.
@@ -37,8 +39,7 @@ namespace Baseline.Filesystem.Adapters.S3
                 ".keep".AsBaselineFilesystemPath()
             ).Build();
             
-            await TouchFileAsync(new TouchFileRequest {FilePath = pathToCreate}, cancellationToken)
-                .ConfigureAwait(false);
+            await TouchFileAsync(new TouchFileRequest {FilePath = pathToCreate}, cancellationToken).ConfigureAwait(false);
 
             return new DirectoryRepresentation {Path = createDirectoryRequest.DirectoryPath};
         }
@@ -49,26 +50,20 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            await CheckDirectoryExistsAsync(deleteDirectoryRequest.DirectoryPath, cancellationToken)
-                .ConfigureAwait(false);
-            
-            await CatchAndWrapProviderExceptions(async () =>
-            {
-                await ListFilesUnderPathAndPerformActionUntilEmptyAsync(
-                     deleteDirectoryRequest.DirectoryPath,
-                    response => _s3Client.DeleteObjectsAsync(
-                        new DeleteObjectsRequest
-                        {
-                            BucketName = _adapterConfiguration.BucketName,
-                            Objects = response.S3Objects.Select(x => new KeyVersion {Key = x.Key}).ToList()
-                        },
-                        cancellationToken
-                    ),
-                    cancellationToken
-                ).ConfigureAwait(false);
+            await CheckDirectoryExistsAsync(deleteDirectoryRequest.DirectoryPath, cancellationToken).ConfigureAwait(false);
 
-                return Task.CompletedTask;
-            }).ConfigureAwait(false);
+            await ListFilesUnderPathAndPerformActionUntilEmptyAsync(
+                deleteDirectoryRequest.DirectoryPath,
+                response => _s3Client.DeleteObjectsAsync(
+                    new DeleteObjectsRequest
+                    {
+                        BucketName = _adapterConfiguration.BucketName,
+                        Objects = response.S3Objects.Select(x => new KeyVersion {Key = x.Key}).ToList()
+                    },
+                    cancellationToken
+                ),
+                cancellationToken
+            ).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -82,8 +77,7 @@ namespace Baseline.Filesystem.Adapters.S3
 
         /// <summary>
         /// Identifies whether a directory (which don't really exist in S3) exists by finding out if there are any
-        /// files under a directory styled prefix. Designed to be called outside of a CatchAndWrapProviderExceptions
-        /// call.
+        /// files under a directory styled prefix. 
         /// </summary>
         /// <param name="directoryPath">The directory path to check.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
@@ -93,15 +87,8 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            try
-            {
-                var files = await ListFilesUnderPath(directoryPath, cancellationToken).ConfigureAwait(false);
-                return files.S3Objects != null && files.S3Objects.Any();
-            }
-            catch (Exception e)
-            {
-                throw ExceptionForS3Exception(e);
-            }
+            var files = await ListFilesUnderPath(directoryPath, cancellationToken).ConfigureAwait(false);
+            return files.S3Objects != null && files.S3Objects.Any();
         }
 
         /// <summary>

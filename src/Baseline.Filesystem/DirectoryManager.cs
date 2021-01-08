@@ -25,7 +25,12 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            throw new System.NotImplementedException();
+            BaseSourceAndDestinationDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(copyDirectoryRequest);
+
+            return GetAdapter(adapter)
+                .CopyDirectoryAsync(copyDirectoryRequest, cancellationToken)
+                .WrapExternalExceptionsAsync(adapter)
+                .AsAdapterAwareRepresentationAsync(adapter);
         }
 
         /// <inheritdoc />
@@ -38,6 +43,7 @@ namespace Baseline.Filesystem
 
             return GetAdapter(adapter)
                 .CreateDirectoryAsync(createDirectoryRequest, cancellationToken)
+                .WrapExternalExceptionsAsync(adapter)
                 .AsAdapterAwareRepresentationAsync(adapter);
         }
 
@@ -49,7 +55,9 @@ namespace Baseline.Filesystem
         {
             BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(deleteDirectoryRequest);
             
-            return GetAdapter(adapter).DeleteDirectoryAsync(deleteDirectoryRequest, cancellationToken);
+            return GetAdapter(adapter)
+                .DeleteDirectoryAsync(deleteDirectoryRequest, cancellationToken)
+                .WrapExternalExceptionsAsync(adapter);
         }
 
         /// <inheritdoc />
@@ -59,7 +67,12 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            throw new System.NotImplementedException();
+            BaseSourceAndDestinationDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(moveDirectoryRequest);
+
+            return GetAdapter(adapter)
+                .MoveDirectoryAsync(moveDirectoryRequest, cancellationToken)
+                .WrapExternalExceptionsAsync(adapter)
+                .AsAdapterAwareRepresentationAsync(adapter);
         }
     }
 }

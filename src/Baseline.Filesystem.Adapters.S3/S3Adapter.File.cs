@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -22,14 +23,12 @@ namespace Baseline.Filesystem.Adapters.S3
             await CheckFileExistsAsync(copyFileRequest.SourceFilePath, cancellationToken).ConfigureAwait(false);
             await CheckFileDoesNotExistAsync(copyFileRequest.DestinationFilePath, cancellationToken).ConfigureAwait(false);
 
-            await CatchAndWrapProviderExceptions(
-                () => _s3Client.CopyObjectAsync(
-                    _adapterConfiguration.BucketName,
-                    CombineRootAndRequestedPath(copyFileRequest.SourceFilePath).NormalisedPath,
-                    _adapterConfiguration.BucketName,
-                    CombineRootAndRequestedPath(copyFileRequest.DestinationFilePath).NormalisedPath,
-                    cancellationToken
-                )
+            await _s3Client.CopyObjectAsync(
+                _adapterConfiguration.BucketName,
+                CombineRootAndRequestedPath(copyFileRequest.SourceFilePath).NormalisedPath,
+                _adapterConfiguration.BucketName,
+                CombineRootAndRequestedPath(copyFileRequest.DestinationFilePath).NormalisedPath,
+                cancellationToken
             ).ConfigureAwait(false);
 
             return new FileRepresentation {Path = copyFileRequest.DestinationFilePath};
@@ -40,12 +39,10 @@ namespace Baseline.Filesystem.Adapters.S3
         {
             await CheckFileExistsAsync(deleteFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
 
-            await CatchAndWrapProviderExceptions(
-                () => _s3Client.DeleteObjectAsync(
-                    _adapterConfiguration.BucketName,
-                    CombineRootAndRequestedPath(deleteFileRequest.FilePath).NormalisedPath,
-                    cancellationToken
-                )
+            await _s3Client.DeleteObjectAsync(
+                _adapterConfiguration.BucketName,
+                CombineRootAndRequestedPath(deleteFileRequest.FilePath).NormalisedPath,
+                cancellationToken
             ).ConfigureAwait(false);
         }
 
@@ -57,13 +54,11 @@ namespace Baseline.Filesystem.Adapters.S3
         {
             try
             {
-                await _s3Client
-                    .GetObjectMetadataAsync(
-                        _adapterConfiguration.BucketName,
-                        CombineRootAndRequestedPath(fileExistsRequest.FilePath).NormalisedPath,
-                        cancellationToken
-                    )
-                    .ConfigureAwait(false);
+                await _s3Client.GetObjectMetadataAsync(
+                    _adapterConfiguration.BucketName,
+                    CombineRootAndRequestedPath(fileExistsRequest.FilePath).NormalisedPath,
+                    cancellationToken
+                ).ConfigureAwait(false);
 
                 return true;
             }
@@ -74,7 +69,7 @@ namespace Baseline.Filesystem.Adapters.S3
                     return false;
                 }
 
-                throw ExceptionForS3Exception(e);
+                throw;
             }
         }
 
@@ -117,12 +112,10 @@ namespace Baseline.Filesystem.Adapters.S3
         {
             await CheckFileExistsAsync(readFileAsStringRequest.FilePath, cancellationToken).ConfigureAwait(false);
 
-            var file = await CatchAndWrapProviderExceptions(
-                () => _s3Client.GetObjectAsync(
-                    _adapterConfiguration.BucketName,
-                    CombineRootAndRequestedPath(readFileAsStringRequest.FilePath).NormalisedPath,
-                    cancellationToken
-                )
+            var file = await _s3Client.GetObjectAsync(
+                _adapterConfiguration.BucketName,
+                CombineRootAndRequestedPath(readFileAsStringRequest.FilePath).NormalisedPath,
+                cancellationToken
             ).ConfigureAwait(false);
 
             return await new StreamReader(file.ResponseStream).ReadToEndAsync().ConfigureAwait(false);
@@ -134,17 +127,15 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            await CatchAndWrapProviderExceptions(
-                () => _s3Client.PutObjectAsync(
-                    new PutObjectRequest
-                    {
-                        BucketName = _adapterConfiguration.BucketName,
-                        ContentBody = "",
-                        ContentType = "text/plain",
-                        Key = CombineRootAndRequestedPath(touchFileRequest.FilePath).NormalisedPath
-                    },
-                    cancellationToken
-                )
+            await _s3Client.PutObjectAsync(
+                new PutObjectRequest
+                {
+                    BucketName = _adapterConfiguration.BucketName,
+                    ContentBody = "",
+                    ContentType = "text/plain",
+                    Key = CombineRootAndRequestedPath(touchFileRequest.FilePath).NormalisedPath
+                },
+                cancellationToken
             ).ConfigureAwait(false);
 
             return new FileRepresentation
@@ -159,17 +150,15 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            await CatchAndWrapProviderExceptions(
-                () => _s3Client.PutObjectAsync(
-                    new PutObjectRequest
-                    {
-                        BucketName = _adapterConfiguration.BucketName,
-                        ContentBody = writeTextToFileRequest.TextToWrite,
-                        ContentType = writeTextToFileRequest.ContentType,
-                        Key = CombineRootAndRequestedPath(writeTextToFileRequest.FilePath).NormalisedPath
-                    },
-                    cancellationToken
-                )
+            await _s3Client.PutObjectAsync(
+                new PutObjectRequest
+                {
+                    BucketName = _adapterConfiguration.BucketName,
+                    ContentBody = writeTextToFileRequest.TextToWrite,
+                    ContentType = writeTextToFileRequest.ContentType,
+                    Key = CombineRootAndRequestedPath(writeTextToFileRequest.FilePath).NormalisedPath
+                },
+                cancellationToken
             ).ConfigureAwait(false);
         }
 
@@ -239,12 +228,15 @@ namespace Baseline.Filesystem.Adapters.S3
         /// <param name="path">The path prefix to retrieve files under.</param>
         /// <param name="action">The action to perform on the returned response.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
-        private async Task ListFilesUnderPathAndPerformActionUntilEmptyAsync(
+        /// <returns>The S3 objects listed under the path for any bulk remedial actions.</returns>
+        private async Task<List<S3Object>> ListFilesUnderPathAndPerformActionUntilEmptyAsync(
             PathRepresentation path,
             Func<ListObjectsResponse, Task> action,
             CancellationToken cancellationToken
         )
         {
+            var objects = new List<S3Object>();
+            
             while (true)
             {
                 var objectsInPrefix = await ListFilesUnderPath(CombineRootAndRequestedPath(path), cancellationToken).ConfigureAwait(false);
@@ -252,9 +244,13 @@ namespace Baseline.Filesystem.Adapters.S3
                 {
                     break;
                 }
+                
+                objects.AddRange(objectsInPrefix.S3Objects);
 
                 await action(objectsInPrefix).ConfigureAwait(false);
             }
+
+            return objects;
         }
     }
 }

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.DirectoryManagerTests
 {
-    public class DeleteAsyncTests : BaseDirectoryManagerTests
+    public class DeleteAsyncManagerUsageTests : BaseManagerUsageTest
     {
         [Fact]
         public async Task It_Throws_An_Exception_When_The_Adapter_Is_Not_Registered()
@@ -37,16 +37,6 @@ namespace Baseline.Filesystem.Tests.DirectoryManagerTests
             Func<Task> func = () => DirectoryManager.DeleteAsync(new DeleteDirectoryRequest
             {
                 DirectoryPath = "i/am/not/a/directory/but-a-path.jpeg".AsBaselineFilesystemPath()
-            });
-            await func.Should().ThrowExactlyAsync<PathIsNotObviouslyADirectoryException>();
-        }
-        
-        [Fact]
-        public async Task It_Throws_An_Exception_When_The_Request_Is_Not_Clearly_A_Directory()
-        {
-            Func<Task> func = () => DirectoryManager.DeleteAsync(new DeleteDirectoryRequest
-            {
-                DirectoryPath = "i/am/not/a/directory/or/am/i".AsBaselineFilesystemPath()
             });
             await func.Should().ThrowExactlyAsync<PathIsNotObviouslyADirectoryException>();
         }

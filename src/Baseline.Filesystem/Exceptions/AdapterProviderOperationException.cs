@@ -7,7 +7,7 @@ namespace Baseline.Filesystem
     /// an operation (i.e. writing a file) that isn't otherwise handled by Baseline.Filesystem (i.e. files not being found throwing a
     /// FileNotFoundException). Prevents you from having to reference the provider's SDK just to catch any exceptions.
     /// </summary>
-    public class AdapterProviderOperationException : Exception
+    public class AdapterProviderOperationException : BaselineFilesystemException
     {
         /// <summary>
         /// Initialises a new instance of the <see cref="AdapterProviderOperationException" />.

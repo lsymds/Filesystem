@@ -5,7 +5,7 @@ namespace Baseline.Filesystem.Internal.Extensions
     /// <summary>
     /// Extension methods related to the <see cref="DirectoryRepresentation" /> class. 
     /// </summary>
-    public static class DirectoryRepresentationExtensions
+    internal static class DirectoryRepresentationExtensions
     {
         /// <summary>
         /// Converts the <see cref="DirectoryRepresentation" /> into one that is adapter aware (i.e. it knows adapters

@@ -5,7 +5,7 @@ namespace Baseline.Filesystem
     /// <summary>
     /// Thrown when an operation is performed (or attempted) on a file that already exists.
     /// </summary>
-    public class FileAlreadyExistsException : Exception
+    public class FileAlreadyExistsException : BaselineFilesystemException
     {
         /// <summary>
         /// Initialises a new instance of the <see cref="FileAlreadyExistsException" /> class.

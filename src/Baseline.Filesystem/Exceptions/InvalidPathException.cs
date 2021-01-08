@@ -5,7 +5,7 @@ namespace Baseline.Filesystem
     /// <summary>
     /// Base exception class used to provide a base exception class consuming applications can use.
     /// </summary>
-    public abstract class InvalidPathException : Exception
+    public abstract class InvalidPathException : BaselineFilesystemException
     {
         /// <summary>
         /// The path specified that is invalid.

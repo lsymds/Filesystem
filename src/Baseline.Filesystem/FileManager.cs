@@ -29,6 +29,7 @@ namespace Baseline.Filesystem
             
             return GetAdapter(adapter)
                 .CopyFileAsync(copyFileRequest, cancellationToken)
+                .WrapExternalExceptionsAsync(adapter)
                 .AsAdapterAwareRepresentationAsync(adapter);
         }
 
@@ -41,7 +42,9 @@ namespace Baseline.Filesystem
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(deleteFileRequest);
 
-            return GetAdapter(adapter).DeleteFileAsync(deleteFileRequest, cancellationToken);
+            return GetAdapter(adapter)
+                .DeleteFileAsync(deleteFileRequest, cancellationToken)
+                .WrapExternalExceptionsAsync(adapter);
         }
 
         /// <inheritdoc />
@@ -53,7 +56,9 @@ namespace Baseline.Filesystem
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(fileExistsRequest);
 
-            return GetAdapter(adapter).FileExistsAsync(fileExistsRequest, cancellationToken);
+            return GetAdapter(adapter)
+                .FileExistsAsync(fileExistsRequest, cancellationToken)
+                .WrapExternalExceptionsAsync(adapter);
         }
 
         /// <inheritdoc />
@@ -67,6 +72,7 @@ namespace Baseline.Filesystem
     
             return GetAdapter(adapter)
                 .GetFileAsync(getFileRequest, cancellationToken)
+                .WrapExternalExceptionsAsync(adapter)
                 .AsAdapterAwareRepresentationAsync(adapter);
         }
 
@@ -81,6 +87,7 @@ namespace Baseline.Filesystem
 
             return GetAdapter(adapter)
                 .MoveFileAsync(moveFileRequest, cancellationToken)
+                .WrapExternalExceptionsAsync(adapter)
                 .AsAdapterAwareRepresentationAsync(adapter);
         }
 
@@ -93,7 +100,9 @@ namespace Baseline.Filesystem
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(readFileAsStringRequest);
 
-            return GetAdapter(adapter).ReadFileAsStringAsync(readFileAsStringRequest, cancellationToken);
+            return GetAdapter(adapter)
+                .ReadFileAsStringAsync(readFileAsStringRequest, cancellationToken)
+                .WrapExternalExceptionsAsync(adapter);
         }
 
         /// <inheritdoc />
@@ -107,6 +116,7 @@ namespace Baseline.Filesystem
             
             return GetAdapter(adapter)
                 .TouchFileAsync(touchFileRequest, cancellationToken)
+                .WrapExternalExceptionsAsync(adapter)
                 .AsAdapterAwareRepresentationAsync(adapter);
         }
 
@@ -119,7 +129,9 @@ namespace Baseline.Filesystem
         {
             WriteTextToFileRequestValidator.ValidateAndThrowIfUnsuccessful(writeTextToFileRequest);
 
-            return GetAdapter(adapter).WriteTextToFileAsync(writeTextToFileRequest, cancellationToken);
+            return GetAdapter(adapter)
+                .WriteTextToFileAsync(writeTextToFileRequest, cancellationToken)
+                .WrapExternalExceptionsAsync(adapter);
         }
     }
 }

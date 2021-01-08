@@ -5,7 +5,7 @@ namespace Baseline.Filesystem
     /// <summary>
     /// Thrown when an adapter is not found by a specified adapter name.
     /// </summary>
-    public class AdapterNotFoundException : Exception
+    public class AdapterNotFoundException : BaselineFilesystemException
     {
         /// <summary>
         /// Gets the name of the adapter that could not be found.

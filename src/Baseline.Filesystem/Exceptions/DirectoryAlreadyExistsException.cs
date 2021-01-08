@@ -5,7 +5,7 @@ namespace Baseline.Filesystem
     /// <summary>
     /// Thrown when an attempt is made to create, copy or move a directory to somewhere that already exists.
     /// </summary>
-    public class DirectoryAlreadyExistsException : Exception
+    public class DirectoryAlreadyExistsException : BaselineFilesystemException
     {
         /// <summary>
         /// Initialises a new instance of the <see cref="DirectoryAlreadyExistsException"/> class.
