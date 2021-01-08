@@ -40,7 +40,7 @@ namespace Baseline.Filesystem.Internal.Extensions
             string adapterName
         )
         {
-            return (await directoryRepresentation).AsAdapterAwareRepresentation(adapterName);
+            return (await directoryRepresentation.ConfigureAwait(false)).AsAdapterAwareRepresentation(adapterName);
         }
     }
 }

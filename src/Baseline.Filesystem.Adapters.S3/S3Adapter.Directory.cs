@@ -27,7 +27,8 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            await CheckDirectoryDoesNotExistAsync(createDirectoryRequest.DirectoryPath, cancellationToken);
+            await CheckDirectoryDoesNotExistAsync(createDirectoryRequest.DirectoryPath, cancellationToken)
+                .ConfigureAwait(false);
 
             // Directories in S3 don't really exist. In order to fake the existence of one, we need to create a
             // temporary file underneath it which causes that path to appear in the S3 browser.
@@ -35,7 +36,8 @@ namespace Baseline.Filesystem.Adapters.S3
                 createDirectoryRequest.DirectoryPath,
                 ".keep".AsBaselineFilesystemPath()
             ).Build();
-            await TouchFileAsync(new TouchFileRequest {FilePath = pathToCreate}, cancellationToken);
+            await TouchFileAsync(new TouchFileRequest {FilePath = pathToCreate}, cancellationToken)
+                .ConfigureAwait(false);
 
             return new DirectoryRepresentation {Path = createDirectoryRequest.DirectoryPath};
         }
@@ -46,7 +48,8 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            await CheckDirectoryExistsAsync(deleteDirectoryRequest.DirectoryPath, cancellationToken);
+            await CheckDirectoryExistsAsync(deleteDirectoryRequest.DirectoryPath, cancellationToken)
+                .ConfigureAwait(false);
             
             await CatchAndWrapProviderExceptions(async () =>
             {
@@ -61,10 +64,10 @@ namespace Baseline.Filesystem.Adapters.S3
                         cancellationToken
                     ),
                     cancellationToken
-                );
+                ).ConfigureAwait(false);
 
                 return Task.CompletedTask;
-            });
+            }).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -91,7 +94,7 @@ namespace Baseline.Filesystem.Adapters.S3
         {
             try
             {
-                var files = await ListFilesUnderPath(directoryPath, cancellationToken);
+                var files = await ListFilesUnderPath(directoryPath, cancellationToken).ConfigureAwait(false);
                 return files.S3Objects != null && files.S3Objects.Any();
             }
             catch (Exception e)
@@ -110,7 +113,7 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            if (await DirectoryExistsAsync(directoryPath, cancellationToken))
+            if (await DirectoryExistsAsync(directoryPath, cancellationToken).ConfigureAwait(false))
             {
                 throw new DirectoryAlreadyExistsException(
                     CombineRootAndRequestedPath(directoryPath).NormalisedPath,
@@ -129,7 +132,7 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            if (!await DirectoryExistsAsync(directoryPath, cancellationToken))
+            if (!await DirectoryExistsAsync(directoryPath, cancellationToken).ConfigureAwait(false))
             {
                 throw new DirectoryNotFoundException(
                     CombineRootAndRequestedPath(directoryPath).NormalisedPath,
