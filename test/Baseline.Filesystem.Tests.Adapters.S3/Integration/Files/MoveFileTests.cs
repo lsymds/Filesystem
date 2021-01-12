@@ -52,5 +52,22 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             });
             fileContents.Should().Be("abc");
         }
+
+        [Fact]
+        public async Task It_Successfully_Moves_A_File_Under_A_Root_Path()
+        {
+            ReconfigureManagerInstances(true);
+            
+            await CreateFileAndWriteTextAsync(_sourceFilePath, "abc");
+
+            await FileManager.MoveAsync(new MoveFileRequest
+            {
+                SourceFilePath = _sourceFilePath,
+                DestinationFilePath = _destinationFilePath
+            });
+
+            var fileContents = await ReadFileAsStringAsync(_destinationFilePath);
+            fileContents.Should().Be("abc");
+        }
     }
 }

@@ -247,8 +247,7 @@ namespace Baseline.Filesystem.Adapters.S3
             ListObjectsResponse objectsInPrefix;
             do
             {
-                objectsInPrefix = await ListFilesUnderPath(CombineRootAndRequestedPath(path), cancellationToken, marker)
-                    .ConfigureAwait(false);
+                objectsInPrefix = await ListFilesUnderPath(path, cancellationToken, marker).ConfigureAwait(false);
                 
                 if (objectsInPrefix.S3Objects == null || !objectsInPrefix.S3Objects.Any())
                 {

@@ -7,8 +7,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
 {
     public class CopyDirectoryTests : BaseS3AdapterIntegrationTest
     {
-        private readonly PathRepresentation _sourceDirectory = "a/random/directory/".AsBaselineFilesystemPath();
-        private readonly PathRepresentation _destinationDirectory = "another/different/directory/".AsBaselineFilesystemPath();
+        private readonly PathRepresentation _sourceDirectory = RandomDirectoryPathRepresentation();
+        private readonly PathRepresentation _destinationDirectory = RandomDirectoryPathRepresentation();
         
         [Fact]
         public async Task It_Throws_An_Exception_If_The_Source_Directory_Does_Not_Exist()
@@ -100,6 +100,12 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
 
         [Fact]
         public async Task It_Copies_A_Large_Directory_Structure_From_One_Location_To_Another()
+        {
+            
+        }
+
+        [Fact]
+        public async Task It_Successfully_Copies_A_Directory_With_A_Root_Path()
         {
             
         }

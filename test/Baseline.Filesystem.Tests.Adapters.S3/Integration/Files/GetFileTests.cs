@@ -25,5 +25,18 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             var response = await FileManager.GetAsync(new GetFileRequest {FilePath = path});
             response.File.Path.Should().Be(path);
         }
+
+        [Fact]
+        public async Task It_Retrieves_A_File_Under_A_Root_Path()
+        {
+            ReconfigureManagerInstances(true);
+            
+            var path = RandomFilePathRepresentation();
+
+            await CreateFileAndWriteTextAsync(path);
+
+            var response = await FileManager.GetAsync(new GetFileRequest {FilePath = path});
+            response.File.Path.Should().Be(path);
+        }
     }
 }

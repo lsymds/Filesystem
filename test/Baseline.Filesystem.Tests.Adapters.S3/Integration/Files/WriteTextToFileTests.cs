@@ -20,14 +20,26 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
                 TextToWrite = "it-successfully-writes-simple-file-to-s3"
             });
 
-            var fileInS3 = await S3Client.GetObjectAsync(
-                GeneratedBucketName, 
-                path.NormalisedPath
-            );
-            fileInS3.HttpStatusCode.Should().Be(HttpStatusCode.OK);
+            (await FileExistsAsync(path)).Should().BeTrue();
+            (await ReadFileAsStringAsync(path)).Should().Be("it-successfully-writes-simple-file-to-s3");
+        }
+
+        [Fact]
+        public async Task It_Successfully_Writes_A_Simple_File_Under_A_Root_Path_To_S3()
+        {
+            ReconfigureManagerInstances(true);
             
-            var contents = await new StreamReader(fileInS3.ResponseStream).ReadToEndAsync();
-            contents.Should().Be("it-successfully-writes-simple-file-to-s3");
+            var path = RandomFilePathRepresentation();
+            
+            await FileManager.WriteTextAsync(new WriteTextToFileRequest
+            {
+                ContentType = "text/plain",
+                FilePath = path,
+                TextToWrite = "it-successfully-writes-simple-file-to-s3"
+            });
+
+            (await FileExistsAsync(path)).Should().BeTrue();
+            (await ReadFileAsStringAsync(path)).Should().Be("it-successfully-writes-simple-file-to-s3");
         }
     }
 }

@@ -33,5 +33,23 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             );
             response.Should().BeFalse();
         }
+
+        [Fact]
+        public async Task It_Returns_True_When_A_File_Exists_Under_A_Root_Path()
+        {
+            ReconfigureManagerInstances(true);
+            
+            var path = RandomFilePathRepresentation();
+
+            await CreateFileAndWriteTextAsync(path);
+
+            var response = await FileManager.ExistsAsync(
+                new FileExistsRequest
+                {
+                    FilePath = path
+                }
+            );
+            response.Should().BeTrue();
+        }
     }
 }

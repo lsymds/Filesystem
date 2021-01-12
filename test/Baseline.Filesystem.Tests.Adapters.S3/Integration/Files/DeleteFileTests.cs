@@ -33,5 +33,21 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             
             (await FileExistsAsync(filePath)).Should().BeFalse(); 
         }
+
+        [Fact]
+        public async Task It_Deletes_A_File_With_A_Root_Path()
+        {
+            ReconfigureManagerInstances(true);
+            
+            var filePath = RandomFilePathRepresentation();
+
+            await CreateFileAndWriteTextAsync(filePath);
+
+            (await FileExistsAsync(filePath)).Should().BeTrue();
+
+            await FileManager.DeleteAsync(new DeleteFileRequest {FilePath = filePath});
+            
+            (await FileExistsAsync(filePath)).Should().BeFalse(); 
+        }
     }
 }

@@ -58,5 +58,27 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             var destinationContents = await ReadFileAsStringAsync(_destinationFilePath);
             destinationContents.Should().Be("[ 1, 2, 3 ]");
         }
+
+        [Fact]
+        public async Task It_Successfully_Copies_A_File_With_A_Root_Path()
+        {
+            ReconfigureManagerInstances(true);
+            
+            await CreateFileAndWriteTextAsync(_sourceFilePath, "[ 1, 2, 3 ]");
+            
+            await FileManager.CopyAsync(
+                new CopyFileRequest
+                {
+                    SourceFilePath = _sourceFilePath,
+                    DestinationFilePath = _destinationFilePath
+                }
+            );
+            
+            (await FileExistsAsync(_sourceFilePath)).Should().BeTrue();
+            (await FileExistsAsync(_destinationFilePath)).Should().BeTrue();
+            
+            var destinationContents = await ReadFileAsStringAsync(_destinationFilePath);
+            destinationContents.Should().Be("[ 1, 2, 3 ]");
+        }
     }
 }

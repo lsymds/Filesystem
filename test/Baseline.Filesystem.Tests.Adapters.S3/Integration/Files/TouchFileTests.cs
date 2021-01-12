@@ -15,14 +15,21 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
 
             await CreateFileAndWriteTextAsync(path);
 
-            var fileInS3 = await S3Client.GetObjectAsync(
-                GeneratedBucketName, 
-                path.NormalisedPath
-            );
-            fileInS3.HttpStatusCode.Should().Be(HttpStatusCode.OK);
+            (await FileExistsAsync(path)).Should().BeTrue();
+            (await ReadFileAsStringAsync(path)).Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task It_Successfully_Touches_A_File_In_S3_Under_A_Root_Path()
+        {
+            ReconfigureManagerInstances(true);
             
-            var contents = await new StreamReader(fileInS3.ResponseStream).ReadToEndAsync();
-            contents.Should().BeEmpty();
+            var path = RandomFilePathRepresentation();
+
+            await CreateFileAndWriteTextAsync(path);
+
+            (await FileExistsAsync(path)).Should().BeTrue();
+            (await ReadFileAsStringAsync(path)).Should().BeEmpty();
         }
     }
 }

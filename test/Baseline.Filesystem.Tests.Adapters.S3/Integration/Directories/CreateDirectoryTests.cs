@@ -7,10 +7,6 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
 {
     public class CreateDirectoryTests : BaseS3AdapterIntegrationTest
     {
-        public CreateDirectoryTests() : base(true)
-        {
-        }
-
         [Fact]
         public async Task It_Throws_An_Exception_If_The_Directory_Already_Exists()
         {
@@ -29,6 +25,19 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
         [Fact]
         public async Task It_Creates_The_Directory()
         {
+            var directory = RandomDirectoryPathRepresentation();
+
+            var response = await DirectoryManager.CreateAsync(new CreateDirectoryRequest {DirectoryPath = directory});
+            
+            (await DirectoryExistsAsync(directory)).Should().BeTrue();
+            response.Directory.Path.Should().BeEquivalentTo(directory);
+        }
+
+        [Fact]
+        public async Task It_Creates_The_Directory_Under_A_Root_Path()
+        {
+            ReconfigureManagerInstances(true);
+            
             var directory = RandomDirectoryPathRepresentation();
 
             var response = await DirectoryManager.CreateAsync(new CreateDirectoryRequest {DirectoryPath = directory});
