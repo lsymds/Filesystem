@@ -8,8 +8,17 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    
+    services:
+      localstack:
+        image: localstack/localstack:latest
+        env:
+          SERVICES: s3
+          DEFAULT_REGION: eu-west-1
+        ports:
+          - 4566:4566
+          - 4571:4571
 
     steps:
     - uses: actions/checkout@v2
