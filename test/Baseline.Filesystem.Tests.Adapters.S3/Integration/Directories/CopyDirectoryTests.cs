@@ -95,19 +95,73 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
         [Fact]
         public async Task It_Copies_A_More_Complex_Directory_Structure_From_One_Location_To_Another()
         {
-            
+            await CreateFileAndWriteTextAsync("a/more/complex/directory/structure/.keep".AsBaselineFilesystemPath());
+            await CreateFileAndWriteTextAsync(
+                "a/more/complex/directory/structure/with/a/nested/file.jpeg".AsBaselineFilesystemPath()
+            );
+            await CreateFileAndWriteTextAsync(
+                "a/more/complex/directory/structure/with/an/even/more/complex/file/structure.txt"
+                    .AsBaselineFilesystemPath()
+            );
+            await CreateFileAndWriteTextAsync(
+                "a/more/complex/directory/structure/with/an/even/more/complex/file/structure.config"
+                    .AsBaselineFilesystemPath()
+            );
+
+            await DirectoryManager.CopyAsync(new CopyDirectoryRequest()
+            {
+                SourceDirectoryPath = "a/more/complex/directory/structure/".AsBaselineFilesystemPath(),
+                DestinationDirectoryPath = "b/".AsBaselineFilesystemPath()
+            });
+
+            await FileExistsAsync("b/.keep".AsBaselineFilesystemPath());
+            await FileExistsAsync("b/with/a/nested/file.jpeg".AsBaselineFilesystemPath());
+            await FileExistsAsync("b/with/an/even/more/complex/file/structure.txt".AsBaselineFilesystemPath());
+            await FileExistsAsync("b/with/an/even/more/complex/file/structure.config".AsBaselineFilesystemPath());
         }
 
         [Fact]
         public async Task It_Copies_A_Large_Directory_Structure_From_One_Location_To_Another()
         {
+            for (var i = 0; i < 1001; i++)
+            {
+                await CreateFileAndWriteTextAsync(
+                    $"{_sourceDirectory.NormalisedPath}/{i}/.keep".AsBaselineFilesystemPath()
+                );
+            }
+
+            await DirectoryManager.CopyAsync(new CopyDirectoryRequest
+            {
+                SourceDirectoryPath = _sourceDirectory,
+                DestinationDirectoryPath = _destinationDirectory
+            });
+
             
+            for (var i = 0; i < 1001; i++)
+            {
+                await FileExistsAsync(
+                    $"{_destinationDirectory.NormalisedPath}/{i}/.keep".AsBaselineFilesystemPath()
+                );
+            }
         }
 
         [Fact]
         public async Task It_Successfully_Copies_A_Directory_With_A_Root_Path()
         {
-            
+            ReconfigureManagerInstances(true);
+
+            await CreateFileAndWriteTextAsync($"{_sourceDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath());
+
+            await DirectoryManager.CopyAsync(new CopyDirectoryRequest
+            {
+                SourceDirectoryPath = _sourceDirectory,
+                DestinationDirectoryPath = _destinationDirectory
+            });
+
+            var exists = await FileExistsAsync(
+                $"{_destinationDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
+            );
+            exists.Should().BeTrue();
         }
     }
 }

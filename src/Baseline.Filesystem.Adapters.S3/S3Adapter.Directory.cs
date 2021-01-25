@@ -63,7 +63,8 @@ namespace Baseline.Filesystem.Adapters.S3
                 ".keep".AsBaselineFilesystemPath()
             ).Build();
             
-            await TouchFileAsync(new TouchFileRequest {FilePath = pathToCreate}, cancellationToken).ConfigureAwait(false);
+            await TouchFileAsync(new TouchFileRequest {FilePath = pathToCreate}, cancellationToken)
+                    .ConfigureAwait(false);
 
             return new DirectoryRepresentation {Path = createDirectoryRequest.DirectoryPath};
         }
@@ -111,7 +112,9 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            var files = await ListFilesUnderPath(directoryPath, cancellationToken).ConfigureAwait(false);
+            var files = await ListFilesUnderPath(directoryPath, cancellationToken)
+                .ConfigureAwait(false);
+            
             return files.S3Objects != null && files.S3Objects.Any();
         }
 

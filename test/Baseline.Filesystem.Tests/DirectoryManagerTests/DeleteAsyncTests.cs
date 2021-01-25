@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.DirectoryManagerTests
 {
-    public class DeleteAsyncManagerUsageTests : BaseManagerUsageTest
+    public class DeleteAsyncTests : BaseManagerUsageTest
     {
         [Fact]
         public async Task It_Throws_An_Exception_When_The_Adapter_Is_Not_Registered()
