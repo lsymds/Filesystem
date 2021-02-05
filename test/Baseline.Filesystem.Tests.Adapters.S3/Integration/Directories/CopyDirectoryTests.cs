@@ -68,7 +68,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
                 var newDirectoryPath = file.NormalisedPath
                     .Replace(_sourceDirectory.NormalisedPath, _destinationDirectory.NormalisedPath);
 
-                (await FileExistsAsync(newDirectoryPath.AsBaselineFilesystemPath())).Should().BeTrue();
+                await ExpectFileToExistAsync(newDirectoryPath.AsBaselineFilesystemPath());
             }
         }
 
@@ -86,10 +86,9 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
                 DestinationDirectoryPath = "food/".AsBaselineFilesystemPath()
             });
 
-            var fileExistsInNewDestination = await FileExistsAsync(
+            await ExpectFileToExistAsync(
                 "food/cheese/more-cheese/my-favourite-cheesestring.jpeg".AsBaselineFilesystemPath()
             );
-            fileExistsInNewDestination.Should().BeTrue();
         }
 
         [Fact]
@@ -114,10 +113,10 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
                 DestinationDirectoryPath = "b/".AsBaselineFilesystemPath()
             });
 
-            await FileExistsAsync("b/.keep".AsBaselineFilesystemPath());
-            await FileExistsAsync("b/with/a/nested/file.jpeg".AsBaselineFilesystemPath());
-            await FileExistsAsync("b/with/an/even/more/complex/file/structure.txt".AsBaselineFilesystemPath());
-            await FileExistsAsync("b/with/an/even/more/complex/file/structure.config".AsBaselineFilesystemPath());
+            await ExpectFileToExistAsync("b/.keep".AsBaselineFilesystemPath());
+            await ExpectFileToExistAsync("b/with/a/nested/file.jpeg".AsBaselineFilesystemPath());
+            await ExpectFileToExistAsync("b/with/an/even/more/complex/file/structure.txt".AsBaselineFilesystemPath());
+            await ExpectFileToExistAsync("b/with/an/even/more/complex/file/structure.config".AsBaselineFilesystemPath());
         }
 
         [Fact]
@@ -139,7 +138,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             
             for (var i = 0; i < 1001; i++)
             {
-                await FileExistsAsync(
+                await ExpectFileToExistAsync(
                     $"{_destinationDirectory.NormalisedPath}/{i}/.keep".AsBaselineFilesystemPath()
                 );
             }
@@ -158,10 +157,9 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
                 DestinationDirectoryPath = _destinationDirectory
             });
 
-            var exists = await FileExistsAsync(
+            await ExpectFileToExistAsync(
                 $"{_destinationDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
             );
-            exists.Should().BeTrue();
         }
     }
 }

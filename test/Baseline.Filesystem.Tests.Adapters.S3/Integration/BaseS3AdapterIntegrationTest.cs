@@ -7,6 +7,7 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Baseline.Filesystem.Adapters.S3;
+using FluentAssertions;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
 {
@@ -78,27 +79,29 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
                 ContentBody = contents
             });
         }
-        
-        protected async Task<bool> FileExistsAsync(PathRepresentation path)
-        {
-            try
-            {
-                var file = await S3Client.GetObjectAsync(new GetObjectRequest
-                {
-                    BucketName = GeneratedBucketName,
-                    Key = CombinePathWithRootPath(path)
-                });
-                return file.HttpStatusCode == HttpStatusCode.OK;
-            }
-            catch (AmazonS3Exception e)
-            {
-                if (e.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return false;
-                }
 
-                throw;
-            }
+        protected async Task ExpectFileToExistAsync(PathRepresentation path)
+        {
+            var exists = await FileExistsAsync(path);
+            exists.Should().BeTrue();
+        }
+
+        protected async Task ExpectFileNotToExistAsync(PathRepresentation path)
+        {
+            var exists = await FileExistsAsync(path);
+            exists.Should().BeFalse();
+        }
+
+        protected async Task ExpectDirectoryToExistAsync(PathRepresentation path)
+        {
+            var exists = await DirectoryExistsAsync(path);
+            exists.Should().BeTrue();
+        }
+
+        protected async Task ExpectDirectoryNotToExistAsync(PathRepresentation path)
+        {
+            var exists = await DirectoryExistsAsync(path);
+            exists.Should().BeFalse();
         }
 
         protected async Task<string> ReadFileAsStringAsync(PathRepresentation path)
@@ -110,16 +113,6 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
             });
 
             return await new StreamReader(file.ResponseStream).ReadToEndAsync();
-        }
-
-        protected async Task<bool> DirectoryExistsAsync(PathRepresentation path)
-        {
-            var objects = await S3Client.ListObjectsAsync(new ListObjectsRequest
-            {
-                BucketName = GeneratedBucketName,
-                Prefix = CombinePathWithRootPath(path)
-            });
-            return objects != null && objects.S3Objects.Any();
         }
 
         protected static string RandomDirectoryPath(bool includeBlank = false)
@@ -165,6 +158,38 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
         private string CombinePathWithRootPath(PathRepresentation path)
         {
             return $"{(_rootPath != null ? $"{_rootPath}/" : string.Empty )}{path.NormalisedPath}";
+        }
+
+        private async Task<bool> FileExistsAsync(PathRepresentation path)
+        {
+            try
+            {
+                var file = await S3Client.GetObjectAsync(new GetObjectRequest
+                {
+                    BucketName = GeneratedBucketName,
+                    Key = CombinePathWithRootPath(path)
+                });
+                return file.HttpStatusCode == HttpStatusCode.OK;
+            }
+            catch (AmazonS3Exception e)
+            {
+                if (e.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+
+                throw;
+            }
+        }
+
+        private async Task<bool> DirectoryExistsAsync(PathRepresentation path)
+        {
+            var objects = await S3Client.ListObjectsAsync(new ListObjectsRequest
+            {
+                BucketName = GeneratedBucketName,
+                Prefix = CombinePathWithRootPath(path)
+            });
+            return objects != null && objects.S3Objects.Any();
         }
         
         private static string RandomString(int length = 8)

@@ -42,7 +42,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             var originalSecondFilePath = $"{_sourceDirectory.NormalisedPath}/a/b/c.txt".AsBaselineFilesystemPath();
             
             await CreateFileAndWriteTextAsync(originalFirstFilePath);
-            await CreateFileAndWriteTextAsync(originalFirstFilePath);
+            await CreateFileAndWriteTextAsync(originalSecondFilePath);
 
             await DirectoryManager.MoveAsync(new MoveDirectoryRequest
             {
@@ -50,26 +50,89 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
                 DestinationDirectoryPath = _destinationDirectory
             });
 
-            (await FileExistsAsync(originalFirstFilePath)).Should().BeFalse();
-            (await FileExistsAsync(originalSecondFilePath)).Should().BeFalse();
+            await ExpectDirectoryNotToExistAsync(_sourceDirectory);
+            await ExpectFileNotToExistAsync(originalSecondFilePath);
         }
 
         [Fact]
         public async Task It_Moves_A_More_Complex_Directory_Structure_From_One_Location_To_Another()
         {
-            
+            var files = new[]
+            {
+                "a/b/c/.keep",
+                "a/b/c/.keeps",
+                "a/b/c/d/e/f/g/.keep",
+                "a/b/c/d/e/f/g/.keeps",
+                "a/b/c/d/v/foo.keep",
+                "a/b/c/d/v/foo.keeps",
+                "a/b/c/d/e/f/a/.keep",
+                "a/b/c/d/e/f/a/.keeps"
+            };
+
+            foreach (var file in files)
+            {
+                await CreateFileAndWriteTextAsync($"{_sourceDirectory.OriginalPath}/{file}".AsBaselineFilesystemPath());
+            }
+
+            await DirectoryManager.MoveAsync(new MoveDirectoryRequest
+            {
+                SourceDirectoryPath = _sourceDirectory,
+                DestinationDirectoryPath = _destinationDirectory
+            });
+
+            await ExpectDirectoryNotToExistAsync(_sourceDirectory);
+            foreach (var file in files)
+            {
+                await ExpectFileToExistAsync(
+                    $"{_destinationDirectory.OriginalPath}/{file}".AsBaselineFilesystemPath()
+                );
+            }
         }
 
         [Fact]
         public async Task It_Moves_A_Large_Directory_Structure_From_One_Location_To_Another()
         {
+            for (var i = 0; i < 1001; i++)
+            {
+                await CreateFileAndWriteTextAsync(
+                    $"{_sourceDirectory.NormalisedPath}/{i}/.keep".AsBaselineFilesystemPath()
+                );
+            }
+
+            await DirectoryManager.MoveAsync(new MoveDirectoryRequest
+            {
+                SourceDirectoryPath = _sourceDirectory,
+                DestinationDirectoryPath = _destinationDirectory
+            });
             
+            await ExpectDirectoryNotToExistAsync(_sourceDirectory);
+            for (var i = 0; i < 1001; i++)
+            {
+                await ExpectFileToExistAsync(
+                    $"{_destinationDirectory.NormalisedPath}/{i}/.keep".AsBaselineFilesystemPath()
+                );
+            }
         }
 
         [Fact]
         public async Task It_Moves_A_Directory_Structure_With_A_Root_Path_From_One_Location_To_Another()
         {
+            ReconfigureManagerInstances(true);
             
+            var originalFirstFilePath = $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath();
+            var originalSecondFilePath = $"{_sourceDirectory.NormalisedPath}/a/b/c.txt".AsBaselineFilesystemPath();
+            
+            await CreateFileAndWriteTextAsync(originalFirstFilePath);
+            await CreateFileAndWriteTextAsync(originalSecondFilePath);
+
+            await DirectoryManager.MoveAsync(new MoveDirectoryRequest
+            {
+                SourceDirectoryPath = _sourceDirectory,
+                DestinationDirectoryPath = _destinationDirectory
+            });
+
+            await ExpectDirectoryNotToExistAsync(_sourceDirectory);
+            await ExpectFileNotToExistAsync(originalSecondFilePath);
         }
     }
 }
