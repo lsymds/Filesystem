@@ -3,10 +3,10 @@ name: .NET
 on:
   pull_request:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
     
     services:
