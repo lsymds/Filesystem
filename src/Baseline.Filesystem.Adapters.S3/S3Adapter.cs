@@ -1,5 +1,4 @@
-﻿using System;
-using Amazon.S3;
+﻿using Amazon.S3;
 using Baseline.Filesystem.Internal.Contracts;
 
 namespace Baseline.Filesystem.Adapters.S3
@@ -28,21 +27,6 @@ namespace Baseline.Filesystem.Adapters.S3
             {
                 _basePath = new PathRepresentationBuilder(adapterConfiguration.RootPath).Build();   
             }
-        }
-
-        /// <summary>
-        /// Gets a <see cref="AdapterProviderOperationException" /> detailing that an unhandled exception occurred
-        /// when calling a provider endpoint.
-        /// </summary>
-        /// <param name="e">The exception to wrap.</param>
-        /// <returns>The wrapped exception that should be thrown.</returns>
-        private static AdapterProviderOperationException ExceptionForS3Exception(Exception e)
-        {
-            return new AdapterProviderOperationException(
-                "Unexpected exception thrown when communicating with the Amazon S3 endpoint. " +
-                "See inner exception for details.",
-                e
-            );
         }
 
         /// <summary>

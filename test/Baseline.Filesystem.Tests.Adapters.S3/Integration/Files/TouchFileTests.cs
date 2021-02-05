@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
@@ -15,7 +13,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
 
             await CreateFileAndWriteTextAsync(path);
 
-            (await FileExistsAsync(path)).Should().BeTrue();
+            await ExpectFileToExistAsync(path);
             (await ReadFileAsStringAsync(path)).Should().BeEmpty();
         }
 
@@ -28,7 +26,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
 
             await CreateFileAndWriteTextAsync(path);
 
-            (await FileExistsAsync(path)).Should().BeTrue();
+            await ExpectFileToExistAsync(path);
             (await ReadFileAsStringAsync(path)).Should().BeEmpty();
         }
     }

@@ -29,7 +29,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
 
             var response = await DirectoryManager.CreateAsync(new CreateDirectoryRequest {DirectoryPath = directory});
             
-            (await DirectoryExistsAsync(directory)).Should().BeTrue();
+            await ExpectDirectoryToExistAsync(directory);
             response.Directory.Path.Should().BeEquivalentTo(directory);
         }
 
@@ -41,8 +41,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             var directory = RandomDirectoryPathRepresentation();
 
             var response = await DirectoryManager.CreateAsync(new CreateDirectoryRequest {DirectoryPath = directory});
-            
-            (await DirectoryExistsAsync(directory)).Should().BeTrue();
+
+            await ExpectDirectoryToExistAsync(directory);
             response.Directory.Path.Should().BeEquivalentTo(directory);
         }
     }

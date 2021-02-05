@@ -18,10 +18,13 @@ namespace Baseline.Filesystem.Adapters.S3
     public partial class S3Adapter
     {
         /// <inheritdoc />
-        public async Task<FileRepresentation> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken)
+        public async Task<FileRepresentation> CopyFileAsync(
+            CopyFileRequest copyFileRequest, 
+            CancellationToken cancellationToken
+        )
         {
-            await CheckFileExistsAsync(copyFileRequest.SourceFilePath, cancellationToken).ConfigureAwait(false);
-            await CheckFileDoesNotExistAsync(copyFileRequest.DestinationFilePath, cancellationToken).ConfigureAwait(false);
+            await EnsureFileExistsAsync(copyFileRequest.SourceFilePath, cancellationToken).ConfigureAwait(false);
+            await EnsureFileDoesNotExistAsync(copyFileRequest.DestinationFilePath, cancellationToken).ConfigureAwait(false);
 
             await _s3Client.CopyObjectAsync(
                 _adapterConfiguration.BucketName,
@@ -37,7 +40,7 @@ namespace Baseline.Filesystem.Adapters.S3
         /// <inheritdoc />
         public async Task DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken)
         {
-            await CheckFileExistsAsync(deleteFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
+            await EnsureFileExistsAsync(deleteFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
 
             await _s3Client.DeleteObjectAsync(
                 _adapterConfiguration.BucketName,
@@ -74,7 +77,10 @@ namespace Baseline.Filesystem.Adapters.S3
         }
 
         /// <inheritdoc />
-        public async Task<FileRepresentation> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken)
+        public async Task<FileRepresentation> GetFileAsync(
+            GetFileRequest getFileRequest, 
+            CancellationToken cancellationToken
+        )
         {
             var fileExists = await FileExistsAsync(
                 new FileExistsRequest { FilePath = getFileRequest.FilePath },
@@ -85,7 +91,10 @@ namespace Baseline.Filesystem.Adapters.S3
         }
 
         /// <inheritdoc />
-        public async Task<FileRepresentation> MoveFileAsync(MoveFileRequest moveFileRequest, CancellationToken cancellationToken)
+        public async Task<FileRepresentation> MoveFileAsync(
+            MoveFileRequest moveFileRequest, 
+            CancellationToken cancellationToken
+        )
         {
             var copiedFileResult = await CopyFileAsync(
                 new CopyFileRequest
@@ -110,7 +119,7 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            await CheckFileExistsAsync(readFileAsStringRequest.FilePath, cancellationToken).ConfigureAwait(false);
+            await EnsureFileExistsAsync(readFileAsStringRequest.FilePath, cancellationToken).ConfigureAwait(false);
 
             var file = await _s3Client.GetObjectAsync(
                 _adapterConfiguration.BucketName,
@@ -163,15 +172,19 @@ namespace Baseline.Filesystem.Adapters.S3
         }
 
         /// <summary>
-        /// Used only in methods inside of this class, CheckFileDoesNotExistAsync does the opposite of
-        /// <see cref="CheckFileExistsAsync" /> and verifies that the file DOES NOT exist, or it throws an exception.
+        /// Used only in methods inside of this class, EnsureFileDoesNotExistAsync does the opposite of
+        /// <see cref="EnsureFileExistsAsync" /> and verifies that the file DOES NOT exist, or it throws an exception.
         /// </summary>
         /// <param name="path">The path to the file that should not exist.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>An awaitable <see cref="Task"/>.</returns>
-        private async Task CheckFileDoesNotExistAsync(PathRepresentation path, CancellationToken cancellationToken)
+        private async Task EnsureFileDoesNotExistAsync(PathRepresentation path, CancellationToken cancellationToken)
         {
-            var fileExists = await FileExistsAsync(new FileExistsRequest {FilePath = path}, cancellationToken).ConfigureAwait(false);
+            var fileExists = await FileExistsAsync(
+                new FileExistsRequest {FilePath = path}, 
+                cancellationToken
+            ).ConfigureAwait(false);
+            
             if (fileExists)
             {
                 throw new FileAlreadyExistsException(
@@ -182,15 +195,19 @@ namespace Baseline.Filesystem.Adapters.S3
         }
 
         /// <summary>
-        /// Used only in methods inside of this class, CheckFileExistsAsync checks if the requested file exists and, if
+        /// Used only in methods inside of this class, EnsureFileExistsAsync checks if the requested file exists and, if
         /// it doesn't, throws a <see cref="FileNotFoundException"/>.
         /// </summary>
         /// <param name="path">The path to check exists.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>An awaitable <see cref="Task"/>.</returns>
-        private async Task CheckFileExistsAsync(PathRepresentation path, CancellationToken cancellationToken)
+        private async Task EnsureFileExistsAsync(PathRepresentation path, CancellationToken cancellationToken)
         {
-            var fileExists = await FileExistsAsync(new FileExistsRequest {FilePath = path}, cancellationToken).ConfigureAwait(false);
+            var fileExists = await FileExistsAsync(
+                new FileExistsRequest {FilePath = path},
+                cancellationToken
+            ).ConfigureAwait(false);
+            
             if (!fileExists)
             {
                 throw new FileNotFoundException(
@@ -210,13 +227,13 @@ namespace Baseline.Filesystem.Adapters.S3
         /// to 1000 objects returned from the list endpoint.
         /// </param>
         /// <returns>The response from S3 containing the files (if there are any) for the prefix.</returns>
-        private Task<ListObjectsResponse> ListFilesUnderPath(
+        private async Task<ListObjectsResponse> ListFilesUnderPath(
             PathRepresentation path, 
             CancellationToken cancellationToken,
             string marker = null
         )
         {
-            return _s3Client.ListObjectsAsync(
+            return await _s3Client.ListObjectsAsync(
                 new ListObjectsRequest
                 {
                     BucketName = _adapterConfiguration.BucketName,
@@ -224,7 +241,7 @@ namespace Baseline.Filesystem.Adapters.S3
                     Marker = marker
                 },
                 cancellationToken
-            );
+            ).ConfigureAwait(false);
         }
         
         /// <summary>

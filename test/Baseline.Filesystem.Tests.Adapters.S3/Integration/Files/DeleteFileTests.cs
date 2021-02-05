@@ -26,12 +26,12 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             var filePath = RandomFilePathRepresentation();
 
             await CreateFileAndWriteTextAsync(filePath);
-
-            (await FileExistsAsync(filePath)).Should().BeTrue();
+            
+            await ExpectFileToExistAsync(filePath); 
 
             await FileManager.DeleteAsync(new DeleteFileRequest {FilePath = filePath});
             
-            (await FileExistsAsync(filePath)).Should().BeFalse(); 
+            await ExpectFileNotToExistAsync(filePath); 
         }
 
         [Fact]
@@ -42,12 +42,12 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             var filePath = RandomFilePathRepresentation();
 
             await CreateFileAndWriteTextAsync(filePath);
-
-            (await FileExistsAsync(filePath)).Should().BeTrue();
+            
+            await ExpectFileToExistAsync(filePath); 
 
             await FileManager.DeleteAsync(new DeleteFileRequest {FilePath = filePath});
             
-            (await FileExistsAsync(filePath)).Should().BeFalse(); 
+            await ExpectFileNotToExistAsync(filePath); 
         }
     }
 }

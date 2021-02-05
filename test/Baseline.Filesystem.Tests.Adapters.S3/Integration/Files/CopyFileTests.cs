@@ -52,8 +52,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
                 }
             );
 
-            (await FileExistsAsync(_sourceFilePath)).Should().BeTrue();
-            (await FileExistsAsync(_destinationFilePath)).Should().BeTrue();
+            await ExpectFileToExistAsync(_sourceFilePath); 
+            await ExpectFileToExistAsync(_destinationFilePath);
 
             var destinationContents = await ReadFileAsStringAsync(_destinationFilePath);
             destinationContents.Should().Be("[ 1, 2, 3 ]");
@@ -73,9 +73,9 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
                     DestinationFilePath = _destinationFilePath
                 }
             );
-            
-            (await FileExistsAsync(_sourceFilePath)).Should().BeTrue();
-            (await FileExistsAsync(_destinationFilePath)).Should().BeTrue();
+
+            await ExpectFileToExistAsync(_sourceFilePath); 
+            await ExpectFileToExistAsync(_destinationFilePath);
             
             var destinationContents = await ReadFileAsStringAsync(_destinationFilePath);
             destinationContents.Should().Be("[ 1, 2, 3 ]");

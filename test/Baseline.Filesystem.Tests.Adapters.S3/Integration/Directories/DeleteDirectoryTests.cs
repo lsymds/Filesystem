@@ -22,8 +22,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
                 DirectoryPath = "simples/".AsBaselineFilesystemPath()
             });
 
-            (await FileExistsAsync(firstFile)).Should().BeFalse();
-            (await FileExistsAsync(secondFile)).Should().BeFalse();
+            await ExpectDirectoryNotToExistAsync("simples".AsBaselineFilesystemPath());
         }
 
         [Fact]
@@ -50,10 +49,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
                 DirectoryPath = "prefixed/".AsBaselineFilesystemPath()
             });
 
-            foreach (var file in files)
-            {
-                (await FileExistsAsync(file.AsBaselineFilesystemPath())).Should().BeFalse();
-            }
+            await ExpectDirectoryNotToExistAsync("prefixed".AsBaselineFilesystemPath());
         }
 
         [Fact]
@@ -103,8 +99,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
                 DirectoryPath = "simples-root/".AsBaselineFilesystemPath()
             });
 
-            (await FileExistsAsync(firstFile)).Should().BeFalse();
-            (await FileExistsAsync(secondFile)).Should().BeFalse();
+            await ExpectFileNotToExistAsync(firstFile);
+            await ExpectFileNotToExistAsync(secondFile);
         }
     }
 }
