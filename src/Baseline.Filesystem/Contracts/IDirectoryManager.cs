@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,6 +20,15 @@ namespace Baseline.Filesystem
         /// <param name="adapter">The adapter in which to perform the action.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The representation of the directory the requested source directory was copied to.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsNotObviouslyADirectoryException" />
+        /// <exception cref="DirectoryNotFoundException" />
+        /// <exception cref="DirectoryAlreadyExistsException" />
         Task<AdapterAwareDirectoryRepresentation> CopyAsync(
             CopyDirectoryRequest copyDirectoryRequest,
             string adapter = "default",
@@ -34,6 +44,14 @@ namespace Baseline.Filesystem
         /// <param name="adapter">The adapter in which to perform the action.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The representation of the directory that was created.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsNotObviouslyADirectoryException" />
+        /// <exception cref="DirectoryAlreadyExistsException" />
         Task<AdapterAwareDirectoryRepresentation> CreateAsync(
             CreateDirectoryRequest createDirectoryRequest,
             string adapter = "default",
@@ -50,6 +68,14 @@ namespace Baseline.Filesystem
         /// </param>
         /// <param name="adapter">The adapter in which to perform the action.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsNotObviouslyADirectoryException" />
+        /// <exception cref="DirectoryNotFoundException" />
         Task DeleteAsync(
             DeleteDirectoryRequest deleteDirectoryRequest, 
             string adapter = "default",
@@ -67,6 +93,15 @@ namespace Baseline.Filesystem
         /// <param name="adapter">The adapter in which to perform the action.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The representation of the directory the requested source directory was moved to.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsNotObviouslyADirectoryException" />
+        /// <exception cref="DirectoryNotFoundException" />
+        /// <exception cref="DirectoryAlreadyExistsException" />
         Task<AdapterAwareDirectoryRepresentation> MoveAsync(
             MoveDirectoryRequest moveDirectoryRequest,
             string adapter = "default",

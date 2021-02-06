@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,6 +20,15 @@ namespace Baseline.Filesystem
         /// The cancellation token used to cancel asynchronous requests if required.
         /// </param>
         /// <returns>The adapter aware file representation of the newly copied file.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsADirectoryException" />
+        /// <exception cref="FileNotFoundException" />
+        /// <exception cref="FileAlreadyExistsException" />
         Task<AdapterAwareFileRepresentation> CopyAsync(
             CopyFileRequest copyFileRequest,
             string adapter = "default",
@@ -34,6 +44,14 @@ namespace Baseline.Filesystem
         /// The cancellation token used to cancel asynchronous requests if required.
         /// </param>
         /// <returns>An awaitable task.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsADirectoryException" />
+        /// <exception cref="FileNotFoundException" />
         Task DeleteAsync(
             DeleteFileRequest deleteFileRequest,
             string adapter = "default",
@@ -51,6 +69,13 @@ namespace Baseline.Filesystem
         /// The cancellation token used to cancel asynchronous requests if required.
         /// </param>
         /// <returns>Whether or not the file defined by the request exists.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsADirectoryException" />
         Task<bool> ExistsAsync(
             FileExistsRequest fileExistsRequest,
             string adapter = "default",
@@ -67,6 +92,14 @@ namespace Baseline.Filesystem
         /// The cancellation token used to cancel asynchronous requests if required.
         /// </param>
         /// <returns>The file's information.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsADirectoryException" />
+        /// <exception cref="FileNotFoundException" />
         Task<AdapterAwareFileRepresentation> GetAsync(
             GetFileRequest getFileRequest,
             string adapter = "default",
@@ -83,6 +116,15 @@ namespace Baseline.Filesystem
         /// The cancellation token used to cancel asynchronous requests if required.
         /// </param>
         /// <returns>The newly created destination file's information.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsADirectoryException" />
+        /// <exception cref="FileNotFoundException" />
+        /// <exception cref="FileAlreadyExistsException" />
         Task<AdapterAwareFileRepresentation> MoveAsync(
             MoveFileRequest moveFileRequest,
             string adapter = "default",
@@ -100,6 +142,14 @@ namespace Baseline.Filesystem
         /// The cancellation token used to cancel asynchronous requests if required.
         /// </param>
         /// <returns>The file's contents.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsADirectoryException" />
+        /// <exception cref="FileNotFoundException" />
         Task<string> ReadAsStringAsync(
             ReadFileAsStringRequest readFileAsStringRequest,
             string adapter = "default",
@@ -117,6 +167,14 @@ namespace Baseline.Filesystem
         /// The cancellation token used to cancel asynchronous requests if required.
         /// </param>
         /// <returns>The created file's information.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsADirectoryException" />
+        /// <exception cref="FileAlreadyExistsException" />
         Task<AdapterAwareFileRepresentation> TouchAsync(
             TouchFileRequest touchFileRequest,
             string adapter = "default",
@@ -134,6 +192,13 @@ namespace Baseline.Filesystem
         /// The cancellation token used to cancel asynchronous requests if required.
         /// </param>
         /// <returns>An awaitable task.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsADirectoryException" />
         Task WriteTextAsync(
             WriteTextToFileRequest writeTextToFileRequest,
             string adapter = "default",
