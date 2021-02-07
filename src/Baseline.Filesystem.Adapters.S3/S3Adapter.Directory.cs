@@ -128,12 +128,7 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            var directoryExists = await DirectoryExistsAsync(
-                directoryPath,
-                cancellationToken
-            ).ConfigureAwait(false);
-
-            if (directoryExists)
+            if (await DirectoryExistsAsync(directoryPath, cancellationToken).ConfigureAwait(false))
             {
                 throw new DirectoryAlreadyExistsException(directoryPath.NormalisedPath);
             }
@@ -149,12 +144,7 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            var directoryExists = await DirectoryExistsAsync(
-                directoryPath,
-                cancellationToken
-            ).ConfigureAwait(false);
-            
-            if (!directoryExists)
+            if (!await DirectoryExistsAsync(directoryPath, cancellationToken).ConfigureAwait(false))
             {
                 throw new DirectoryNotFoundException(directoryPath.NormalisedPath);
             }

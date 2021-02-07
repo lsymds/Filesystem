@@ -47,10 +47,7 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            return await FileExistsInternalAsync(
-                fileExistsRequest.FilePath, 
-                cancellationToken
-            ).ConfigureAwait(false);
+            return await FileExistsInternalAsync(fileExistsRequest.FilePath, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -59,11 +56,7 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            var fileExists = await FileExistsInternalAsync(
-                getFileRequest.FilePath, 
-                cancellationToken
-            ).ConfigureAwait(false);
-            
+            var fileExists = await FileExistsInternalAsync(getFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
             return fileExists ? new FileRepresentation {Path = getFileRequest.FilePath} : null;
         }
 
@@ -111,9 +104,7 @@ namespace Baseline.Filesystem.Adapters.S3
         )
         {
             await EnsureFileDoesNotExistAsync(touchFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
-            
             await TouchFileInternalAsync(touchFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
-
             return new FileRepresentation { Path = touchFileRequest.FilePath };
         }
 
