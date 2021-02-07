@@ -29,7 +29,7 @@ namespace Baseline.Filesystem
 
             return GetAdapter(adapter)
                 .CopyDirectoryAsync(
-                    copyDirectoryRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)), 
+                    copyDirectoryRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)), 
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
@@ -46,7 +46,7 @@ namespace Baseline.Filesystem
 
             return GetAdapter(adapter)
                 .CreateDirectoryAsync(
-                    createDirectoryRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    createDirectoryRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
@@ -63,7 +63,7 @@ namespace Baseline.Filesystem
             
             return GetAdapter(adapter)
                 .DeleteDirectoryAsync(
-                    deleteDirectoryRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)), 
+                    deleteDirectoryRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)), 
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter);
@@ -80,7 +80,7 @@ namespace Baseline.Filesystem
             
             return GetAdapter(adapter)
                 .MoveDirectoryAsync(
-                    moveDirectoryRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    moveDirectoryRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)

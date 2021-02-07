@@ -43,7 +43,6 @@ namespace Baseline.Filesystem
         /// <param name="cancellationToken">
         /// The cancellation token used to cancel asynchronous requests if required.
         /// </param>
-        /// <returns>An awaitable task.</returns>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="AdapterNotFoundException" />
         /// <exception cref="AdapterProviderOperationException" />
@@ -191,7 +190,6 @@ namespace Baseline.Filesystem
         /// <param name="cancellationToken">
         /// The cancellation token used to cancel asynchronous requests if required.
         /// </param>
-        /// <returns>An awaitable task.</returns>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="AdapterNotFoundException" />
         /// <exception cref="AdapterProviderOperationException" />

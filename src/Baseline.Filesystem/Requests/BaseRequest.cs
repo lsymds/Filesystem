@@ -10,13 +10,13 @@ namespace Baseline.Filesystem
         /// paths are modified (no values), so there is no need to clone any properties.
         /// </summary>
         /// <returns></returns>
-        internal abstract T CloneForPathUpdates();
+        internal abstract T ShallowClone();
 
         /// <summary>
         /// Clones the current instance and then combines the current instance's paths with a root path.
         /// </summary>
         /// <param name="rootPath">The root path to combine the current paths with.</param>
         /// <returns>A clone of the current instance with its paths combined with a root path.</returns>
-        internal abstract T CombinePathsWithRootPath(PathRepresentation rootPath);
+        internal abstract T CloneAndCombinePathsWithRootPath(PathRepresentation rootPath);
     }
 }

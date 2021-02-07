@@ -18,24 +18,23 @@ namespace Baseline.Filesystem
         /// <returns>
         /// A cloned version of the current class, with the paths combined with the root path if applicable.
         /// </returns>
-        internal override T CombinePathsWithRootPath(PathRepresentation rootPath)
+        internal override T CloneAndCombinePathsWithRootPath(PathRepresentation rootPath)
         {
             if (rootPath == null)
             {
                 return (T)this;
             }
 
-            var cloned = CloneForPathUpdates();
+            var cloned = ShallowClone();
             cloned.FilePath = cloned.FilePath.CombineWithBase(rootPath);
             return cloned;
         }
         
         /// <summary>
-        /// Clones the current instance for path updates. Some properties do not need to be cloned (for example path
-        /// representations) as they're never modified.
+        /// Clones the current instance for path updates. This only needs to be a shallow (i.e. top level) clone.
         /// </summary>
         /// <returns>A clone of the current instance.</returns>
-        internal override T CloneForPathUpdates()
+        internal override T ShallowClone()
         {
             return new T
             {

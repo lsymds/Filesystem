@@ -20,9 +20,9 @@ namespace Baseline.Filesystem
         public string TextToWrite { get; set; }
 
         /// <inheritdoc />
-        internal override WriteTextToFileRequest CloneForPathUpdates()
+        internal override WriteTextToFileRequest ShallowClone()
         {
-            var clonedBase = base.CloneForPathUpdates();
+            var clonedBase = base.ShallowClone();
 
             clonedBase.ContentType = ContentType;
             clonedBase.TextToWrite = TextToWrite;

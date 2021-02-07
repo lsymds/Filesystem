@@ -29,7 +29,7 @@ namespace Baseline.Filesystem
             
             return GetAdapter(adapter)
                 .CopyFileAsync(
-                    copyFileRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    copyFileRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
@@ -47,7 +47,7 @@ namespace Baseline.Filesystem
 
             return GetAdapter(adapter)
                 .DeleteFileAsync(
-                    deleteFileRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    deleteFileRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter);
@@ -64,7 +64,7 @@ namespace Baseline.Filesystem
 
             return GetAdapter(adapter)
                 .FileExistsAsync(
-                    fileExistsRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)), 
+                    fileExistsRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)), 
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter);
@@ -81,7 +81,7 @@ namespace Baseline.Filesystem
     
             return GetAdapter(adapter)
                 .GetFileAsync(
-                    getFileRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    getFileRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
@@ -99,7 +99,7 @@ namespace Baseline.Filesystem
 
             return GetAdapter(adapter)
                 .MoveFileAsync(
-                    moveFileRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    moveFileRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
@@ -117,7 +117,7 @@ namespace Baseline.Filesystem
 
             return GetAdapter(adapter)
                 .ReadFileAsStringAsync(
-                    readFileAsStringRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    readFileAsStringRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter);
@@ -134,7 +134,7 @@ namespace Baseline.Filesystem
             
             return GetAdapter(adapter)
                 .TouchFileAsync(
-                    touchFileRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    touchFileRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
@@ -152,7 +152,7 @@ namespace Baseline.Filesystem
 
             return GetAdapter(adapter)
                 .WriteTextToFileAsync(
-                    writeTextToFileRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    writeTextToFileRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter);
