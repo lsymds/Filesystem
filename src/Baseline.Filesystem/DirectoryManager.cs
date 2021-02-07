@@ -28,7 +28,10 @@ namespace Baseline.Filesystem
             BaseSourceAndDestinationDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(copyDirectoryRequest);
 
             return GetAdapter(adapter)
-                .CopyDirectoryAsync(copyDirectoryRequest, cancellationToken)
+                .CopyDirectoryAsync(
+                    copyDirectoryRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)), 
+                    cancellationToken
+                )
                 .WrapExternalExceptionsAsync(adapter)
                 .AsAdapterAwareRepresentationAsync(adapter);
         }
@@ -42,7 +45,10 @@ namespace Baseline.Filesystem
             BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(createDirectoryRequest);
 
             return GetAdapter(adapter)
-                .CreateDirectoryAsync(createDirectoryRequest, cancellationToken)
+                .CreateDirectoryAsync(
+                    createDirectoryRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    cancellationToken
+                )
                 .WrapExternalExceptionsAsync(adapter)
                 .AsAdapterAwareRepresentationAsync(adapter);
         }
@@ -56,7 +62,10 @@ namespace Baseline.Filesystem
             BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(deleteDirectoryRequest);
             
             return GetAdapter(adapter)
-                .DeleteDirectoryAsync(deleteDirectoryRequest, cancellationToken)
+                .DeleteDirectoryAsync(
+                    deleteDirectoryRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)), 
+                    cancellationToken
+                )
                 .WrapExternalExceptionsAsync(adapter);
         }
 
@@ -68,9 +77,12 @@ namespace Baseline.Filesystem
         )
         {
             BaseSourceAndDestinationDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(moveDirectoryRequest);
-
+            
             return GetAdapter(adapter)
-                .MoveDirectoryAsync(moveDirectoryRequest, cancellationToken)
+                .MoveDirectoryAsync(
+                    moveDirectoryRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    cancellationToken
+                )
                 .WrapExternalExceptionsAsync(adapter)
                 .AsAdapterAwareRepresentationAsync(adapter);
         }

@@ -1,4 +1,3 @@
-using Baseline.Filesystem.Internal.Contracts;
 using Moq;
 
 namespace Baseline.Filesystem.Tests
@@ -16,7 +15,7 @@ namespace Baseline.Filesystem.Tests
             AdapterManager = new AdapterManager();
             DirectoryManager = new DirectoryManager(AdapterManager);
             FileManager = new FileManager(AdapterManager);
-            AdapterManager.Register(Adapter.Object);
+            AdapterManager.Register(new AdapterRegistration { Adapter = Adapter.Object});
         }
     }
 }

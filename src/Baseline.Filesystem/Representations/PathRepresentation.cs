@@ -26,5 +26,16 @@ namespace Baseline.Filesystem
         /// Gets the original path that was specified by the consuming application.
         /// </summary>
         public string OriginalPath { get; internal set; }
+
+        /// <summary>
+        /// Combines the current path representation with a base path representation, wherein the base path
+        /// representation is set first, and the current path after.
+        /// </summary>
+        /// <param name="@base">The base path to combine with the current path.</param>
+        /// <returns>The newly combined path.</returns>
+        internal PathRepresentation CombineWithBase(PathRepresentation @base)
+        {
+            return new PathCombinationBuilder(@base, this).Build();
+        }
     }
 }

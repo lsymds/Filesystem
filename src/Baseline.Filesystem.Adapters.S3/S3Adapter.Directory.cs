@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.S3.Model;
 using Baseline.Filesystem.Adapters.S3.Internal.Extensions;
-using Baseline.Filesystem.Internal.Contracts;
 using Baseline.Filesystem.Internal.Extensions;
 
 namespace Baseline.Filesystem.Adapters.S3
@@ -20,8 +19,8 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            await CheckDirectoryExistsAsync(copyDirectoryRequest.SourceDirectoryPath, cancellationToken).ConfigureAwait(false);
-            await CheckDirectoryDoesNotExistAsync(copyDirectoryRequest.DestinationDirectoryPath, cancellationToken).ConfigureAwait(false);
+            await EnsureDirectoryExistsAsync(copyDirectoryRequest.SourceDirectoryPath, cancellationToken).ConfigureAwait(false);
+            await EnsureDirectoryDoesNotExistAsync(copyDirectoryRequest.DestinationDirectoryPath, cancellationToken).ConfigureAwait(false);
 
             await CopyDirectoryInternalAsync(
                 copyDirectoryRequest.SourceDirectoryPath,
@@ -38,17 +37,14 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            await CheckDirectoryDoesNotExistAsync(createDirectoryRequest.DirectoryPath, cancellationToken).ConfigureAwait(false);
+            await EnsureDirectoryDoesNotExistAsync(createDirectoryRequest.DirectoryPath, cancellationToken).ConfigureAwait(false);
 
-            // Directories in S3 don't really exist. In order to fake the existence of one, we need to create a
-            // temporary file underneath it which causes that path to appear in the S3 browser.
             var pathToCreate = new PathCombinationBuilder(
                 createDirectoryRequest.DirectoryPath,
                 ".keep".AsBaselineFilesystemPath()
             ).Build();
             
-            await TouchFileAsync(new TouchFileRequest {FilePath = pathToCreate}, cancellationToken)
-                    .ConfigureAwait(false);
+            await TouchFileInternalAsync(pathToCreate, cancellationToken).ConfigureAwait(false);
 
             return new DirectoryRepresentation {Path = createDirectoryRequest.DirectoryPath};
         }
@@ -59,7 +55,7 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            await CheckDirectoryExistsAsync(deleteDirectoryRequest.DirectoryPath, cancellationToken).ConfigureAwait(false);
+            await EnsureDirectoryExistsAsync(deleteDirectoryRequest.DirectoryPath, cancellationToken).ConfigureAwait(false);
 
             await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 deleteDirectoryRequest.DirectoryPath,
@@ -81,8 +77,8 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            await CheckDirectoryExistsAsync(moveDirectoryRequest.SourceDirectoryPath, cancellationToken).ConfigureAwait(false);
-            await CheckDirectoryDoesNotExistAsync(moveDirectoryRequest.DestinationDirectoryPath, cancellationToken).ConfigureAwait(false);
+            await EnsureDirectoryExistsAsync(moveDirectoryRequest.SourceDirectoryPath, cancellationToken).ConfigureAwait(false);
+            await EnsureDirectoryDoesNotExistAsync(moveDirectoryRequest.DestinationDirectoryPath, cancellationToken).ConfigureAwait(false);
 
             var sourceFiles = await CopyDirectoryInternalAsync(
                 moveDirectoryRequest.SourceDirectoryPath,
@@ -118,9 +114,7 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            var files = await ListFilesUnderPath(directoryPath, cancellationToken)
-                .ConfigureAwait(false);
-            
+            var files = await ListFilesUnderPath(directoryPath, cancellationToken).ConfigureAwait(false);
             return files.S3Objects != null && files.S3Objects.Any();
         }
 
@@ -129,17 +123,19 @@ namespace Baseline.Filesystem.Adapters.S3
         /// </summary>
         /// <param name="directoryPath">The directory path to be checked.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
-        private async Task CheckDirectoryDoesNotExistAsync(
+        private async Task EnsureDirectoryDoesNotExistAsync(
             PathRepresentation directoryPath,
             CancellationToken cancellationToken
         )
         {
-            if (await DirectoryExistsAsync(directoryPath, cancellationToken).ConfigureAwait(false))
+            var directoryExists = await DirectoryExistsAsync(
+                directoryPath,
+                cancellationToken
+            ).ConfigureAwait(false);
+
+            if (directoryExists)
             {
-                throw new DirectoryAlreadyExistsException(
-                    CombineRootAndRequestedPath(directoryPath).NormalisedPath,
-                    directoryPath.NormalisedPath
-                );
+                throw new DirectoryAlreadyExistsException(directoryPath.NormalisedPath);
             }
         }
 
@@ -148,17 +144,19 @@ namespace Baseline.Filesystem.Adapters.S3
         /// </summary>
         /// <param name="directoryPath">The directory path to be checked.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
-        private async Task CheckDirectoryExistsAsync(
+        private async Task EnsureDirectoryExistsAsync(
             PathRepresentation directoryPath, 
             CancellationToken cancellationToken
         )
         {
-            if (!await DirectoryExistsAsync(directoryPath, cancellationToken).ConfigureAwait(false))
+            var directoryExists = await DirectoryExistsAsync(
+                directoryPath,
+                cancellationToken
+            ).ConfigureAwait(false);
+            
+            if (!directoryExists)
             {
-                throw new DirectoryNotFoundException(
-                    CombineRootAndRequestedPath(directoryPath).NormalisedPath,
-                    directoryPath.NormalisedPath
-                );
+                throw new DirectoryNotFoundException(directoryPath.NormalisedPath);
             }
         }
 
@@ -182,8 +180,8 @@ namespace Baseline.Filesystem.Adapters.S3
                     foreach (var obj in objects.S3Objects)
                     {
                         var newFileLocation = obj.Key.ReplaceFirstOccurrence(
-                            CombineRootAndRequestedPath(sourcePath).S3SafeDirectoryPath(),
-                            CombineRootAndRequestedPath(destinationPath).S3SafeDirectoryPath()
+                            sourcePath.S3SafeDirectoryPath(),
+                            destinationPath.S3SafeDirectoryPath()
                         );
 
                         await _s3Client.CopyObjectAsync(

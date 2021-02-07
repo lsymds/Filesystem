@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Baseline.Filesystem.Adapters.S3.Internal.Extensions;
-using Baseline.Filesystem.Internal.Contracts;
 
 namespace Baseline.Filesystem.Adapters.S3
 {
@@ -25,12 +24,10 @@ namespace Baseline.Filesystem.Adapters.S3
         {
             await EnsureFileExistsAsync(copyFileRequest.SourceFilePath, cancellationToken).ConfigureAwait(false);
             await EnsureFileDoesNotExistAsync(copyFileRequest.DestinationFilePath, cancellationToken).ConfigureAwait(false);
-
-            await _s3Client.CopyObjectAsync(
-                _adapterConfiguration.BucketName,
-                CombineRootAndRequestedPath(copyFileRequest.SourceFilePath).NormalisedPath,
-                _adapterConfiguration.BucketName,
-                CombineRootAndRequestedPath(copyFileRequest.DestinationFilePath).NormalisedPath,
+            
+            await CopyFileInternalAsync(
+                copyFileRequest.SourceFilePath,
+                copyFileRequest.DestinationFilePath,
                 cancellationToken
             ).ConfigureAwait(false);
 
@@ -41,12 +38,7 @@ namespace Baseline.Filesystem.Adapters.S3
         public async Task DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken)
         {
             await EnsureFileExistsAsync(deleteFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
-
-            await _s3Client.DeleteObjectAsync(
-                _adapterConfiguration.BucketName,
-                CombineRootAndRequestedPath(deleteFileRequest.FilePath).NormalisedPath,
-                cancellationToken
-            ).ConfigureAwait(false);
+            await DeleteFileInternalAsync(deleteFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -55,11 +47,107 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
+            return await FileExistsInternalAsync(
+                fileExistsRequest.FilePath, 
+                cancellationToken
+            ).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task<FileRepresentation> GetFileAsync(
+            GetFileRequest getFileRequest, 
+            CancellationToken cancellationToken
+        )
+        {
+            var fileExists = await FileExistsInternalAsync(
+                getFileRequest.FilePath, 
+                cancellationToken
+            ).ConfigureAwait(false);
+            
+            return fileExists ? new FileRepresentation {Path = getFileRequest.FilePath} : null;
+        }
+
+        /// <inheritdoc />
+        public async Task<FileRepresentation> MoveFileAsync(
+            MoveFileRequest moveFileRequest, 
+            CancellationToken cancellationToken
+        )
+        {
+            await EnsureFileExistsAsync(moveFileRequest.SourceFilePath, cancellationToken).ConfigureAwait(false);
+            await EnsureFileDoesNotExistAsync(moveFileRequest.DestinationFilePath, cancellationToken).ConfigureAwait(false);
+
+            await CopyFileInternalAsync(
+                moveFileRequest.SourceFilePath,
+                moveFileRequest.DestinationFilePath,
+                cancellationToken
+            ).ConfigureAwait(false);
+
+            await DeleteFileInternalAsync(moveFileRequest.SourceFilePath, cancellationToken).ConfigureAwait(false);
+
+            return new FileRepresentation { Path = moveFileRequest.DestinationFilePath };
+        }
+
+        /// <inheritdoc />
+        public async Task<string> ReadFileAsStringAsync(
+            ReadFileAsStringRequest readFileAsStringRequest,
+            CancellationToken cancellationToken
+        )
+        {
+            await EnsureFileExistsAsync(readFileAsStringRequest.FilePath, cancellationToken).ConfigureAwait(false);
+
+            var file = await _s3Client.GetObjectAsync(
+                _adapterConfiguration.BucketName,
+                readFileAsStringRequest.FilePath.NormalisedPath,
+                cancellationToken
+            ).ConfigureAwait(false);
+
+            return await new StreamReader(file.ResponseStream).ReadToEndAsync().ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task<FileRepresentation> TouchFileAsync(
+            TouchFileRequest touchFileRequest,
+            CancellationToken cancellationToken
+        )
+        {
+            await EnsureFileDoesNotExistAsync(touchFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
+            
+            await TouchFileInternalAsync(touchFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
+
+            return new FileRepresentation { Path = touchFileRequest.FilePath };
+        }
+
+        /// <inheritdoc />
+        public async Task WriteTextToFileAsync(
+            WriteTextToFileRequest writeTextToFileRequest,
+            CancellationToken cancellationToken
+        )
+        {
+            await _s3Client.PutObjectAsync(
+                new PutObjectRequest
+                {
+                    BucketName = _adapterConfiguration.BucketName,
+                    ContentBody = writeTextToFileRequest.TextToWrite,
+                    ContentType = writeTextToFileRequest.ContentType,
+                    Key = writeTextToFileRequest.FilePath.NormalisedPath
+                },
+                cancellationToken
+            ).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Checks and returns whether a file exists. For use within methods that do their own validation.
+        /// </summary>
+        /// <param name="path">The path to check to see if it exists.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>Whether the file exists or not.</returns>
+        private async Task<bool> FileExistsInternalAsync(PathRepresentation path, CancellationToken cancellationToken)
+        {
             try
             {
                 await _s3Client.GetObjectMetadataAsync(
                     _adapterConfiguration.BucketName,
-                    CombineRootAndRequestedPath(fileExistsRequest.FilePath).NormalisedPath,
+                    path.NormalisedPath,
                     cancellationToken
                 ).ConfigureAwait(false);
 
@@ -76,65 +164,48 @@ namespace Baseline.Filesystem.Adapters.S3
             }
         }
 
-        /// <inheritdoc />
-        public async Task<FileRepresentation> GetFileAsync(
-            GetFileRequest getFileRequest, 
+        /// <summary>
+        /// Copies a file without performing any validation. For use within methods that do their own validation.
+        /// </summary>
+        /// <param name="source">The file to copy.</param>
+        /// <param name="destination">The destination to copy it to.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        private async Task CopyFileInternalAsync(
+            PathRepresentation source,
+            PathRepresentation destination,
             CancellationToken cancellationToken
         )
         {
-            var fileExists = await FileExistsAsync(
-                new FileExistsRequest { FilePath = getFileRequest.FilePath },
-                cancellationToken
-            ).ConfigureAwait(false);
-            
-            return fileExists ? new FileRepresentation {Path = getFileRequest.FilePath} : null;
-        }
-
-        /// <inheritdoc />
-        public async Task<FileRepresentation> MoveFileAsync(
-            MoveFileRequest moveFileRequest, 
-            CancellationToken cancellationToken
-        )
-        {
-            var copiedFileResult = await CopyFileAsync(
-                new CopyFileRequest
-                {
-                    SourceFilePath = moveFileRequest.SourceFilePath,
-                    DestinationFilePath = moveFileRequest.DestinationFilePath
-                },
-                cancellationToken
-            ).ConfigureAwait(false);
-
-            await DeleteFileAsync(
-                new DeleteFileRequest {FilePath = moveFileRequest.SourceFilePath},
-                cancellationToken
-            ).ConfigureAwait(false);
-
-            return copiedFileResult;
-        }
-
-        /// <inheritdoc />
-        public async Task<string> ReadFileAsStringAsync(
-            ReadFileAsStringRequest readFileAsStringRequest,
-            CancellationToken cancellationToken
-        )
-        {
-            await EnsureFileExistsAsync(readFileAsStringRequest.FilePath, cancellationToken).ConfigureAwait(false);
-
-            var file = await _s3Client.GetObjectAsync(
+            await _s3Client.CopyObjectAsync(
                 _adapterConfiguration.BucketName,
-                CombineRootAndRequestedPath(readFileAsStringRequest.FilePath).NormalisedPath,
+                source.NormalisedPath,
+                _adapterConfiguration.BucketName,
+                destination.NormalisedPath,
                 cancellationToken
             ).ConfigureAwait(false);
-
-            return await new StreamReader(file.ResponseStream).ReadToEndAsync().ConfigureAwait(false);
         }
 
-        /// <inheritdoc />
-        public async Task<FileRepresentation> TouchFileAsync(
-            TouchFileRequest touchFileRequest,
-            CancellationToken cancellationToken
-        )
+        /// <summary>
+        /// Deletes a file without performing any validation. For use within methods that do their own validation.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="cancellationToken"></param>
+        private async Task DeleteFileInternalAsync(PathRepresentation file, CancellationToken cancellationToken)
+        {
+            await _s3Client.DeleteObjectAsync(
+                _adapterConfiguration.BucketName,
+                file.NormalisedPath,
+                cancellationToken
+            ).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Touches (i.e. creates a blank file) without performing any validation. For use within methods that do their
+        /// own validation.
+        /// </summary>
+        /// <param name="file">The file to create.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        private async Task TouchFileInternalAsync(PathRepresentation file, CancellationToken cancellationToken)
         {
             await _s3Client.PutObjectAsync(
                 new PutObjectRequest
@@ -142,30 +213,7 @@ namespace Baseline.Filesystem.Adapters.S3
                     BucketName = _adapterConfiguration.BucketName,
                     ContentBody = "",
                     ContentType = "text/plain",
-                    Key = CombineRootAndRequestedPath(touchFileRequest.FilePath).NormalisedPath
-                },
-                cancellationToken
-            ).ConfigureAwait(false);
-
-            return new FileRepresentation
-            {
-                Path = touchFileRequest.FilePath
-            };
-        }
-
-        /// <inheritdoc />
-        public async Task WriteTextToFileAsync(
-            WriteTextToFileRequest writeTextToFileRequest,
-            CancellationToken cancellationToken
-        )
-        {
-            await _s3Client.PutObjectAsync(
-                new PutObjectRequest
-                {
-                    BucketName = _adapterConfiguration.BucketName,
-                    ContentBody = writeTextToFileRequest.TextToWrite,
-                    ContentType = writeTextToFileRequest.ContentType,
-                    Key = CombineRootAndRequestedPath(writeTextToFileRequest.FilePath).NormalisedPath
+                    Key = file.NormalisedPath
                 },
                 cancellationToken
             ).ConfigureAwait(false);
@@ -177,20 +225,11 @@ namespace Baseline.Filesystem.Adapters.S3
         /// </summary>
         /// <param name="path">The path to the file that should not exist.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>An awaitable <see cref="Task"/>.</returns>
         private async Task EnsureFileDoesNotExistAsync(PathRepresentation path, CancellationToken cancellationToken)
         {
-            var fileExists = await FileExistsAsync(
-                new FileExistsRequest {FilePath = path}, 
-                cancellationToken
-            ).ConfigureAwait(false);
-            
-            if (fileExists)
+            if (await FileExistsInternalAsync(path, cancellationToken).ConfigureAwait(false))
             {
-                throw new FileAlreadyExistsException(
-                    CombineRootAndRequestedPath(path).NormalisedPath,
-                    path.NormalisedPath
-                );
+                throw new FileAlreadyExistsException(path.NormalisedPath);
             }
         }
 
@@ -200,20 +239,11 @@ namespace Baseline.Filesystem.Adapters.S3
         /// </summary>
         /// <param name="path">The path to check exists.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>An awaitable <see cref="Task"/>.</returns>
         private async Task EnsureFileExistsAsync(PathRepresentation path, CancellationToken cancellationToken)
         {
-            var fileExists = await FileExistsAsync(
-                new FileExistsRequest {FilePath = path},
-                cancellationToken
-            ).ConfigureAwait(false);
-            
-            if (!fileExists)
+            if (!await FileExistsInternalAsync(path, cancellationToken).ConfigureAwait(false))
             {
-                throw new FileNotFoundException(
-                    CombineRootAndRequestedPath(path).NormalisedPath,
-                    path.NormalisedPath
-                );
+                throw new FileNotFoundException(path.NormalisedPath);
             }
         }
         
@@ -237,7 +267,7 @@ namespace Baseline.Filesystem.Adapters.S3
                 new ListObjectsRequest
                 {
                     BucketName = _adapterConfiguration.BucketName,
-                    Prefix = CombineRootAndRequestedPath(path).S3SafeDirectoryPath(),
+                    Prefix = path.S3SafeDirectoryPath(),
                     Marker = marker
                 },
                 cancellationToken

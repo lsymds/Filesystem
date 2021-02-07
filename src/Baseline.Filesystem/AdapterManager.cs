@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using Baseline.Filesystem.Internal.Contracts;
 
 namespace Baseline.Filesystem
 {
@@ -8,11 +7,11 @@ namespace Baseline.Filesystem
     /// </summary>
     public class AdapterManager : IAdapterManager
     {
-        private readonly ConcurrentDictionary<string, IAdapter> _adapters =
-            new ConcurrentDictionary<string, IAdapter>();
+        private readonly ConcurrentDictionary<string, AdapterRegistration> _adapters =
+            new ConcurrentDictionary<string, AdapterRegistration>();
             
         /// <inheritdoc />
-        public IAdapter Get(string name)
+        public AdapterRegistration Get(string name)
         {
             var normalisedName = NormaliseAdapterName(name);
 
@@ -23,14 +22,14 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public void Register(IAdapter adapter, string name = "default")
+        public void Register(AdapterRegistration registration)
         {
-            var normalisedName = NormaliseAdapterName(name);
+            var normalisedName = NormaliseAdapterName(registration.Name);
 
             if (AdapterAlreadyRegistered(normalisedName))
                 throw new AdapterAlreadyRegisteredException(normalisedName);
 
-            _adapters[normalisedName] = adapter;
+            _adapters[normalisedName] = registration;
         }
 
         /// <summary>

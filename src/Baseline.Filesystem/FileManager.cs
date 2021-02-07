@@ -28,7 +28,10 @@ namespace Baseline.Filesystem
             BaseSourceAndDestinationFileRequestValidator.ValidateAndThrowIfUnsuccessful(copyFileRequest);
             
             return GetAdapter(adapter)
-                .CopyFileAsync(copyFileRequest, cancellationToken)
+                .CopyFileAsync(
+                    copyFileRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    cancellationToken
+                )
                 .WrapExternalExceptionsAsync(adapter)
                 .AsAdapterAwareRepresentationAsync(adapter);
         }
@@ -43,7 +46,10 @@ namespace Baseline.Filesystem
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(deleteFileRequest);
 
             return GetAdapter(adapter)
-                .DeleteFileAsync(deleteFileRequest, cancellationToken)
+                .DeleteFileAsync(
+                    deleteFileRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    cancellationToken
+                )
                 .WrapExternalExceptionsAsync(adapter);
         }
 
@@ -57,7 +63,10 @@ namespace Baseline.Filesystem
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(fileExistsRequest);
 
             return GetAdapter(adapter)
-                .FileExistsAsync(fileExistsRequest, cancellationToken)
+                .FileExistsAsync(
+                    fileExistsRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)), 
+                    cancellationToken
+                )
                 .WrapExternalExceptionsAsync(adapter);
         }
 
@@ -71,7 +80,10 @@ namespace Baseline.Filesystem
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(getFileRequest);
     
             return GetAdapter(adapter)
-                .GetFileAsync(getFileRequest, cancellationToken)
+                .GetFileAsync(
+                    getFileRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    cancellationToken
+                )
                 .WrapExternalExceptionsAsync(adapter)
                 .AsAdapterAwareRepresentationAsync(adapter);
         }
@@ -86,7 +98,10 @@ namespace Baseline.Filesystem
             BaseSourceAndDestinationFileRequestValidator.ValidateAndThrowIfUnsuccessful(moveFileRequest);
 
             return GetAdapter(adapter)
-                .MoveFileAsync(moveFileRequest, cancellationToken)
+                .MoveFileAsync(
+                    moveFileRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    cancellationToken
+                )
                 .WrapExternalExceptionsAsync(adapter)
                 .AsAdapterAwareRepresentationAsync(adapter);
         }
@@ -101,7 +116,10 @@ namespace Baseline.Filesystem
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(readFileAsStringRequest);
 
             return GetAdapter(adapter)
-                .ReadFileAsStringAsync(readFileAsStringRequest, cancellationToken)
+                .ReadFileAsStringAsync(
+                    readFileAsStringRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    cancellationToken
+                )
                 .WrapExternalExceptionsAsync(adapter);
         }
 
@@ -115,7 +133,10 @@ namespace Baseline.Filesystem
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(touchFileRequest);
             
             return GetAdapter(adapter)
-                .TouchFileAsync(touchFileRequest, cancellationToken)
+                .TouchFileAsync(
+                    touchFileRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    cancellationToken
+                )
                 .WrapExternalExceptionsAsync(adapter)
                 .AsAdapterAwareRepresentationAsync(adapter);
         }
@@ -130,7 +151,10 @@ namespace Baseline.Filesystem
             WriteTextToFileRequestValidator.ValidateAndThrowIfUnsuccessful(writeTextToFileRequest);
 
             return GetAdapter(adapter)
-                .WriteTextToFileAsync(writeTextToFileRequest, cancellationToken)
+                .WriteTextToFileAsync(
+                    writeTextToFileRequest.CombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    cancellationToken
+                )
                 .WrapExternalExceptionsAsync(adapter);
         }
     }

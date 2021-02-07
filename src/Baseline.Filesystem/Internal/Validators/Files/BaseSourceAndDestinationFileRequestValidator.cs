@@ -3,7 +3,7 @@ using System;
 namespace Baseline.Filesystem.Internal.Validators.Files
 {
     /// <summary>
-    /// Validation methods for the <see cref="BaseSourceAndDestinationFileRequest" /> class.
+    /// Validation methods for the <see cref="BaseSourceAndDestinationFileRequest{T}" /> class.
     /// </summary>
     internal static class BaseSourceAndDestinationFileRequestValidator
     {
@@ -12,7 +12,8 @@ namespace Baseline.Filesystem.Internal.Validators.Files
         /// </summary>
         /// <param name="fileRequest">The request to validate.</param>
         /// <exception cref="ArgumentNullException" />
-        public static void ValidateAndThrowIfUnsuccessful(BaseSourceAndDestinationFileRequest fileRequest)
+        public static void ValidateAndThrowIfUnsuccessful<T>(BaseSourceAndDestinationFileRequest<T> fileRequest) 
+            where T : BaseSourceAndDestinationFileRequest<T>, new()
         {
             if (fileRequest == null)
             {

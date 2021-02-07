@@ -54,12 +54,15 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
             var adapter = new S3Adapter(new S3AdapterConfiguration
             {
                 BucketName = GeneratedBucketName,
-                S3Client = S3Client,
-                RootPath = _rootPath
+                S3Client = S3Client
             });
             
             var adapterManager = new AdapterManager();
-            adapterManager.Register(adapter);
+            adapterManager.Register(new AdapterRegistration
+            {
+                Adapter = adapter, 
+                RootPath = _rootPath?.AsBaselineFilesystemPath()
+            });
             
             FileManager = new FileManager(adapterManager);
             DirectoryManager = new DirectoryManager(adapterManager);
@@ -115,6 +118,16 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
             return await new StreamReader(file.ResponseStream).ReadToEndAsync();
         }
 
+        protected string CombinePathWithRootPath(PathRepresentation path)
+        {
+            return $"{(_rootPath != null ? $"{_rootPath}/" : string.Empty )}{path.NormalisedPath}";
+        }
+
+        protected PathRepresentation CombinedPathWithRootPathForAssertion(PathRepresentation path)
+        {
+            return _rootPath == null ? path : new PathCombinationBuilder(_rootPath.AsBaselineFilesystemPath(), path).Build();
+        }
+
         protected static string RandomDirectoryPath(bool includeBlank = false)
         {
             var directories = new[]
@@ -153,11 +166,6 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
         protected static PathRepresentation RandomFilePathRepresentationWithPrefix(string prefix)
         {
             return $"{prefix}/{RandomFilePathRepresentation().OriginalPath}".AsBaselineFilesystemPath();
-        }
-
-        private string CombinePathWithRootPath(PathRepresentation path)
-        {
-            return $"{(_rootPath != null ? $"{_rootPath}/" : string.Empty )}{path.NormalisedPath}";
         }
 
         private async Task<bool> FileExistsAsync(PathRepresentation path)
