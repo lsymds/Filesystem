@@ -17,7 +17,11 @@ namespace Baseline.Filesystem.Tests.AdapterManagerTests
         [Fact]
         public void It_Returns_The_Adapter_When_An_Adapter_With_The_Exact_Name_Has_Been_Registered()
         {
-            AdapterManager.Register(new SuccessfulOutcomeAdapter(), "mySpecificNaming-CONVENTION");
+            AdapterManager.Register(new AdapterRegistration 
+            {
+                    Adapter = new SuccessfulOutcomeAdapter(), 
+                    Name = "mySpecificNaming-CONVENTION"
+            });
             var adapter = AdapterManager.Get("mySpecificNaming-CONVENTION");
             adapter.Should().NotBeNull();
         }
@@ -25,7 +29,11 @@ namespace Baseline.Filesystem.Tests.AdapterManagerTests
         [Fact]
         public void It_Returns_The_Adapter_When_An_Adapter_With_A_Normalised_Version_Of_The_Name_Has_Been_Registered()
         {
-            AdapterManager.Register(new SuccessfulOutcomeAdapter(), "my-specific-naming-convention");
+            AdapterManager.Register(new AdapterRegistration
+            {
+                Adapter = new SuccessfulOutcomeAdapter(),
+                Name = "my-specific-naming-convention"
+            });
             var adapter = AdapterManager.Get("MY-SpeCifIc-NAMING-convention");
             adapter.Should().NotBeNull();
         }

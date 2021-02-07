@@ -3,7 +3,7 @@ using System;
 namespace Baseline.Filesystem.Internal.Validators.Files
 {
     /// <summary>
-    /// Validation methods for the <see cref="BaseSingleFileRequest" /> class.
+    /// Validation methods for the <see cref="BaseSingleFileRequest{T}" /> class.
     /// </summary>
     internal static class BaseSingleFileRequestValidator
     {
@@ -14,7 +14,8 @@ namespace Baseline.Filesystem.Internal.Validators.Files
         /// <param name="request">The base file request.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="PathIsADirectoryException"></exception>
-        public static void ValidateAndThrowIfUnsuccessful(BaseSingleFileRequest request)
+        public static void ValidateAndThrowIfUnsuccessful<T>(BaseSingleFileRequest<T> request) 
+            where T : BaseSingleFileRequest<T>, new()
         {
             if (request == null)
             {

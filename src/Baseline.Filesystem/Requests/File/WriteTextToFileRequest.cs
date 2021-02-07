@@ -3,7 +3,7 @@ namespace Baseline.Filesystem
     /// <summary>
     /// Request used to write text to a particular file path.
     /// </summary>
-    public class WriteTextToFileRequest : BaseSingleFileRequest
+    public class WriteTextToFileRequest : BaseSingleFileRequest<WriteTextToFileRequest>
     {
         /// <summary>
         /// Gets or sets the content (mime) type to set the file as. A jpeg file, for example, would be image/jpeg.
@@ -13,10 +13,21 @@ namespace Baseline.Filesystem
         public string ContentType { get; set; }
         
         /// <summary>
-        /// Gets or sets the text to write to the file defined by the <see cref="FilePath" /> property.
+        /// Gets or sets the text to write to the file defined by the FilePath property.
         ///
         /// NOTE: This property cannot be null (or it'll fail validation) but it can be empty or whitespace.
         /// </summary>
         public string TextToWrite { get; set; }
+
+        /// <inheritdoc />
+        internal override WriteTextToFileRequest ShallowClone()
+        {
+            var clonedBase = base.ShallowClone();
+
+            clonedBase.ContentType = ContentType;
+            clonedBase.TextToWrite = TextToWrite;
+
+            return clonedBase;
+        }
     }
 }

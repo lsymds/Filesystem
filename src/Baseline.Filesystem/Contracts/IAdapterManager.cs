@@ -1,5 +1,3 @@
-using Baseline.Filesystem.Internal.Contracts;
-
 namespace Baseline.Filesystem
 {
     /// <summary>
@@ -11,20 +9,19 @@ namespace Baseline.Filesystem
     public interface IAdapterManager
     {
         /// <summary>
-        /// Gets an adapter by its registered name.
+        /// Gets an adapter registration by its registered name.
         /// </summary>
         /// <param name="name">The name of the adapter.</param>
-        /// <returns>The adapter instance if it is found.</returns>
+        /// <returns>The adapter registration if it is found.</returns>
         /// <exception cref="AdapterNotFoundException" />
-        IAdapter Get(string name);
+        AdapterRegistration Get(string name);
 
         /// <summary>
         /// Registers an adapter by a specified name. Names are normalised (lowercased). Duplicates will result in an
         /// exception being thrown.
         /// </summary>
-        /// <param name="adapter">The adapter to register.</param>
-        /// <param name="name">The name of the adapter.</param>
+        /// <param name="registration">The registration class containing the adapter, its name, and its root path.</param>
         /// <exception cref="AdapterAlreadyRegisteredException" />
-        void Register(IAdapter adapter, string name = "default");
+        void Register(AdapterRegistration registration);
     }
 }

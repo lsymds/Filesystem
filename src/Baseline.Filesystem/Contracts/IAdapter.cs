@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Baseline.Filesystem.Internal.Contracts
+namespace Baseline.Filesystem
 {
     /// <summary>
     /// Provides an interface for all Baseline.Filesystem adapters. Implementations are not aware that there may be more than one

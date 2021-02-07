@@ -1,5 +1,4 @@
 ﻿using Amazon.S3;
-using Baseline.Filesystem.Internal.Contracts;
 
 namespace Baseline.Filesystem.Adapters.S3
 {
@@ -10,7 +9,6 @@ namespace Baseline.Filesystem.Adapters.S3
     public partial class S3Adapter : IAdapter
     {
         private readonly S3AdapterConfiguration _adapterConfiguration;
-        private readonly PathRepresentation _basePath;
         private readonly IAmazonS3 _s3Client;
 
         /// <summary>
@@ -22,26 +20,6 @@ namespace Baseline.Filesystem.Adapters.S3
         {
             _adapterConfiguration = adapterConfiguration;
             _s3Client = _adapterConfiguration.S3Client;
-            
-            if (!string.IsNullOrWhiteSpace(adapterConfiguration.RootPath))
-            {
-                _basePath = new PathRepresentationBuilder(adapterConfiguration.RootPath).Build();   
-            }
-        }
-
-        /// <summary>
-        /// Combines the root path (if specified) with the path specified as part of the request.
-        /// </summary>
-        /// <param name="requestedPath">The path specified as part of the request.</param>
-        /// <returns>The combined paths, if applicable, or the request path if not.</returns>
-        private PathRepresentation CombineRootAndRequestedPath(PathRepresentation requestedPath)
-        {
-            if (_basePath == null)
-            {
-                return requestedPath;
-            }
-            
-            return new PathCombinationBuilder(_basePath, requestedPath).Build();
         }
     }
 }

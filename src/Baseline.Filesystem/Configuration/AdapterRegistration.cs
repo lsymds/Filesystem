@@ -1,10 +1,20 @@
-namespace Baseline.Filesystem.Configuration
+namespace Baseline.Filesystem
 {
     /// <summary>
-    /// Base adapter configuration which defines common functionality across all adapter configuration objects.
+    /// Configuration class containing all of the properties and information required to register an adapter.
     /// </summary>
-    public class BaseAdapterConfiguration
+    public class AdapterRegistration
     {
+        /// <summary>
+        /// Gets or sets the adapter instance to be registered.
+        /// </summary>
+        public IAdapter Adapter { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the name of the adapter.
+        /// </summary>
+        public string Name { get; set; } = "default";
+        
         /// <summary>
         /// Gets or sets an optional root path which is always combined with a path specified in any call to any methods
         /// within an adapter. This is a great feature to use when you want to keep normalised URLs in your application
@@ -21,6 +31,6 @@ namespace Baseline.Filesystem.Configuration
         ///     - If, in the future, I decide I want to use a physical file system, I can use the file system adapter,
         ///       configure its root path accordingly, and not have to change anything within my application. 
         /// </summary>
-        public string RootPath { get; set; }
+        public PathRepresentation RootPath { get; set; }
     }
 }

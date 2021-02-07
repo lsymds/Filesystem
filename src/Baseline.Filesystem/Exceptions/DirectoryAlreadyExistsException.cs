@@ -8,11 +8,9 @@ namespace Baseline.Filesystem
         /// <summary>
         /// Initialises a new instance of the <see cref="DirectoryAlreadyExistsException"/> class.
         /// </summary>
-        /// <param name="pathWithRoot">The requested path combined with the root path of the adapter if set.</param>
-        /// <param name="path">The requested path without the root path of the adapter.</param>
-        public DirectoryAlreadyExistsException(string pathWithRoot, string path)
-            : base($"The directory (path with root: {pathWithRoot}, path without root: {path}) already exists " +
-                   $"and cannot be created, copied to or moved to.")
+        /// <param name="path">The requested path that already exists.</param>
+        public DirectoryAlreadyExistsException(string path)
+            : base($"The directory ({path}) already exists and cannot be created, copied to or moved to.")
         {
         }
     }
