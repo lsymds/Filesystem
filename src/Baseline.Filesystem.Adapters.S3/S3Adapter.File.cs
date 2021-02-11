@@ -132,7 +132,7 @@ namespace Baseline.Filesystem.Adapters.S3
             CancellationToken cancellationToken
         )
         {
-            await EnsureFileExistsAsync(getFilePublicUrlRequest.FilePath, cancellationToken);
+            await EnsureFileExistsAsync(getFilePublicUrlRequest.FilePath, cancellationToken).ConfigureAwait(false);
 
             var expiry = getFilePublicUrlRequest.Expiry ?? DateTime.Today.AddDays(1);
 

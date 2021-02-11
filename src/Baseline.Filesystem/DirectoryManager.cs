@@ -33,7 +33,8 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
-                .AsAdapterAwareRepresentationAsync(adapter);
+                .AsAdapterAwareRepresentationAsync(adapter)
+                .ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -50,7 +51,8 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
-                .AsAdapterAwareRepresentationAsync(adapter);
+                .AsAdapterAwareRepresentationAsync(adapter)
+                .ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -66,7 +68,8 @@ namespace Baseline.Filesystem
                     deleteDirectoryRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)), 
                     cancellationToken
                 )
-                .WrapExternalExceptionsAsync(adapter);
+                .WrapExternalExceptionsAsync(adapter)
+                .ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -84,7 +87,8 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
-                .AsAdapterAwareRepresentationAsync(adapter);
+                .AsAdapterAwareRepresentationAsync(adapter)
+                .ConfigureAwait(false);
         }
     }
 }
