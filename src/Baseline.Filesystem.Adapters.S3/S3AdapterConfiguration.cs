@@ -1,6 +1,6 @@
 ﻿using Amazon.S3;
 
-namespace Baseline.Filesystem.Adapters.S3
+namespace Baseline.Filesystem
 {
     /// <summary>
     /// Configuration options for the S3 adapter.

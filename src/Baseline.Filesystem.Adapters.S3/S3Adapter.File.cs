@@ -9,7 +9,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Baseline.Filesystem.Adapters.S3.Internal.Extensions;
 
-namespace Baseline.Filesystem.Adapters.S3
+namespace Baseline.Filesystem
 {
     /// <summary>
     /// Provides the file based functions of an <see cref="IAdapter"/> for Amazon's Simple Storage Service. 

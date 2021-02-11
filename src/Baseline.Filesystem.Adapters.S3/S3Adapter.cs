@@ -1,6 +1,6 @@
 ﻿using Amazon.S3;
 
-namespace Baseline.Filesystem.Adapters.S3
+namespace Baseline.Filesystem
 {
     /// <summary>
     /// Provides the shared, directory/file agnostic functions of the <see cref="IAdapter"/> implementation for

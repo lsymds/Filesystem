@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Baseline.Filesystem.DependencyInjection\Baseline.Filesystem.DependencyInjection.csproj" />
     <ProjectReference Include="..\Baseline.Filesystem\Baseline.Filesystem.csproj" />
   </ItemGroup>
 

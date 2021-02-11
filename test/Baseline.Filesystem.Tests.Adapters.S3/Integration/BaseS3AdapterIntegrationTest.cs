@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Baseline.Filesystem.Adapters.S3;
 using FluentAssertions;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
@@ -15,8 +14,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
     {
         private static readonly Random Random = new Random();
 
-        private string _rootPath;
-        
+        protected string RootPath { get; private set; }
         protected readonly string GeneratedBucketName;
         protected readonly IAmazonS3 S3Client;
         
@@ -49,7 +47,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
 
         protected void ReconfigureManagerInstances(bool useRootPath)
         {
-            _rootPath = useRootPath ? $"{RandomString(6)}/{RandomString(2)}" : null;
+            RootPath = useRootPath ? $"{RandomString(6)}/{RandomString(2)}" : null;
             
             var adapter = new S3Adapter(new S3AdapterConfiguration
             {
@@ -61,7 +59,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
             adapterManager.Register(new AdapterRegistration
             {
                 Adapter = adapter, 
-                RootPath = _rootPath?.AsBaselineFilesystemPath()
+                RootPath = RootPath?.AsBaselineFilesystemPath()
             });
             
             FileManager = new FileManager(adapterManager);
@@ -120,12 +118,12 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
 
         protected string CombinePathWithRootPath(PathRepresentation path)
         {
-            return $"{(_rootPath != null ? $"{_rootPath}/" : string.Empty )}{path.NormalisedPath}";
+            return $"{(RootPath != null ? $"{RootPath}/" : string.Empty )}{path.NormalisedPath}";
         }
 
         protected PathRepresentation CombinedPathWithRootPathForAssertion(PathRepresentation path)
         {
-            return _rootPath == null ? path : new PathCombinationBuilder(_rootPath.AsBaselineFilesystemPath(), path).Build();
+            return RootPath == null ? path : new PathCombinationBuilder(RootPath.AsBaselineFilesystemPath(), path).Build();
         }
 
         protected static string RandomDirectoryPath(bool includeBlank = false)
