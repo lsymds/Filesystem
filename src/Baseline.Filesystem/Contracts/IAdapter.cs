@@ -121,7 +121,18 @@ namespace Baseline.Filesystem
         /// The request containing information about what to write and to where.
         /// </param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        /// <returns>An asynchronous task.</returns>
         Task WriteTextToFileAsync(WriteTextToFileRequest writeTextToFileRequest, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Retrieves a public URL for a file from the adapter's data store.
+        /// </summary>
+        /// <param name="getFilePublicUrlRequest">
+        /// The request containing information about what file to retrieve a public URL for.
+        /// </param>
+        /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
+        Task<GetFilePublicUrlResponse> GetFilePublicUrlAsync(
+            GetFilePublicUrlRequest getFilePublicUrlRequest,
+            CancellationToken cancellationToken
+        );
     }
 }

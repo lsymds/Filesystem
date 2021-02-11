@@ -19,7 +19,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public Task<AdapterAwareFileRepresentation> CopyAsync(
+        public async Task<AdapterAwareFileRepresentation> CopyAsync(
             CopyFileRequest copyFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -27,7 +27,7 @@ namespace Baseline.Filesystem
         {
             BaseSourceAndDestinationFileRequestValidator.ValidateAndThrowIfUnsuccessful(copyFileRequest);
             
-            return GetAdapter(adapter)
+            return await GetAdapter(adapter)
                 .CopyFileAsync(
                     copyFileRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
@@ -37,7 +37,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public Task DeleteAsync(
+        public async Task DeleteAsync(
             DeleteFileRequest deleteFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -45,7 +45,7 @@ namespace Baseline.Filesystem
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(deleteFileRequest);
 
-            return GetAdapter(adapter)
+            await GetAdapter(adapter)
                 .DeleteFileAsync(
                     deleteFileRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
@@ -54,7 +54,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public Task<bool> ExistsAsync(
+        public async Task<bool> ExistsAsync(
             FileExistsRequest fileExistsRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -62,7 +62,7 @@ namespace Baseline.Filesystem
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(fileExistsRequest);
 
-            return GetAdapter(adapter)
+            return await GetAdapter(adapter)
                 .FileExistsAsync(
                     fileExistsRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)), 
                     cancellationToken
@@ -71,7 +71,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public Task<AdapterAwareFileRepresentation> GetAsync(
+        public async Task<AdapterAwareFileRepresentation> GetAsync(
             GetFileRequest getFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -79,13 +79,30 @@ namespace Baseline.Filesystem
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(getFileRequest);
     
-            return GetAdapter(adapter)
+            return await GetAdapter(adapter)
                 .GetFileAsync(
                     getFileRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
                 .AsAdapterAwareRepresentationAsync(adapter);
+        }
+
+        /// <inheritdoc />
+        public async Task<GetFilePublicUrlResponse> GetPublicUrlAsync(
+            GetFilePublicUrlRequest getFilePublicUrlRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        )
+        {
+            BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(getFilePublicUrlRequest);
+
+            return await GetAdapter(adapter)
+                .GetFilePublicUrlAsync(
+                    getFilePublicUrlRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)), 
+                    cancellationToken
+                )
+                .WrapExternalExceptionsAsync(adapter);
         }
 
         /// <inheritdoc />

@@ -73,5 +73,13 @@ namespace Baseline.Filesystem.Tests.Fixtures
         {
             return Task.CompletedTask;
         }
+
+        public Task<GetFilePublicUrlResponse> GetFilePublicUrlAsync(
+            GetFilePublicUrlRequest getFilePublicUrlRequest,
+            CancellationToken cancellationToken
+        )
+        {
+            return Task.FromResult(new GetFilePublicUrlResponse());
+        }
     }
 }
