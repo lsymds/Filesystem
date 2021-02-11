@@ -28,6 +28,6 @@ jobs:
               env:
                   VERSION: ${{ steps.tagName.outputs.tag }}
             - name: Release to Nuget
-              run: dotnet nuget push ./dist/*.nupkg --source https://api.nuget.org/v3/index.json -k ${NUGET_TOKEN} --skip-duplicate
+              run: dotnet nuget push ./dist/* --source https://api.nuget.org/v3/index.json -k ${NUGET_TOKEN} --skip-duplicate
               env:
                   NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
