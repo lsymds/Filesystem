@@ -1,36 +1,27 @@
 using System;
-using System.Runtime.Serialization;
 
-namespace Baseline.Filesystem.DependencyInjection
+namespace Baseline.Filesystem
 {
+    /// <summary>
+    /// Builder class containing properties required to fluently add an adapter registration to the
+    /// <see cref="AdapterManager"/> class.
+    /// </summary>
     public class AdapterRegistrationBuilder
     {
+        /// <summary>
+        /// Gets or sets the name of the adapter.
+        /// </summary>
         internal string Name { get; set; }
-        internal string RootPath { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the root path of the adapter.
+        /// </summary>
+        internal PathRepresentation RootPath { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the lambda function used to resolve an <see cref="IAdapter"/> instance that becomes the adapter
+        /// registration.
+        /// </summary>
         internal Func<IServiceProvider, IAdapter> Resolver { get; set; }
-    }
-
-    public static class AdapterRegistrationBuilderExtensions
-    {
-        public static AdapterRegistrationBuilder WithName(this AdapterRegistrationBuilder builder, string name)
-        {
-            builder.Name = name;
-            return builder;
-        }
-
-        public static AdapterRegistrationBuilder WithRootPath(this AdapterRegistrationBuilder builder, string rootPath)
-        {
-            builder.RootPath = rootPath;
-            return builder;
-        }
-
-        public static AdapterRegistrationBuilder WithAdapter(
-            this AdapterRegistrationBuilder builder,
-            Func<IServiceProvider, IAdapter> resolver
-        )
-        {
-            builder.Resolver = resolver;
-            return builder;
-        }
     }
 }

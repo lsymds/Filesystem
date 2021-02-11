@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baseline.Filesystem.Tests.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baseline.Filesystem.DependencyInjection", "src\Baseline.Filesystem.DependencyInjection\Baseline.Filesystem.DependencyInjection.csproj", "{28E9F700-048C-47C9-9CA6-99267F88297F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baseline.Filesystem.Tests.DependencyInjection", "test\Baseline.Filesystem.Tests.DependencyInjection\Baseline.Filesystem.Tests.DependencyInjection.csproj", "{F4F559A2-B168-455E-83F5-A67C35160C89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +92,18 @@ Global
 		{28E9F700-048C-47C9-9CA6-99267F88297F}.Release|x64.Build.0 = Release|Any CPU
 		{28E9F700-048C-47C9-9CA6-99267F88297F}.Release|x86.ActiveCfg = Release|Any CPU
 		{28E9F700-048C-47C9-9CA6-99267F88297F}.Release|x86.Build.0 = Release|Any CPU
+		{F4F559A2-B168-455E-83F5-A67C35160C89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4F559A2-B168-455E-83F5-A67C35160C89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4F559A2-B168-455E-83F5-A67C35160C89}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F4F559A2-B168-455E-83F5-A67C35160C89}.Debug|x64.Build.0 = Debug|Any CPU
+		{F4F559A2-B168-455E-83F5-A67C35160C89}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F4F559A2-B168-455E-83F5-A67C35160C89}.Debug|x86.Build.0 = Debug|Any CPU
+		{F4F559A2-B168-455E-83F5-A67C35160C89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4F559A2-B168-455E-83F5-A67C35160C89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4F559A2-B168-455E-83F5-A67C35160C89}.Release|x64.ActiveCfg = Release|Any CPU
+		{F4F559A2-B168-455E-83F5-A67C35160C89}.Release|x64.Build.0 = Release|Any CPU
+		{F4F559A2-B168-455E-83F5-A67C35160C89}.Release|x86.ActiveCfg = Release|Any CPU
+		{F4F559A2-B168-455E-83F5-A67C35160C89}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{388BFA14-FB4B-444F-97AC-853BC898C562} = {AF29C6EF-5BB8-452F-A1AE-0C2B296D6BE6}
@@ -97,5 +111,6 @@ Global
 		{EB1C21D4-3108-4CE8-8ECB-073AD67B1A9A} = {AF29C6EF-5BB8-452F-A1AE-0C2B296D6BE6}
 		{35B861C2-F2FC-479F-9A86-3052D8A7C010} = {51323181-3938-412F-B990-AF404D3280BC}
 		{28E9F700-048C-47C9-9CA6-99267F88297F} = {AF29C6EF-5BB8-452F-A1AE-0C2B296D6BE6}
+		{F4F559A2-B168-455E-83F5-A67C35160C89} = {51323181-3938-412F-B990-AF404D3280BC}
 	EndGlobalSection
 EndGlobal

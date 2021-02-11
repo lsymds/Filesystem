@@ -1,25 +1,17 @@
-using System;
 using System.Collections.Generic;
 
-namespace Baseline.Filesystem.DependencyInjection
+namespace Baseline.Filesystem
 {
+    /// <summary>
+    /// Builder class containing properties required to fluently add the Baseline.Filesystem project to a service
+    /// collection.
+    /// </summary>
     public class BaselineFilesystemBuilder
     {
-        internal List<AdapterRegistrationBuilder> AdapterRegistrations = new List<AdapterRegistrationBuilder>();
-    }
-
-    public static class BaselineFilesystemBuilderExtensions
-    {
-        public static BaselineFilesystemBuilder AddAdapterRegistration(
-            this BaselineFilesystemBuilder builder,
-            Action<AdapterRegistrationBuilder> adapterRegistrationBuilder)
-        {
-            var registration = new AdapterRegistrationBuilder();
-            adapterRegistrationBuilder(registration);
-            
-            builder.AdapterRegistrations.Add(registration);
-
-            return builder;
-        }
+        /// <summary>
+        /// Gets the collection of adapter registrations to register in the service collection.
+        /// </summary>
+        internal List<AdapterRegistrationBuilder> AdapterRegistrations { get; } = 
+            new List<AdapterRegistrationBuilder>();
     }
 }

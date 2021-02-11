@@ -1,6 +1,5 @@
 ﻿using Amazon.S3;
 using Moq;
-using Baseline.Filesystem.Adapters.S3;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Unit
 {
