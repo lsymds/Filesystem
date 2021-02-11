@@ -99,7 +99,7 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(getFilePublicUrlRequest);
+            GetFilePublicUrlRequestValidator.ValidateAndThrowIfUnsuccessful(getFilePublicUrlRequest);
 
             return await GetAdapter(adapter)
                 .GetFilePublicUrlAsync(

@@ -44,6 +44,22 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
             });
             await func.Should().ThrowExactlyAsync<PathIsADirectoryException>();
         }
+
+        [Fact]
+        public async Task It_Throws_An_Exception_If_The_Expiry_Date_Was_Not_Far_Enough_Away()
+        {
+            var path = "/users/Foo/bar/Destiny/XYZ/BARTINO.txt".AsBaselineFilesystemPath();
+            
+            Func<Task> func = async () => await FileManager.GetPublicUrlAsync(new GetFilePublicUrlRequest
+            {
+                FilePath = path,
+                Expiry = DateTime.Now
+            });
+            await func
+                .Should()
+                .ThrowExactlyAsync<ArgumentException>()
+                .WithMessage("Expiry cannot be less than 10 seconds away from the current time. (Parameter 'Expiry')");
+        }
         
         [Fact]
         public async Task It_Invokes_The_Matching_Adapters_Get_File_Method_And_Wraps_The_Response()
