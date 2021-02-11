@@ -125,6 +125,28 @@ namespace Baseline.Filesystem.Adapters.S3
                 cancellationToken
             ).ConfigureAwait(false);
         }
+        
+        /// <inheritdoc />
+        public async Task<GetFilePublicUrlResponse> GetFilePublicUrlAsync(
+            GetFilePublicUrlRequest getFilePublicUrlRequest,
+            CancellationToken cancellationToken
+        )
+        {
+            await EnsureFileExistsAsync(getFilePublicUrlRequest.FilePath, cancellationToken).ConfigureAwait(false);
+
+            var expiry = getFilePublicUrlRequest.Expiry ?? DateTime.Today.AddDays(1);
+
+            return new GetFilePublicUrlResponse
+            {
+                Expiry = expiry,
+                Url = _s3Client.GetPreSignedURL(new GetPreSignedUrlRequest
+                {
+                    BucketName = _adapterConfiguration.BucketName,
+                    Key = getFilePublicUrlRequest.FilePath.NormalisedPath,
+                    Expires = expiry
+                })
+            };
+        }
 
         /// <summary>
         /// Checks and returns whether a file exists. For use within methods that do their own validation.

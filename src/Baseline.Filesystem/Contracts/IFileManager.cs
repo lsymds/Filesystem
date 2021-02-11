@@ -104,6 +104,21 @@ namespace Baseline.Filesystem
             string adapter = "default",
             CancellationToken cancellationToken = default
         );
+        
+        /// <summary>
+        /// Retrieves a publicly accessible URL for the file defined in the request.
+        /// </summary>
+        /// <param name="getFilePublicUrlRequest">
+        /// The request containing the information about the file to get the public URL for.
+        /// </param>
+        /// <param name="adapter">The adapter to get the public URL for the file from.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>A response containing the public URL and related information of the file.</returns>
+        Task<GetFilePublicUrlResponse> GetPublicUrlAsync(
+            GetFilePublicUrlRequest getFilePublicUrlRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Moves a file from one path in an adapter's storage to another, returning the information about the newly

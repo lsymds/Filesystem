@@ -60,7 +60,7 @@ namespace Baseline.Filesystem.Internal.Extensions
                 throw e.CreateAdapterException(adapterName);
             }
         }
-
+        
         /// <summary>
         /// Creates a <see cref="AdapterProviderOperationException"/> for a given exception and adapter name with a
         /// consistent message.
