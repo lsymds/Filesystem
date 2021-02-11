@@ -4,4 +4,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>Baseline.Filesystem</PackageId>
+    <PackageTags>file system;file system abstractions;files;fileserver;s3;file store; file abstractions;file store abstractions;blob;baseline;baseline filesystem</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>lsymonds</Authors>
+    <RepositoryUrl>https://github.com/baseline-project/Baseline.Filesystem</RepositoryUrl>
+    <PackageDescription>A storage and filesystem abstraction layer for modern .NET projects. Save yourself the pain of writing an `IFileStore` over and over again and use this tried, tested, well documented and super extensible one instead.</PackageDescription>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  
 </Project>
