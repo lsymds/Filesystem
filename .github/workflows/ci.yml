@@ -31,9 +31,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ matrix.dotnet }}
-    - name: Restore dependencies
-      run: dotnet restore -f "${{ matrix.framework }}"
     - name: Build
-      run: dotnet build --no-restore -f "${{ matrix.framework }}"
+      run: dotnet build -f "${{ matrix.framework }}"
     - name: Test
       run: dotnet test --no-build --verbosity normal -f "${{ matrix.framework }}"
