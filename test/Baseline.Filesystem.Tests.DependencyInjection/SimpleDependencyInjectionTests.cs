@@ -37,10 +37,10 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
 
             // Assert.
             var adapterManager = serviceProvider.GetService<IAdapterManager>();
-            adapterManager!.Get("default").Adapter.Should().BeOfType<S3Adapter>();
+            adapterManager.Get("default").Adapter.Should().BeOfType<S3Adapter>();
 
             var fileManager = serviceProvider.GetService<IFileManager>();
-            var fileContents = await fileManager!.ReadAsStringAsync(
+            var fileContents = await fileManager.ReadAsStringAsync(
                 new ReadFileAsStringRequest
                 {
                     FilePath = filePath
@@ -76,10 +76,10 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
 
             // Assert.
             var adapterManager = serviceProvider.GetService<IAdapterManager>();
-            adapterManager!.Get("default").Adapter.Should().BeOfType<S3Adapter>();
+            adapterManager.Get("default").Adapter.Should().BeOfType<S3Adapter>();
 
             var fileManager = serviceProvider.GetService<IFileManager>();
-            var fileContents = await fileManager!.ReadAsStringAsync(
+            var fileContents = await fileManager.ReadAsStringAsync(
                 new ReadFileAsStringRequest
                 {
                     FilePath = filePath
@@ -125,11 +125,11 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
 
             // Assert.
             var adapterManager = serviceProvider.GetService<IAdapterManager>();
-            adapterManager!.Get("default").Adapter.Should().BeOfType<S3Adapter>();
-            adapterManager!.Get("second").Adapter.Should().BeOfType<S3Adapter>();
+            adapterManager.Get("default").Adapter.Should().BeOfType<S3Adapter>();
+            adapterManager.Get("second").Adapter.Should().BeOfType<S3Adapter>();
 
             var fileManager = serviceProvider.GetService<IFileManager>();
-            var fileContents = await fileManager!.ReadAsStringAsync(
+            var fileContents = await fileManager.ReadAsStringAsync(
                 new ReadFileAsStringRequest
                 {
                     FilePath = filePath
@@ -167,10 +167,10 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
 
             // Assert.
             var adapterManager = serviceProvider.GetService<IAdapterManager>();
-            adapterManager!.Get("default").Adapter.Should().BeOfType<S3Adapter>();
+            adapterManager.Get("default").Adapter.Should().BeOfType<S3Adapter>();
 
             var fileManager = serviceProvider.GetService<IFileManager>();
-            var fileContents = await fileManager!.ReadAsStringAsync(
+            var fileContents = await fileManager.ReadAsStringAsync(
                 new ReadFileAsStringRequest
                 {
                     FilePath = filePath
