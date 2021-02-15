@@ -10,7 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet: [ '3.1.x', '5.0.x' ]
+        include:
+          - dotnet: 3.1.x
+            framework: netcoreapp3.1
+          - dotnet: 5.0.x
+            framework: net5.0
     services:
       localstack:
         image: localstack/localstack:latest
@@ -28,8 +32,8 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet }}
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore -f "${{ matrix.framework }}"
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore -f "${{ matrix.framework }}"
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal -f "${{ matrix.framework }}"
