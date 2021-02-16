@@ -167,6 +167,24 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
+        public async Task<WriteStreamToFileResponse> WriteStreamAsync(
+            WriteStreamToFileRequest writeStreamToFileRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        )
+        {
+            WriteStreamToFileRequestValidator.ValidateAndThrowIfUnsuccessful(writeStreamToFileRequest);
+
+            return await GetAdapter(adapter)
+                .WriteStreamToFileAsync(
+                    writeStreamToFileRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    cancellationToken
+                )
+                .WrapExternalExceptionsAsync(adapter)
+                .ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
         public async Task WriteTextAsync(
             WriteTextToFileRequest writeTextToFileRequest,
             string adapter = "default",
@@ -174,7 +192,6 @@ namespace Baseline.Filesystem
         )
         {
             WriteTextToFileRequestValidator.ValidateAndThrowIfUnsuccessful(writeTextToFileRequest);
-
             
             await GetAdapter(adapter)
                 .WriteTextToFileAsync(

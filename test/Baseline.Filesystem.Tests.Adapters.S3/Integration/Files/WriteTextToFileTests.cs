@@ -7,7 +7,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
     public class WriteTextToFileTests : BaseS3AdapterIntegrationTest
     {
         [Fact]
-        public async Task It_Successfully_Writes_Simple_File_To_S3()
+        public async Task It_Successfully_Writes_A_Simple_File_To_S3()
         {
             var path = RandomFilePathRepresentation();
             

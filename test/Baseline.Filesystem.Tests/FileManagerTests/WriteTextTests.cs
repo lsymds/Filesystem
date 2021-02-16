@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.FileManagerTests
 {
-    public class WriteTextAsyncTests : BaseManagerUsageTest
+    public class WriteTextTests : BaseManagerUsageTest
     {
         [Fact]
         public async Task It_Throws_An_Exception_If_The_Requested_Adapter_Name_Is_Not_Registered()
@@ -29,7 +29,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         [Fact]
         public async Task It_Throws_An_Exception_If_The_Path_For_The_Request_Was_Null()
         {
-            Func<Task> func = async () => await FileManager.WriteTextAsync(new WriteTextToFileRequest());
+            Func<Task> func = async () => await FileManager.WriteTextAsync(new WriteTextToFileRequest { TextToWrite = "foo" });
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
 
