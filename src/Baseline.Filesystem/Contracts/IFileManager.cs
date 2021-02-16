@@ -217,5 +217,27 @@ namespace Baseline.Filesystem
             string adapter = "default",
             CancellationToken cancellationToken = default
         );
+
+        /// <summary>
+        /// Writes a stream to a path, overwriting it entirely if it already exists or creating it if it doesn't.
+        /// </summary>
+        /// <param name="writeStreamToFileRequest">
+        /// The request containing information about the file and content to write.
+        /// </param>
+        /// <param name="adapter">The adapter in which to write the file stream to.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>A response containing information about what was created.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsADirectoryException" />
+        Task<WriteStreamToFileResponse> WriteStreamAsync(
+            WriteStreamToFileRequest writeStreamToFileRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        );
     }
 }

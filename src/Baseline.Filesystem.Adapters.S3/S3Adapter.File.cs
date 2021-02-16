@@ -59,6 +59,28 @@ namespace Baseline.Filesystem
             var fileExists = await FileExistsInternalAsync(getFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
             return fileExists ? new FileRepresentation {Path = getFileRequest.FilePath} : null;
         }
+        
+        /// <inheritdoc />
+        public async Task<GetFilePublicUrlResponse> GetFilePublicUrlAsync(
+            GetFilePublicUrlRequest getFilePublicUrlRequest,
+            CancellationToken cancellationToken
+        )
+        {
+            await EnsureFileExistsAsync(getFilePublicUrlRequest.FilePath, cancellationToken).ConfigureAwait(false);
+
+            var expiry = getFilePublicUrlRequest.Expiry ?? DateTime.Today.AddDays(1);
+
+            return new GetFilePublicUrlResponse
+            {
+                Expiry = expiry,
+                Url = _s3Client.GetPreSignedURL(new GetPreSignedUrlRequest
+                {
+                    BucketName = _adapterConfiguration.BucketName,
+                    Key = getFilePublicUrlRequest.FilePath.NormalisedPath,
+                    Expires = expiry
+                })
+            };
+        }
 
         /// <inheritdoc />
         public async Task<FileRepresentation> MoveFileAsync(
@@ -109,6 +131,27 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
+        public async Task<WriteStreamToFileResponse> WriteStreamToFileAsync(
+            WriteStreamToFileRequest writeStreamToFileRequest,
+            CancellationToken cancellationToken
+        )
+        {
+            await _s3Client.PutObjectAsync(
+                new PutObjectRequest
+                {
+                    BucketName = _adapterConfiguration.BucketName,
+                    AutoCloseStream = false,
+                    InputStream = writeStreamToFileRequest.Stream,
+                    ContentType = writeStreamToFileRequest.ContentType,
+                    Key = writeStreamToFileRequest.FilePath.NormalisedPath
+                },
+                cancellationToken
+            ).ConfigureAwait(false);
+
+            return new WriteStreamToFileResponse();
+        }
+
+        /// <inheritdoc />
         public async Task WriteTextToFileAsync(
             WriteTextToFileRequest writeTextToFileRequest,
             CancellationToken cancellationToken
@@ -124,28 +167,6 @@ namespace Baseline.Filesystem
                 },
                 cancellationToken
             ).ConfigureAwait(false);
-        }
-        
-        /// <inheritdoc />
-        public async Task<GetFilePublicUrlResponse> GetFilePublicUrlAsync(
-            GetFilePublicUrlRequest getFilePublicUrlRequest,
-            CancellationToken cancellationToken
-        )
-        {
-            await EnsureFileExistsAsync(getFilePublicUrlRequest.FilePath, cancellationToken).ConfigureAwait(false);
-
-            var expiry = getFilePublicUrlRequest.Expiry ?? DateTime.Today.AddDays(1);
-
-            return new GetFilePublicUrlResponse
-            {
-                Expiry = expiry,
-                Url = _s3Client.GetPreSignedURL(new GetPreSignedUrlRequest
-                {
-                    BucketName = _adapterConfiguration.BucketName,
-                    Key = getFilePublicUrlRequest.FilePath.NormalisedPath,
-                    Expires = expiry
-                })
-            };
         }
 
         /// <summary>

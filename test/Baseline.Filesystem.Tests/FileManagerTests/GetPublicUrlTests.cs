@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.FileManagerTests
 {
-    public class GetPublicUrlAsyncTests : BaseManagerUsageTest
+    public class GetPublicUrlTests : BaseManagerUsageTest
     {
         [Fact]
         public async Task It_Throws_An_Exception_If_The_Requested_Adapter_Name_Is_Not_Registered()

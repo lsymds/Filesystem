@@ -7,13 +7,13 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.FileManagerTests
 {
-    public class GetAsyncTests : BaseManagerUsageTest
+    public class DeleteTests : BaseManagerUsageTest
     {
         [Fact]
         public async Task It_Throws_An_Exception_If_The_Requested_Adapter_Name_Is_Not_Registered()
         {
-            Func<Task> func = async () => await FileManager.GetAsync(
-                new GetFileRequest { FilePath = "a".AsBaselineFilesystemPath() },
+            Func<Task> func = async () => await FileManager.DeleteAsync(
+                new DeleteFileRequest { FilePath = "a".AsBaselineFilesystemPath() },
                 "foo"
             );
             await func.Should().ThrowAsync<AdapterNotFoundException>();
@@ -22,14 +22,14 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         [Fact]
         public async Task It_Throws_An_Exception_If_The_Request_Was_Null()
         {
-            Func<Task> func = async () => await FileManager.GetAsync(null);
+            Func<Task> func = async () => await FileManager.DeleteAsync(null);
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
 
         [Fact]
         public async Task It_Throws_An_Exception_If_The_Path_For_The_Request_Was_Null()
         {
-            Func<Task> func = async () => await FileManager.GetAsync(new GetFileRequest());
+            Func<Task> func = async () => await FileManager.DeleteAsync(new DeleteFileRequest());
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
 
@@ -38,20 +38,18 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
             
-            Func<Task> func = async () => await FileManager.GetAsync(new GetFileRequest { FilePath = path });
+            Func<Task> func = async () => await FileManager.DeleteAsync(new DeleteFileRequest { FilePath = path });
             await func.Should().ThrowExactlyAsync<PathIsADirectoryException>();
         }
         
         [Fact]
-        public async Task It_Invokes_The_Matching_Adapters_Get_File_Method_And_Wraps_The_Response()
+        public async Task It_Invokes_The_Matching_Adapters_Delete_File_Method()
         {
             Adapter
-                .Setup(x => x.GetFileAsync(It.IsAny<GetFileRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new FileRepresentation { Path = new PathRepresentation() })
+                .Setup(x => x.DeleteFileAsync(It.IsAny<DeleteFileRequest>(), It.IsAny<CancellationToken>()))
                 .Verifiable();
             
-            var response = await FileManager.GetAsync(new GetFileRequest { FilePath = "a".AsBaselineFilesystemPath() });
-            response.AdapterName.Should().Be("default");
+            await FileManager.DeleteAsync(new DeleteFileRequest { FilePath = "a".AsBaselineFilesystemPath() });
             
             Adapter.VerifyAll();
         }

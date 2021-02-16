@@ -7,13 +7,13 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.FileManagerTests
 {
-    public class ReadAsStringAsyncTests : BaseManagerUsageTest
+    public class ExistsTests : BaseManagerUsageTest
     {
         [Fact]
         public async Task It_Throws_An_Exception_If_The_Requested_Adapter_Name_Is_Not_Registered()
         {
-            Func<Task> func = async () => await FileManager.ReadAsStringAsync(
-                new ReadFileAsStringRequest { FilePath = "a".AsBaselineFilesystemPath() },
+            Func<Task> func = async () => await FileManager.ExistsAsync(
+                new FileExistsRequest { FilePath = "a".AsBaselineFilesystemPath() },
                 "foo"
             );
             await func.Should().ThrowAsync<AdapterNotFoundException>();
@@ -22,14 +22,14 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         [Fact]
         public async Task It_Throws_An_Exception_If_The_Request_Was_Null()
         {
-            Func<Task> func = async () => await FileManager.ReadAsStringAsync(null);
+            Func<Task> func = async () => await FileManager.ExistsAsync(null);
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
 
         [Fact]
         public async Task It_Throws_An_Exception_If_The_Path_For_The_Request_Was_Null()
         {
-            Func<Task> func = async () => await FileManager.ReadAsStringAsync(new ReadFileAsStringRequest());
+            Func<Task> func = async () => await FileManager.ExistsAsync(new FileExistsRequest());
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
 
@@ -37,25 +37,21 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         public async Task It_Throws_An_Exception_If_The_Path_Was_Obviously_Intended_As_A_Directory()
         {
             var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
-
-            Func<Task> func = async () =>
-                await FileManager.ReadAsStringAsync(new ReadFileAsStringRequest { FilePath = path }
-            );
+            
+            Func<Task> func = async () => await FileManager.ExistsAsync(new FileExistsRequest { FilePath = path });
             await func.Should().ThrowExactlyAsync<PathIsADirectoryException>();
         }
         
         [Fact]
-        public async Task It_Invokes_The_Matching_Adapters_ReadFileAsString_Method()
+        public async Task It_Invokes_The_Matching_Adapters_File_Exists_Method()
         {
             Adapter
-                .Setup(x => x.ReadFileAsStringAsync(It.IsAny<ReadFileAsStringRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync("foo")
+                .Setup(x => x.FileExistsAsync(It.IsAny<FileExistsRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false)
                 .Verifiable();
             
-            var response = await FileManager.ReadAsStringAsync(
-                new ReadFileAsStringRequest { FilePath = "a".AsBaselineFilesystemPath() }
-            );
-            response.Should().Be("foo");
+            var response = await FileManager.ExistsAsync(new FileExistsRequest { FilePath = "a".AsBaselineFilesystemPath() });
+            response.Should().BeFalse();
             
             Adapter.VerifyAll();
         }

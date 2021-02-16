@@ -66,6 +66,14 @@ namespace Baseline.Filesystem.Tests.Fixtures
             return Task.FromResult(new FileRepresentation());
         }
 
+        public Task<WriteStreamToFileResponse> WriteStreamToFileAsync(
+            WriteStreamToFileRequest writeStreamToFileRequest,
+            CancellationToken cancellationToken
+        )
+        {
+            return Task.FromResult(new WriteStreamToFileResponse());
+        }
+
         public Task WriteTextToFileAsync(
             WriteTextToFileRequest writeTextToFileRequest,
             CancellationToken cancellationToken
