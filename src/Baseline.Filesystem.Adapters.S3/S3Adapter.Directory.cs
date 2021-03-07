@@ -72,6 +72,31 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
+        public async Task<ListDirectoryContentsResponse> ListDirectoryContentsAsync(
+            ListDirectoryContentsRequest listDirectoryContentsRequest,
+            CancellationToken cancellationToken = default
+        )
+        {
+            await EnsureDirectoryExistsAsync(listDirectoryContentsRequest.DirectoryPath, cancellationToken).ConfigureAwait(false);
+
+            var directorysContents = new List<PathRepresentation>();
+            var addedDirectoryPaths = new List<PathRepresentation>();
+            
+            var filesWithinDirectory = await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
+                listDirectoryContentsRequest.DirectoryPath,
+                null,
+                cancellationToken
+            ).ConfigureAwait(false);
+
+            foreach (var file in filesWithinDirectory)
+            {
+                
+            }
+
+            return new ListDirectoryContentsResponse { Contents = directorysContents };
+        }
+
+        /// <inheritdoc />
         public async Task<DirectoryRepresentation> MoveDirectoryAsync(
             MoveDirectoryRequest moveDirectoryRequest,
             CancellationToken cancellationToken

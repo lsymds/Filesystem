@@ -82,6 +82,19 @@ namespace Baseline.Filesystem
             GetFilePublicUrlRequest getFilePublicUrlRequest,
             CancellationToken cancellationToken
         );
+        
+        /// <summary>
+        /// Lists the directory's contents from within the adapter's data store.
+        /// </summary>
+        /// <param name="listDirectoryContentsRequest">
+        /// The request which contains information about which directory to list the contents for.
+        /// </param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>A response containing the available paths in the directory.</returns>
+        Task<ListDirectoryContentsResponse> ListDirectoryContentsAsync(
+            ListDirectoryContentsRequest listDirectoryContentsRequest,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Moves a directory from one location in the adapter's data store to another.

@@ -50,8 +50,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
                 .ReturnsAsync(new FileRepresentation { Path = new PathRepresentation() })
                 .Verifiable();
             
-            var response = await FileManager.GetAsync(new GetFileRequest { FilePath = "a".AsBaselineFilesystemPath() });
-            response.AdapterName.Should().Be("default");
+            await FileManager.GetAsync(new GetFileRequest { FilePath = "a".AsBaselineFilesystemPath() });
             
             Adapter.VerifyAll();
         }
