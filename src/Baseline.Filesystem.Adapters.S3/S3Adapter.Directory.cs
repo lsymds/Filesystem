@@ -93,8 +93,7 @@ namespace Baseline.Filesystem
             {
                 if (file.Key.Contains("/"))
                 {
-                    var directory = file.Key
-                        .Substring(0, file.Key.LastIndexOf("/", StringComparison.Ordinal))
+                    var directory = (file.Key.Substring(0, file.Key.LastIndexOf("/", StringComparison.Ordinal)) + "/")
                         .AsBaselineFilesystemPath();
 
                     if (addedDirectoryPaths.All(x => x.NormalisedPath != directory.NormalisedPath))
