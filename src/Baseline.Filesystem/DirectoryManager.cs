@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Baseline.Filesystem.Internal.Extensions;
@@ -40,7 +41,8 @@ namespace Baseline.Filesystem
         public async Task<DirectoryRepresentation> CreateAsync(
             CreateDirectoryRequest createDirectoryRequest,
             string adapter = "default",
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(createDirectoryRequest);
 
@@ -57,7 +59,8 @@ namespace Baseline.Filesystem
         public async Task DeleteAsync(
             DeleteDirectoryRequest deleteDirectoryRequest,
             string adapter = "default",
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(deleteDirectoryRequest);
             
@@ -92,7 +95,10 @@ namespace Baseline.Filesystem
                 return response;
             }
 
-            return null;
+            return new ListDirectoryContentsResponse
+            {
+                Contents = response.Contents.RemoveRootPath(GetAdapterRootPath(adapter)).ToList()
+            };
         }
 
         /// <inheritdoc />

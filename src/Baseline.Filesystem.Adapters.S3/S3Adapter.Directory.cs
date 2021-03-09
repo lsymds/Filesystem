@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -90,7 +91,20 @@ namespace Baseline.Filesystem
 
             foreach (var file in filesWithinDirectory)
             {
+                if (file.Key.Contains("/"))
+                {
+                    var directory = file.Key
+                        .Substring(0, file.Key.LastIndexOf("/", StringComparison.Ordinal))
+                        .AsBaselineFilesystemPath();
+
+                    if (addedDirectoryPaths.All(x => x.NormalisedPath != directory.NormalisedPath))
+                    {
+                        addedDirectoryPaths.Add(directory);
+                        directorysContents.Add(directory);
+                    }
+                }
                 
+                directorysContents.Add(file.Key.AsBaselineFilesystemPath());
             }
 
             return new ListDirectoryContentsResponse { Contents = directorysContents };
