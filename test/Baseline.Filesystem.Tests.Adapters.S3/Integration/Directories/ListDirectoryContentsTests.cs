@@ -58,7 +58,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e" && x.FinalPathPartIsObviouslyADirectory);
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f" && x.FinalPathPartIsObviouslyADirectory);
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g" && x.FinalPathPartIsObviouslyADirectory);
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/c/e/f/g/.keep");
+            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g/.keep");
         }
         
         [Fact]

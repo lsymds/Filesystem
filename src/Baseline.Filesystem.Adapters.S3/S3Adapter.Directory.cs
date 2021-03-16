@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -81,7 +80,7 @@ namespace Baseline.Filesystem
             await EnsureDirectoryExistsAsync(listDirectoryContentsRequest.DirectoryPath, cancellationToken).ConfigureAwait(false);
 
             var directorysContents = new List<PathRepresentation>();
-            var addedDirectoryPaths = new List<PathRepresentation>();
+            var addedDirectoryPaths = new Dictionary<string, PathRepresentation>();
             
             var filesWithinDirectory = await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 listDirectoryContentsRequest.DirectoryPath,
@@ -91,21 +90,25 @@ namespace Baseline.Filesystem
 
             foreach (var file in filesWithinDirectory)
             {
+                var baselineFilePath = file.Key.AsBaselineFilesystemPath();
+                
                 if (file.Key.Contains("/"))
                 {
-                    var directory = (file.Key.Substring(0, file.Key.LastIndexOf("/", StringComparison.Ordinal)) + "/")
-                        .AsBaselineFilesystemPath();
-
-                    if (addedDirectoryPaths.All(x => x.NormalisedPath != directory.NormalisedPath))
+                    foreach (var p in baselineFilePath.GetPathTree())
                     {
-                        addedDirectoryPaths.Add(directory);
-                        directorysContents.Add(directory);
+                        if (addedDirectoryPaths.ContainsKey(p.NormalisedPath))
+                        {
+                            continue;
+                        }
+
+                        addedDirectoryPaths.Add(p.NormalisedPath, p);
+                        directorysContents.Add(p);
                     }
                 }
                 
-                directorysContents.Add(file.Key.AsBaselineFilesystemPath());
+                directorysContents.Add(baselineFilePath);
             }
-
+    
             return new ListDirectoryContentsResponse { Contents = directorysContents };
         }
 

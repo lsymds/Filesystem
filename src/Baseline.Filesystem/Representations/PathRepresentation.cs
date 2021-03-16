@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace Baseline.Filesystem
 {
     /// <summary>
@@ -5,6 +8,42 @@ namespace Baseline.Filesystem
     /// </summary>
     public class PathRepresentation
     {
+        /// <summary>
+        /// Gets a function that returns the deeply nested path tree of the normalised path of the current path
+        /// representation. This is stored as a function to stop the unneccessary and complex lookups when creating
+        /// what is otherwise a light object.
+        /// <example>
+        /// For the path a/b/c/d/e/f/g/.keep, <see cref="PathTree"/> would return the following:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <description>a/</description>
+        ///     </item>
+        ///     <item>
+        ///         <description>a/b/</description>
+        ///     </item>
+        ///     <item>
+        ///         <description>a/b/c/</description>
+        ///     </item>
+        ///     <item>
+        ///         <description>a/b/c/d/</description>
+        ///     </item>
+        ///     <item>
+        ///         <description>a/b/c/d/e/</description>
+        ///     </item>
+        ///     <item>
+        ///         <description>a/b/c/d/e/f/</description>
+        ///     </item>
+        ///     <item>
+        ///         <description>a/b/c/d/e/f/g/</description>
+        ///     </item>
+        ///     <item>
+        ///         <description>a/b/c/d/e/f/g/.keep</description>
+        ///     </item>
+        /// </list>
+        /// </example>
+        /// </summary>
+        public Func<IEnumerable<PathRepresentation>> GetPathTree { get; internal set; }
+        
         /// <summary>
         /// Gets the final part of the path. This could be a directory or it could be a file. It is up to the individual
         /// managers ({directory, file}) to decide how this final part of the path is used.
