@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Baseline.Filesystem.Internal.Extensions
 {
@@ -20,8 +21,17 @@ namespace Baseline.Filesystem.Internal.Extensions
         {
             foreach (var pathRepresentation in source)
             {
-                var replacementPathRepresentation = pathRepresentation.NormalisedPath
-                    .ReplaceFirstOccurrence(rootPath.NormalisedPath + "/", string.Empty);
+                // Remove any occurrences where the path is equivalent to a representation of a root path. For example,
+                // if there was a root path of a/b and pathRepresentation was a/b, it would be filtered out and not
+                // returned.
+                if (rootPath.GetPathTree().Any(x => x.NormalisedPath == pathRepresentation.NormalisedPath))
+                {
+                    continue;
+                }
+                
+                var replacementPathRepresentation = pathRepresentation.FinalPathPartIsObviouslyADirectory ?
+                    (pathRepresentation.NormalisedPath + "/").ReplaceFirstOccurrence(rootPath.NormalisedPath + "/", string.Empty) :
+                    pathRepresentation.NormalisedPath.ReplaceFirstOccurrence(rootPath.NormalisedPath + "/", string.Empty);
 
                 if (string.IsNullOrWhiteSpace(replacementPathRepresentation))
                 {
