@@ -12,7 +12,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             var response = await FileManager.GetAsync(
                 new GetFileRequest {FilePath = RandomFilePathRepresentation()}
             );
-            response.Path.Should().BeNull();
+            response.Should().BeNull();
         }
 
         [Fact]
