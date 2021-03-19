@@ -43,7 +43,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             var response = await DirectoryManager.CreateAsync(new CreateDirectoryRequest {DirectoryPath = directory});
 
             await ExpectDirectoryToExistAsync(directory);
-            response.Path.Should().BeEquivalentTo(CombinedPathWithRootPathForAssertion(directory));
+            response.Path.Should().BeEquivalentTo(CombinedPathWithRootPathForAssertion(directory), x => x.Excluding(y => y.GetPathTree));
         }
     }
 }

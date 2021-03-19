@@ -36,7 +36,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             await CreateFileAndWriteTextAsync(path);
 
             var response = await FileManager.GetAsync(new GetFileRequest {FilePath = path});
-            response.Path.Should().BeEquivalentTo(CombinedPathWithRootPathForAssertion(path));
+            response.Path.Should().BeEquivalentTo(CombinedPathWithRootPathForAssertion(path), x => x.Excluding(y => y.GetPathTree));
         }
     }
 }
