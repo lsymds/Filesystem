@@ -69,15 +69,9 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
         public async Task It_Lists_The_Contents_Of_A_Directory_With_A_Large_Number_Of_Files_In()
         {
             // Arrange.
-            var tasksToRun = new List<Task>();
             for (int i = 0; i < 1000; i++)
             {
-                tasksToRun.Add(CreateFileAndWriteTextAsync($"a-dir/{i}.txt".AsBaselineFilesystemPath()));
-            }
-
-            foreach (var chunked in tasksToRun.ChunkBy(50))
-            {
-                await Task.WhenAll(chunked);
+                await CreateFileAndWriteTextAsync($"a-dir/{i}.txt".AsBaselineFilesystemPath());
             }
             
             // Act.

@@ -8,6 +8,9 @@ namespace Baseline.Filesystem
     /// </summary>
     public class ListDirectoryContentsResponse
     {
+        /// <summary>
+        /// Gets or sets the contents of the directory defined in the request.
+        /// </summary>
         public List<PathRepresentation> Contents { get; set; }
     }
 }
