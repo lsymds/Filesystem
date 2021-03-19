@@ -37,5 +37,15 @@ namespace Baseline.Filesystem
         {
             return _adapterManager.Get(adapterName).Adapter;
         }
+
+        /// <summary>
+        /// Identifies whether an adapter has a root path configured or not.
+        /// </summary>
+        /// <param name="adapterName">The name of the adapter to check.</param>
+        /// <returns>Whether or not an adapter has a root path configured.</returns>
+        protected bool AdapterHasRootPath(string adapterName)
+        {
+            return GetAdapterRootPath(adapterName) != null;
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace Baseline.Filesystem.Tests.Builders
             var originalPath = new PathRepresentationBuilder("users/foo/bar").Build();
             var path = new PathCombinationBuilder(originalPath).Build();
 
-            path.Should().BeEquivalentTo(originalPath);
+            path.Should().BeEquivalentTo(originalPath, x => x.Excluding(y => y.GetPathTree));
         }
 
         [Fact]

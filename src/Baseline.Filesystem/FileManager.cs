@@ -19,7 +19,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<AdapterAwareFileRepresentation> CopyAsync(
+        public async Task<FileRepresentation> CopyAsync(
             CopyFileRequest copyFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -33,7 +33,6 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
-                .AsAdapterAwareRepresentationAsync(adapter)
                 .ConfigureAwait(false);
         }
 
@@ -74,7 +73,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<AdapterAwareFileRepresentation> GetAsync(
+        public async Task<FileRepresentation> GetAsync(
             GetFileRequest getFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -88,7 +87,6 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
-                .AsAdapterAwareRepresentationAsync(adapter)
                 .ConfigureAwait(false);
         }
 
@@ -111,7 +109,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<AdapterAwareFileRepresentation> MoveAsync(
+        public async Task<FileRepresentation> MoveAsync(
             MoveFileRequest moveFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -125,7 +123,6 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
-                .AsAdapterAwareRepresentationAsync(adapter)
                 .ConfigureAwait(false);
         }
 
@@ -148,7 +145,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<AdapterAwareFileRepresentation> TouchAsync(
+        public async Task<FileRepresentation> TouchAsync(
             TouchFileRequest touchFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -162,7 +159,6 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
-                .AsAdapterAwareRepresentationAsync(adapter)
                 .ConfigureAwait(false);
         }
 

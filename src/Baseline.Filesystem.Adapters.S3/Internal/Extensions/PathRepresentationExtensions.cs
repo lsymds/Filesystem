@@ -10,7 +10,6 @@ namespace Baseline.Filesystem.Adapters.S3.Internal.Extensions
         /// Throws an exception if the path is not obviously a directory as an additional safeguard.
         /// </summary>
         /// <param name="pathRepresentation">The path representation to convert into an S3 safe directory path.</param>
-        /// <returns>The S3 safe directory path.</returns>
         public static string S3SafeDirectoryPath(this PathRepresentation pathRepresentation)
         {
             if (!pathRepresentation.FinalPathPartIsObviouslyADirectory)

@@ -47,7 +47,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
 
         protected void ReconfigureManagerInstances(bool useRootPath)
         {
-            RootPath = useRootPath ? $"{RandomString(6)}/{RandomString(2)}" : null;
+            RootPath = useRootPath ? $"{RandomString(6)}/{RandomString(2)}/" : null;
             
             var adapter = new S3Adapter(new S3AdapterConfiguration
             {
@@ -118,7 +118,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
 
         protected string CombinePathWithRootPath(PathRepresentation path)
         {
-            return $"{(RootPath != null ? $"{RootPath}/" : string.Empty )}{path.NormalisedPath}";
+            return $"{(RootPath ?? string.Empty)}{path.NormalisedPath}";
         }
 
         protected PathRepresentation CombinedPathWithRootPathForAssertion(PathRepresentation path)

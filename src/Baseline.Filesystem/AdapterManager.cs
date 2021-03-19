@@ -27,7 +27,14 @@ namespace Baseline.Filesystem
             var normalisedName = NormaliseAdapterName(registration.Name);
 
             if (AdapterAlreadyRegistered(normalisedName))
+            {
                 throw new AdapterAlreadyRegisteredException(normalisedName);
+            }
+
+            if (registration.RootPath != null && !registration.RootPath.FinalPathPartIsObviouslyADirectory)
+            {
+                throw new PathIsNotObviouslyADirectoryException(registration.RootPath.OriginalPath);
+            }
 
             _adapters[normalisedName] = registration;
         }

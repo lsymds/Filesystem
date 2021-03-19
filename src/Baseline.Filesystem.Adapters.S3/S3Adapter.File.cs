@@ -313,13 +313,13 @@ namespace Baseline.Filesystem
         /// on each page within the paginated result set.
         /// </summary>
         /// <param name="path">The path prefix to retrieve files under.</param>
-        /// <param name="action">The action to perform on the returned response.</param>
+        /// <param name="action">An optional action to perform on the returned response.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The S3 objects listed under the path for any bulk remedial actions.</returns>
         private async Task<List<S3Object>> ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
             PathRepresentation path,
-            Func<ListObjectsResponse, Task> action,
-            CancellationToken cancellationToken
+            Func<ListObjectsResponse, Task> action = null,
+            CancellationToken cancellationToken = default
         )
         {
             string marker = null;
@@ -338,6 +338,11 @@ namespace Baseline.Filesystem
                 marker = objectsInPrefix.NextMarker;
                 objects.AddRange(objectsInPrefix.S3Objects);
 
+                if (action == null)
+                {
+                    continue;
+                }
+                
                 await action(objectsInPrefix).ConfigureAwait(false);
             } while (objectsInPrefix.IsTruncated);
 

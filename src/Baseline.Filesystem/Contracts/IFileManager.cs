@@ -19,7 +19,7 @@ namespace Baseline.Filesystem
         /// <param name="cancellationToken">
         /// The cancellation token used to cancel asynchronous requests if required.
         /// </param>
-        /// <returns>The adapter aware file representation of the newly copied file.</returns>
+        /// <returns>The file representation of the newly copied file.</returns>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="AdapterNotFoundException" />
         /// <exception cref="AdapterProviderOperationException" />
@@ -29,7 +29,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsADirectoryException" />
         /// <exception cref="FileNotFoundException" />
         /// <exception cref="FileAlreadyExistsException" />
-        Task<AdapterAwareFileRepresentation> CopyAsync(
+        Task<FileRepresentation> CopyAsync(
             CopyFileRequest copyFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -99,7 +99,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsRelativeException" />
         /// <exception cref="PathIsADirectoryException" />
         /// <exception cref="FileNotFoundException" />
-        Task<AdapterAwareFileRepresentation> GetAsync(
+        Task<FileRepresentation> GetAsync(
             GetFileRequest getFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -139,7 +139,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsADirectoryException" />
         /// <exception cref="FileNotFoundException" />
         /// <exception cref="FileAlreadyExistsException" />
-        Task<AdapterAwareFileRepresentation> MoveAsync(
+        Task<FileRepresentation> MoveAsync(
             MoveFileRequest moveFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -189,7 +189,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsRelativeException" />
         /// <exception cref="PathIsADirectoryException" />
         /// <exception cref="FileAlreadyExistsException" />
-        Task<AdapterAwareFileRepresentation> TouchAsync(
+        Task<FileRepresentation> TouchAsync(
             TouchFileRequest touchFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default

@@ -40,6 +40,12 @@ namespace Baseline.Filesystem.Tests.Fixtures
             return Task.FromResult(new FileRepresentation());
         }
 
+        public Task<ListDirectoryContentsResponse> ListDirectoryContentsAsync(ListDirectoryContentsRequest listDirectoryContentsRequest,
+            CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(new ListDirectoryContentsResponse());
+        }
+
         public Task<DirectoryRepresentation> MoveDirectoryAsync(MoveDirectoryRequest moveDirectoryRequest, CancellationToken cancellationToken)
         {
             return Task.FromResult(new DirectoryRepresentation());

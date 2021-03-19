@@ -43,15 +43,14 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         }
         
         [Fact]
-        public async Task It_Invokes_The_Matching_Adapters_Touch_File_Method_And_Wraps_The_Response()
+        public async Task It_Invokes_The_Matching_Adapters_Touch_File_Method()
         {
             Adapter
                 .Setup(x => x.TouchFileAsync(It.IsAny<TouchFileRequest>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new FileRepresentation { Path = new PathRepresentation() })
                 .Verifiable();
             
-            var response = await FileManager.TouchAsync(new TouchFileRequest { FilePath = "a".AsBaselineFilesystemPath() });
-            response.AdapterName.Should().Be("default");
+            await FileManager.TouchAsync(new TouchFileRequest { FilePath = "a".AsBaselineFilesystemPath() });
             
             Adapter.VerifyAll();
         }

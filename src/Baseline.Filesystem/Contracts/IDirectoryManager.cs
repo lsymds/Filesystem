@@ -29,7 +29,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsNotObviouslyADirectoryException" />
         /// <exception cref="DirectoryNotFoundException" />
         /// <exception cref="DirectoryAlreadyExistsException" />
-        Task<AdapterAwareDirectoryRepresentation> CopyAsync(
+        Task<DirectoryRepresentation> CopyAsync(
             CopyDirectoryRequest copyDirectoryRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -52,7 +52,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsRelativeException" />
         /// <exception cref="PathIsNotObviouslyADirectoryException" />
         /// <exception cref="DirectoryAlreadyExistsException" />
-        Task<AdapterAwareDirectoryRepresentation> CreateAsync(
+        Task<DirectoryRepresentation> CreateAsync(
             CreateDirectoryRequest createDirectoryRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -83,6 +83,30 @@ namespace Baseline.Filesystem
         );
 
         /// <summary>
+        /// Lists the directory's contents, returning the available paths as a flat list. Directories will be
+        /// returned in the list prior to any child files/directories.
+        /// </summary>
+        /// <param name="listDirectoryContentsRequest">
+        /// The request which contains information about which directory to list the contents for.
+        /// </param>
+        /// <param name="adapter">The adapter to run the list operation against.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>A response containing the available paths in the directory.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsNotObviouslyADirectoryException" />
+        /// <exception cref="DirectoryNotFoundException" />
+        Task<ListDirectoryContentsResponse> ListContentsAsync(
+            ListDirectoryContentsRequest listDirectoryContentsRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        );
+
+        /// <summary>
         /// Moves a directory from one location to another. Please note: some adapters require each file within the
         /// directory tree to be moved in order to move a directory and all of its contained files. This could have
         /// unintended performance consequences, so be careful in its use. Consider doing this manually.
@@ -102,7 +126,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsNotObviouslyADirectoryException" />
         /// <exception cref="DirectoryNotFoundException" />
         /// <exception cref="DirectoryAlreadyExistsException" />
-        Task<AdapterAwareDirectoryRepresentation> MoveAsync(
+        Task<DirectoryRepresentation> MoveAsync(
             MoveDirectoryRequest moveDirectoryRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default

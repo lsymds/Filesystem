@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Baseline.Filesystem.Internal.Validators;
@@ -44,11 +45,34 @@ namespace Baseline.Filesystem
 
             return new PathRepresentation
             {
+                GetPathTree = () => BuildPathTree(path),
                 FinalPathPart = finalPathPart,
                 FinalPathPartIsObviouslyADirectory = path.EndsWith("/"),
                 NormalisedPath = normalisedPath,
                 OriginalPath = path
             };
+        }
+
+        /// <summary>
+        /// Builds and returns the nested path tree for a specified path.
+        /// </summary>
+        /// <param name="path">The path to formulate into a path tree.</param>
+        private static IEnumerable<PathRepresentation> BuildPathTree(string path)
+        {
+            if (!path.Contains("/"))
+            {
+                yield return path.AsBaselineFilesystemPath();
+                yield break;
+            }
+
+            var pathSplitByDirectory = path.Substring(0, path.LastIndexOf("/", StringComparison.Ordinal) + 1).Split("/");
+            var currentPath = string.Empty;
+
+            foreach (var p in pathSplitByDirectory.Where(pathSplit => !string.IsNullOrEmpty(pathSplit)))
+            {
+                currentPath += p + "/";
+                yield return currentPath.AsBaselineFilesystemPath();
+            }
         }
 
         /// <summary>

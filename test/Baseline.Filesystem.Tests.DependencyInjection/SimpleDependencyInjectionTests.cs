@@ -1,10 +1,8 @@
-using System;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Baseline.Filesystem.Tests.Adapters.S3.Integration;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using Xunit;
 
 namespace Baseline.Filesystem.Tests.DependencyInjection

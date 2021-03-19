@@ -67,17 +67,16 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         }
         
         [Fact]
-        public async Task It_Invokes_The_Matching_Adapters_Delete_File_Method_And_Wraps_The_Response()
+        public async Task It_Invokes_The_Matching_Adapters_Copy_File_Method()
         {
             Adapter
                 .Setup(x => x.CopyFileAsync(It.IsAny<CopyFileRequest>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new FileRepresentation())
                 .Verifiable();
             
-            var response = await FileManager.CopyAsync(
+            await FileManager.CopyAsync(
                 new CopyFileRequest { SourceFilePath = "a".AsBaselineFilesystemPath(), DestinationFilePath = "a".AsBaselineFilesystemPath() }
             );
-            response.AdapterName.Should().Be("default");
             
             Adapter.VerifyAll();
         }

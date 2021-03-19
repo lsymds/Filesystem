@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Baseline.Filesystem.Internal.Extensions;
@@ -19,7 +20,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<AdapterAwareDirectoryRepresentation> CopyAsync(
+        public async Task<DirectoryRepresentation> CopyAsync(
             CopyDirectoryRequest copyDirectoryRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -33,15 +34,15 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
-                .AsAdapterAwareRepresentationAsync(adapter)
                 .ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<AdapterAwareDirectoryRepresentation> CreateAsync(
+        public async Task<DirectoryRepresentation> CreateAsync(
             CreateDirectoryRequest createDirectoryRequest,
             string adapter = "default",
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(createDirectoryRequest);
 
@@ -51,7 +52,6 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
-                .AsAdapterAwareRepresentationAsync(adapter)
                 .ConfigureAwait(false);
         }
 
@@ -59,7 +59,8 @@ namespace Baseline.Filesystem
         public async Task DeleteAsync(
             DeleteDirectoryRequest deleteDirectoryRequest,
             string adapter = "default",
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(deleteDirectoryRequest);
             
@@ -71,9 +72,37 @@ namespace Baseline.Filesystem
                 .WrapExternalExceptionsAsync(adapter)
                 .ConfigureAwait(false);
         }
+        
+        /// <inheritdoc />
+        public async Task<ListDirectoryContentsResponse> ListContentsAsync(
+            ListDirectoryContentsRequest listDirectoryContentsRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        )
+        {
+            BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(listDirectoryContentsRequest);
+
+            var response = await GetAdapter(adapter)
+                .ListDirectoryContentsAsync(
+                    listDirectoryContentsRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    cancellationToken
+                )
+                .WrapExternalExceptionsAsync(adapter)
+                .ConfigureAwait(false);
+
+            if (!AdapterHasRootPath(adapter))
+            {
+                return response;
+            }
+
+            return new ListDirectoryContentsResponse
+            {
+                Contents = response.Contents.RemoveRootPath(GetAdapterRootPath(adapter)).ToList()
+            };
+        }
 
         /// <inheritdoc />
-        public async Task<AdapterAwareDirectoryRepresentation> MoveAsync(
+        public async Task<DirectoryRepresentation> MoveAsync(
             MoveDirectoryRequest moveDirectoryRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -87,7 +116,6 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
-                .AsAdapterAwareRepresentationAsync(adapter)
                 .ConfigureAwait(false);
         }
     }
