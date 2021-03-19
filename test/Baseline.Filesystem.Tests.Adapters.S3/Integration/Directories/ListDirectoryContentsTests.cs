@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Baseline.Filesystem.Adapters.S3.Internal.Extensions;
 using FluentAssertions;
 using Xunit;
 
@@ -9,23 +11,20 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
         private readonly PathRepresentation _directoryPath = RandomDirectoryPathRepresentation();
 
         [Fact]
-        public async Task It_Lists_The_Contents_Of_The_Root_Directory()
-        {
-            
-        }
-        
-        [Fact]
         public async Task It_Lists_The_Contents_Of_A_Simple_Directory()
         {
+            // Arrange.
             await CreateFileAndWriteTextAsync("simple/file.txt".AsBaselineFilesystemPath());
             await CreateFileAndWriteTextAsync("simple/another-file.txt".AsBaselineFilesystemPath());
             await CreateFileAndWriteTextAsync("simple/.config".AsBaselineFilesystemPath());
 
+            // Act.
             var contents = await DirectoryManager.ListContentsAsync(new ListDirectoryContentsRequest
             {
                 DirectoryPath = "simple/".AsBaselineFilesystemPath()
             });
 
+            // Assert.
             contents.Contents.Should().HaveCount(4);
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple" && x.FinalPathPartIsObviouslyADirectory);
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/file.txt");
@@ -69,7 +68,29 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
         [Fact]
         public async Task It_Lists_The_Contents_Of_A_Directory_With_A_Large_Number_Of_Files_In()
         {
+            // Arrange.
+            var tasksToRun = new List<Task>();
+            for (int i = 0; i < 1000; i++)
+            {
+                tasksToRun.Add(CreateFileAndWriteTextAsync($"a-dir/{i}.txt".AsBaselineFilesystemPath()));
+            }
+
+            foreach (var chunked in tasksToRun.ChunkBy(50))
+            {
+                await Task.WhenAll(chunked);
+            }
             
+            // Act.
+            var contents = await DirectoryManager.ListContentsAsync(new ListDirectoryContentsRequest
+            {
+                DirectoryPath = "a-dir/".AsBaselineFilesystemPath()
+            });
+            
+            // Assert.
+            for (var i = 0; i < 1000; i++)
+            {
+                contents.Contents.Should().ContainSingle(x => x.OriginalPath == $"a-dir/{i}.txt");
+            }
         }
 
         [Fact]
