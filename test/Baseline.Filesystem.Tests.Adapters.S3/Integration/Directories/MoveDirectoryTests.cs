@@ -13,43 +13,53 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
         [Fact]
         public async Task It_Throws_An_Exception_If_The_Source_Directory_Does_Not_Exist()
         {
+            // Act.
             Func<Task> func = async () => await DirectoryManager.MoveAsync(new MoveDirectoryRequest
             {
                 SourceDirectoryPath = _sourceDirectory,
                 DestinationDirectoryPath = _destinationDirectory
             });
+            
+            // Assert.
             await func.Should().ThrowExactlyAsync<DirectoryNotFoundException>();
         }
 
         [Fact]
         public async Task It_Throws_An_Exception_If_The_Destination_Directory_Exists()
         {
+            // Arrange.
             await CreateFileAndWriteTextAsync($"{_sourceDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath());
             await CreateFileAndWriteTextAsync($"{_destinationDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath());
             
+            // Act.
             Func<Task> func = async () => await DirectoryManager.MoveAsync(new MoveDirectoryRequest
             {
                 SourceDirectoryPath = _sourceDirectory,
                 DestinationDirectoryPath = _destinationDirectory
             });
+            
+            // Assert.
             await func.Should().ThrowExactlyAsync<DirectoryAlreadyExistsException>();
         }
 
         [Fact]
         public async Task It_Successfully_Moves_A_Simple_Directory_Structure_From_One_Location_To_Another()
         {
+            // Arrange.
             var originalFirstFilePath = $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath();
             var originalSecondFilePath = $"{_sourceDirectory.NormalisedPath}/a/b/c.txt".AsBaselineFilesystemPath();
             
             await CreateFileAndWriteTextAsync(originalFirstFilePath);
             await CreateFileAndWriteTextAsync(originalSecondFilePath);
 
+            // Act.
             await DirectoryManager.MoveAsync(new MoveDirectoryRequest
             {
                 SourceDirectoryPath = _sourceDirectory,
                 DestinationDirectoryPath = _destinationDirectory
             });
-
+            
+            // Assert.
             await ExpectDirectoryNotToExistAsync(_sourceDirectory);
             await ExpectFileNotToExistAsync(originalSecondFilePath);
         }
@@ -57,6 +67,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
         [Fact]
         public async Task It_Moves_A_More_Complex_Directory_Structure_From_One_Location_To_Another()
         {
+            // Arrange.
             var files = new[]
             {
                 "a/b/c/.keep",
@@ -74,12 +85,14 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
                 await CreateFileAndWriteTextAsync($"{_sourceDirectory.OriginalPath}/{file}".AsBaselineFilesystemPath());
             }
 
+            // Act.
             await DirectoryManager.MoveAsync(new MoveDirectoryRequest
             {
                 SourceDirectoryPath = _sourceDirectory,
                 DestinationDirectoryPath = _destinationDirectory
             });
-
+            
+            // Assert.
             await ExpectDirectoryNotToExistAsync(_sourceDirectory);
             foreach (var file in files)
             {
@@ -92,6 +105,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
         [Fact]
         public async Task It_Moves_A_Large_Directory_Structure_From_One_Location_To_Another()
         {
+            // Arrange.
             for (var i = 0; i < 1001; i++)
             {
                 await CreateFileAndWriteTextAsync(
@@ -99,12 +113,14 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
                 );
             }
 
+            // Act.
             await DirectoryManager.MoveAsync(new MoveDirectoryRequest
             {
                 SourceDirectoryPath = _sourceDirectory,
                 DestinationDirectoryPath = _destinationDirectory
             });
             
+            // Assert.
             await ExpectDirectoryNotToExistAsync(_sourceDirectory);
             for (var i = 0; i < 1001; i++)
             {
@@ -117,6 +133,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
         [Fact]
         public async Task It_Moves_A_Directory_Structure_With_A_Root_Path_From_One_Location_To_Another()
         {
+            // Arrange.
             ReconfigureManagerInstances(true);
             
             var originalFirstFilePath = $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath();
@@ -125,12 +142,14 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             await CreateFileAndWriteTextAsync(originalFirstFilePath);
             await CreateFileAndWriteTextAsync(originalSecondFilePath);
 
+            // Act.
             await DirectoryManager.MoveAsync(new MoveDirectoryRequest
             {
                 SourceDirectoryPath = _sourceDirectory,
                 DestinationDirectoryPath = _destinationDirectory
             });
-
+            
+            // Assert.
             await ExpectDirectoryNotToExistAsync(_sourceDirectory);
             await ExpectFileNotToExistAsync(originalSecondFilePath);
         }

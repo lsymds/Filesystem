@@ -13,10 +13,12 @@ namespace Baseline.Filesystem.Tests
         [Fact]
         public async Task When_A_Method_Wraps_Exceptions_They_Wrap_Successfully()
         {
+            // Arrange.
             Adapter
                 .Setup(x => x.GetFileAsync(It.IsAny<GetFileRequest>(), CancellationToken.None))
                 .ThrowsAsync(new ExternalException());
             
+            // Act.
             Func<Task> act = async () => await FileManager.GetAsync(
                 new GetFileRequest
                 {
@@ -26,6 +28,7 @@ namespace Baseline.Filesystem.Tests
                 CancellationToken.None
             );
             
+            // Assert.
             await act
                 .Should()
                 .ThrowExactlyAsync<AdapterProviderOperationException>()
@@ -36,6 +39,7 @@ namespace Baseline.Filesystem.Tests
         [Fact]
         public async Task It_Clones_The_Request_Passed_In_And_Does_Not_Modify_The_Original_Request()
         {
+            // Arrange.
             Reconfigure(true);
 
             var filePath = "abc".AsBaselineFilesystemPath();
@@ -55,8 +59,10 @@ namespace Baseline.Filesystem.Tests
                 .ReturnsAsync(true)
                 .Verifiable();
 
+            // Act.
             await FileManager.ExistsAsync(request);
-
+            
+            // Assert.
             Adapter.Verify();
             request.FilePath.Should().Be(filePath);
         }
