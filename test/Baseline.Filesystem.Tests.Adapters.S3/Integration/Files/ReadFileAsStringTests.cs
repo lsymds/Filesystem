@@ -10,16 +10,20 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         [Fact]
         public async Task It_Throws_An_Exception_If_File_Does_Not_Exist()
         {
+            // Act.
             Func<Task> func = async () => await FileManager.ReadAsStringAsync(new ReadFileAsStringRequest
             {
                 FilePath = RandomFilePathRepresentation()
             });
+            
+            // Assert.
             await func.Should().ThrowExactlyAsync<FileNotFoundException>();
         }
 
         [Fact]
         public async Task It_Retrieves_File_Contents_If_File_Does_Exist()
         {
+            // Arrange.
             var path = RandomFilePathRepresentation();
             
             await FileManager.WriteTextAsync(
@@ -31,20 +35,27 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
                 }
             );
 
+            // Act.
             var fileContents = await FileManager.ReadAsStringAsync(new ReadFileAsStringRequest { FilePath = path });
+            
+            // Assert.
             fileContents.Should().Be("you should check these contents");
         }
 
         [Fact]
         public async Task It_Retrieves_File_Contents_Under_A_Root_Path()
         {
+            // Arrange.
             ReconfigureManagerInstances(true);
             
             var path = RandomFilePathRepresentation();
 
             await CreateFileAndWriteTextAsync(path, "you should check these contents");
             
+            // Act.
             var fileContents = await FileManager.ReadAsStringAsync(new ReadFileAsStringRequest { FilePath = path });
+            
+            // Assert.
             fileContents.Should().Be("you should check these contents");
         }
     }

@@ -13,6 +13,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         [Fact]
         public async Task It_Throws_An_Exception_If_Source_Path_Does_Not_Exist()
         {
+            // Act.
             Func<Task> func = async () => await FileManager.CopyAsync(
                 new CopyFileRequest
                 {
@@ -20,15 +21,19 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
                     DestinationFilePath = _destinationFilePath
                 }
             );
+            
+            // Assert.
             await func.Should().ThrowExactlyAsync<FileNotFoundException>();
         }
 
         [Fact]
         public async Task It_Throws_An_Exception_If_Destination_Path_Already_Exists()
         {
+            // Arrange.
             await CreateFileAndWriteTextAsync(_sourceFilePath);
             await CreateFileAndWriteTextAsync(_destinationFilePath);
             
+            // Act.
             Func<Task> func = async () => await FileManager.CopyAsync(
                 new CopyFileRequest
                 {
@@ -36,14 +41,18 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
                     DestinationFilePath = _destinationFilePath
                 }
             );
+            
+            // Assert.
             await func.Should().ThrowExactlyAsync<FileAlreadyExistsException>();
         }
 
         [Fact]
         public async Task It_Successfully_Copies_A_File()
         {
+            // Arrange.
             await CreateFileAndWriteTextAsync(_sourceFilePath, "[ 1, 2, 3 ]");
             
+            // Act.
             await FileManager.CopyAsync(
                 new CopyFileRequest
                 {
@@ -51,7 +60,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
                     DestinationFilePath = _destinationFilePath
                 }
             );
-
+            
+            // Assert.
             await ExpectFileToExistAsync(_sourceFilePath); 
             await ExpectFileToExistAsync(_destinationFilePath);
 
@@ -62,10 +72,12 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         [Fact]
         public async Task It_Successfully_Copies_A_File_With_A_Root_Path()
         {
+            // Arrange.
             ReconfigureManagerInstances(true);
             
             await CreateFileAndWriteTextAsync(_sourceFilePath, "[ 1, 2, 3 ]");
             
+            // Act.
             await FileManager.CopyAsync(
                 new CopyFileRequest
                 {
@@ -73,7 +85,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
                     DestinationFilePath = _destinationFilePath
                 }
             );
-
+            
+            // Assert.
             await ExpectFileToExistAsync(_sourceFilePath); 
             await ExpectFileToExistAsync(_destinationFilePath);
             
