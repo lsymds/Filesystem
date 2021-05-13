@@ -17,7 +17,7 @@ namespace Baseline.Filesystem
     public partial class S3Adapter
     {
         /// <inheritdoc />
-        public async Task<FileRepresentation> CopyFileAsync(
+        public async Task<CopyFileResponse> CopyFileAsync(
             CopyFileRequest copyFileRequest, 
             CancellationToken cancellationToken
         )
@@ -31,7 +31,10 @@ namespace Baseline.Filesystem
                 cancellationToken
             ).ConfigureAwait(false);
 
-            return new FileRepresentation {Path = copyFileRequest.DestinationFilePath};
+            return new CopyFileResponse
+            {
+                DestinationFile = new FileRepresentation {Path = copyFileRequest.DestinationFilePath}
+            };
         }
 
         /// <inheritdoc />
@@ -42,12 +45,16 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<bool> FileExistsAsync(
+        public async Task<FileExistsResponse> FileExistsAsync(
             FileExistsRequest fileExistsRequest,
             CancellationToken cancellationToken
         )
         {
-            return await FileExistsInternalAsync(fileExistsRequest.FilePath, cancellationToken).ConfigureAwait(false);
+            return new FileExistsResponse
+            {
+                FileExists = await FileExistsInternalAsync(fileExistsRequest.FilePath, cancellationToken)
+                    .ConfigureAwait(false)
+            };
         }
 
         /// <inheritdoc />

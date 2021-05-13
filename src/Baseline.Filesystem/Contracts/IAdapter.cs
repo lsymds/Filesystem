@@ -25,8 +25,7 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="copyFileRequest">The request containing information about the file to copy.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        /// <returns>The information about the file that was created (the destination file).</returns>
-        Task<FileRepresentation> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken);
+        Task<CopyFileResponse> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken);
 
         /// <summary>
         /// Creates a directory in an adapter's data store.
@@ -61,7 +60,7 @@ namespace Baseline.Filesystem
         /// <param name="fileExistsRequest">The request containing information about the file to check.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
         /// <returns>Whether or not the file defined in the request exists.</returns>
-        Task<bool> FileExistsAsync(FileExistsRequest fileExistsRequest, CancellationToken cancellationToken);
+        Task<FileExistsResponse> FileExistsAsync(FileExistsRequest fileExistsRequest, CancellationToken cancellationToken);
         
         /// <summary>
         /// Gets a file's information (i.e. the name, path, extension, size etc) from the adapter's data store.

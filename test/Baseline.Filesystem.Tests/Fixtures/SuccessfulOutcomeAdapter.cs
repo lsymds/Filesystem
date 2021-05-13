@@ -10,9 +10,9 @@ namespace Baseline.Filesystem.Tests.Fixtures
             return Task.FromResult(new DirectoryRepresentation());
         }
 
-        public Task<FileRepresentation> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken)
+        public Task<CopyFileResponse> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FileRepresentation());
+            return Task.FromResult(new CopyFileResponse());
         }
 
         public Task<DirectoryRepresentation> CreateDirectoryAsync(CreateDirectoryRequest createDirectoryRequest, CancellationToken cancellationToken)
@@ -30,9 +30,9 @@ namespace Baseline.Filesystem.Tests.Fixtures
             return Task.CompletedTask;
         }
 
-        public Task<bool> FileExistsAsync(FileExistsRequest fileExistsRequest, CancellationToken cancellationToken)
+        public Task<FileExistsResponse> FileExistsAsync(FileExistsRequest fileExistsRequest, CancellationToken cancellationToken)
         {
-            return Task.FromResult(true);
+            return Task.FromResult(new FileExistsResponse { FileExists = true });
         }
 
         public Task<FileRepresentation> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken)

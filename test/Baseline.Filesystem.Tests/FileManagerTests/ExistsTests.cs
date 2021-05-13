@@ -61,14 +61,14 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
             // Arrange.
             Adapter
                 .Setup(x => x.FileExistsAsync(It.IsAny<FileExistsRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false)
+                .ReturnsAsync(new FileExistsResponse { FileExists = false })
                 .Verifiable();
             
             // Act.
             var response = await FileManager.ExistsAsync(new FileExistsRequest { FilePath = "a".AsBaselineFilesystemPath() });
             
             // Assert.
-            response.Should().BeFalse();
+            response.FileExists.Should().BeFalse();
             Adapter.VerifyAll();
         }
     }

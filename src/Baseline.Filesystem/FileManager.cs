@@ -19,7 +19,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<FileRepresentation> CopyAsync(
+        public async Task<CopyFileResponse> CopyAsync(
             CopyFileRequest copyFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -55,7 +55,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<bool> ExistsAsync(
+        public async Task<FileExistsResponse> ExistsAsync(
             FileExistsRequest fileExistsRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default

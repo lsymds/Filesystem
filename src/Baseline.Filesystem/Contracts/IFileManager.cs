@@ -19,7 +19,6 @@ namespace Baseline.Filesystem
         /// <param name="cancellationToken">
         /// The cancellation token used to cancel asynchronous requests if required.
         /// </param>
-        /// <returns>The file representation of the newly copied file.</returns>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="AdapterNotFoundException" />
         /// <exception cref="AdapterProviderOperationException" />
@@ -29,7 +28,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsADirectoryException" />
         /// <exception cref="FileNotFoundException" />
         /// <exception cref="FileAlreadyExistsException" />
-        Task<FileRepresentation> CopyAsync(
+        Task<CopyFileResponse> CopyAsync(
             CopyFileRequest copyFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -75,7 +74,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathContainsInvalidCharacterException" />
         /// <exception cref="PathIsRelativeException" />
         /// <exception cref="PathIsADirectoryException" />
-        Task<bool> ExistsAsync(
+        Task<FileExistsResponse> ExistsAsync(
             FileExistsRequest fileExistsRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
