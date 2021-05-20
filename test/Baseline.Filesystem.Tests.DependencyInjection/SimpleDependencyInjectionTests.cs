@@ -44,7 +44,7 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
                     FilePath = filePath
                 }
             );
-            fileContents.Should().Be("hello, world");
+            fileContents.FileContents.Should().Be("hello, world");
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
                     FilePath = filePath
                 }
             );
-            fileContents.Should().Be("hello, world");
+            fileContents.FileContents.Should().Be("hello, world");
         }
         
         [Fact]
@@ -134,7 +134,7 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
                 },
                 "second"
             );
-            fileContents.Should().Be("hello, world");
+            fileContents.FileContents.Should().Be("hello, world");
         }
         [Fact]
         public async Task It_Functions_Correctly_When_A_Root_Path_Is_Registered()
@@ -174,7 +174,7 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
                     FilePath = filePath
                 }
             );
-            fileContents.Should().Be("hello, world");
+            fileContents.FileContents.Should().Be("hello, world");
         }
     }
 }

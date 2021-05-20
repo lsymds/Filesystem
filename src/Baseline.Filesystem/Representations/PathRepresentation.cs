@@ -13,7 +13,7 @@ namespace Baseline.Filesystem
         /// representation. This is stored as a function to stop the unneccessary and complex lookups when creating
         /// what is otherwise a light object.
         /// <example>
-        /// For the path a/b/c/d/e/f/g/.keep, <see cref="PathTree"/> would return the following:
+        /// For the path a/b/c/d/e/f/g/.keep, <see cref="GetPathTree"/> would return the following:
         /// <list type="bullet">
         ///     <item>
         ///         <description>a/</description>
@@ -70,7 +70,7 @@ namespace Baseline.Filesystem
         /// Combines the current path representation with a base path representation, wherein the base path
         /// representation is set first, and the current path after.
         /// </summary>
-        /// <param name="@base">The base path to combine with the current path.</param>
+        /// <param name="base">The base path to combine with the current path.</param>
         /// <returns>The newly combined path.</returns>
         internal PathRepresentation CombineWithBase(PathRepresentation @base)
         {
