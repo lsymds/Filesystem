@@ -38,10 +38,15 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken)
+        public async Task<DeleteFileResponse> DeleteFileAsync(
+            DeleteFileRequest deleteFileRequest, 
+            CancellationToken cancellationToken
+        )
         {
             await EnsureFileExistsAsync(deleteFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
             await DeleteFileInternalAsync(deleteFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
+
+            return new DeleteFileResponse();
         }
 
         /// <inheritdoc />
@@ -58,13 +63,15 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<FileRepresentation> GetFileAsync(
+        public async Task<GetFileResponse> GetFileAsync(
             GetFileRequest getFileRequest, 
             CancellationToken cancellationToken
         )
         {
             var fileExists = await FileExistsInternalAsync(getFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
-            return fileExists ? new FileRepresentation {Path = getFileRequest.FilePath} : null;
+            return fileExists 
+                ? new GetFileResponse { File = new FileRepresentation {Path = getFileRequest.FilePath} } 
+                : null;
         }
         
         /// <inheritdoc />
@@ -90,7 +97,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<FileRepresentation> MoveFileAsync(
+        public async Task<MoveFileResponse> MoveFileAsync(
             MoveFileRequest moveFileRequest, 
             CancellationToken cancellationToken
         )
@@ -106,11 +113,14 @@ namespace Baseline.Filesystem
 
             await DeleteFileInternalAsync(moveFileRequest.SourceFilePath, cancellationToken).ConfigureAwait(false);
 
-            return new FileRepresentation { Path = moveFileRequest.DestinationFilePath };
+            return new MoveFileResponse
+            {
+                DestinationFile = new FileRepresentation {Path = moveFileRequest.DestinationFilePath}
+            };
         }
 
         /// <inheritdoc />
-        public async Task<string> ReadFileAsStringAsync(
+        public async Task<ReadFileAsStringResponse> ReadFileAsStringAsync(
             ReadFileAsStringRequest readFileAsStringRequest,
             CancellationToken cancellationToken
         )
@@ -123,18 +133,25 @@ namespace Baseline.Filesystem
                 cancellationToken
             ).ConfigureAwait(false);
 
-            return await new StreamReader(file.ResponseStream).ReadToEndAsync().ConfigureAwait(false);
+            return new ReadFileAsStringResponse
+            {
+                FileContents = await new StreamReader(file.ResponseStream).ReadToEndAsync().ConfigureAwait(false)
+            };
         }
 
         /// <inheritdoc />
-        public async Task<FileRepresentation> TouchFileAsync(
+        public async Task<TouchFileResponse> TouchFileAsync(
             TouchFileRequest touchFileRequest,
             CancellationToken cancellationToken
         )
         {
             await EnsureFileDoesNotExistAsync(touchFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
             await TouchFileInternalAsync(touchFileRequest.FilePath, cancellationToken).ConfigureAwait(false);
-            return new FileRepresentation { Path = touchFileRequest.FilePath };
+            
+            return new TouchFileResponse
+            {
+                File = new FileRepresentation {Path = touchFileRequest.FilePath}
+            };
         }
 
         /// <inheritdoc />
@@ -159,7 +176,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task WriteTextToFileAsync(
+        public async Task<WriteTextToFileResponse> WriteTextToFileAsync(
             WriteTextToFileRequest writeTextToFileRequest,
             CancellationToken cancellationToken
         )
@@ -174,6 +191,8 @@ namespace Baseline.Filesystem
                 },
                 cancellationToken
             ).ConfigureAwait(false);
+
+            return new WriteTextToFileResponse();
         }
 
         /// <summary>

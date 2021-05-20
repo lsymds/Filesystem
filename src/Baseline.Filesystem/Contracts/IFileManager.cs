@@ -50,7 +50,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsRelativeException" />
         /// <exception cref="PathIsADirectoryException" />
         /// <exception cref="FileNotFoundException" />
-        Task DeleteAsync(
+        Task<DeleteFileResponse> DeleteAsync(
             DeleteFileRequest deleteFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -98,7 +98,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsRelativeException" />
         /// <exception cref="PathIsADirectoryException" />
         /// <exception cref="FileNotFoundException" />
-        Task<FileRepresentation> GetAsync(
+        Task<GetFileResponse> GetAsync(
             GetFileRequest getFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -138,7 +138,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsADirectoryException" />
         /// <exception cref="FileNotFoundException" />
         /// <exception cref="FileAlreadyExistsException" />
-        Task<FileRepresentation> MoveAsync(
+        Task<MoveFileResponse> MoveAsync(
             MoveFileRequest moveFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -163,7 +163,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsRelativeException" />
         /// <exception cref="PathIsADirectoryException" />
         /// <exception cref="FileNotFoundException" />
-        Task<string> ReadAsStringAsync(
+        Task<ReadFileAsStringResponse> ReadAsStringAsync(
             ReadFileAsStringRequest readFileAsStringRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -188,7 +188,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsRelativeException" />
         /// <exception cref="PathIsADirectoryException" />
         /// <exception cref="FileAlreadyExistsException" />
-        Task<FileRepresentation> TouchAsync(
+        Task<TouchFileResponse> TouchAsync(
             TouchFileRequest touchFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -211,7 +211,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathContainsInvalidCharacterException" />
         /// <exception cref="PathIsRelativeException" />
         /// <exception cref="PathIsADirectoryException" />
-        Task WriteTextAsync(
+        Task<WriteTextToFileResponse> WriteTextAsync(
             WriteTextToFileRequest writeTextToFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default

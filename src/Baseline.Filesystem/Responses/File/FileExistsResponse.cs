@@ -1,7 +1,7 @@
 namespace Baseline.Filesystem
 {
     /// <summary>
-    /// Response returned from the FileExists method.
+    /// Response returned from the FileManager.Exists method.
     /// </summary>
     public class FileExistsResponse
     {

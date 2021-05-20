@@ -15,7 +15,7 @@ namespace Baseline.Filesystem
         /// <param name="copyDirectoryRequest">The request containing information about the directory to copy.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
         /// <returns>The information about the directory that was created (the destination directory).</returns>
-        Task<DirectoryRepresentation> CopyDirectoryAsync(
+        Task<CopyDirectoryResponse> CopyDirectoryAsync(
             CopyDirectoryRequest copyDirectoryRequest,
             CancellationToken cancellationToken
         );
@@ -35,7 +35,7 @@ namespace Baseline.Filesystem
         /// </param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
         /// <returns>The information about the directory that was created (the destination directory).</returns>
-        Task<DirectoryRepresentation> CreateDirectoryAsync(
+        Task<CreateDirectoryResponse> CreateDirectoryAsync(
             CreateDirectoryRequest createDirectoryRequest,
             CancellationToken cancellationToken
         );
@@ -45,14 +45,17 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="deleteDirectoryRequest">The request containing information about the directory to delete.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        Task DeleteDirectoryAsync(DeleteDirectoryRequest deleteDirectoryRequest, CancellationToken cancellationToken);
+        Task<DeleteDirectoryResponse> DeleteDirectoryAsync(
+            DeleteDirectoryRequest deleteDirectoryRequest, 
+            CancellationToken cancellationToken
+        );
         
         /// <summary>
         /// Deletes a file from the adapter's data store.
         /// </summary>
         /// <param name="deleteFileRequest">The request containing information about the file to delete.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        Task DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken);
+        Task<DeleteFileResponse> DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken);
         
         /// <summary>
         /// Checks whether a file exists or not in the adapter's data store.
@@ -68,7 +71,7 @@ namespace Baseline.Filesystem
         /// <param name="getFileRequest">The request containing information about the file to retrieve.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
         /// <returns>The information about the requested file.</returns>
-        Task<FileRepresentation> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken);
+        Task<GetFileResponse> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken);
 
         /// <summary>
         /// Retrieves a public URL for a file from the adapter's data store.
@@ -101,7 +104,7 @@ namespace Baseline.Filesystem
         /// <param name="moveDirectoryRequest">The request containing information about the directory to move.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
         /// <returns>The information about the directory that was created (the destination directory).</returns>
-        Task<DirectoryRepresentation> MoveDirectoryAsync(
+        Task<MoveDirectoryResponse> MoveDirectoryAsync(
             MoveDirectoryRequest moveDirectoryRequest,
             CancellationToken cancellationToken
         );
@@ -114,7 +117,7 @@ namespace Baseline.Filesystem
         /// </param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
         /// <returns>The information about the destination file of the move request.</returns>
-        Task<FileRepresentation> MoveFileAsync(MoveFileRequest moveFileRequest, CancellationToken cancellationToken);
+        Task<MoveFileResponse> MoveFileAsync(MoveFileRequest moveFileRequest, CancellationToken cancellationToken);
 
         /// <summary>
         /// Retrieves a file from the adapter's data store and reads its contents as a string.
@@ -124,7 +127,7 @@ namespace Baseline.Filesystem
         /// </param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
         /// <returns>The file's contents.</returns>
-        Task<string> ReadFileAsStringAsync(
+        Task<ReadFileAsStringResponse> ReadFileAsStringAsync(
             ReadFileAsStringRequest readFileAsStringRequest,
             CancellationToken cancellationToken
         );
@@ -135,7 +138,7 @@ namespace Baseline.Filesystem
         /// <param name="touchFileRequest">The request containing information about the file to touch.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
         /// <returns>The information about the file that was created.</returns>
-        Task<FileRepresentation> TouchFileAsync(TouchFileRequest touchFileRequest, CancellationToken cancellationToken);
+        Task<TouchFileResponse> TouchFileAsync(TouchFileRequest touchFileRequest, CancellationToken cancellationToken);
 
         /// <summary>
         /// Writes a stream to a file within the adapter's data store, creating it if it doesn't exist or overwriting it
@@ -157,6 +160,9 @@ namespace Baseline.Filesystem
         /// The request containing information about what to write and to where.
         /// </param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        Task WriteTextToFileAsync(WriteTextToFileRequest writeTextToFileRequest, CancellationToken cancellationToken);
+        Task<WriteTextToFileResponse> WriteTextToFileAsync(
+            WriteTextToFileRequest writeTextToFileRequest, 
+            CancellationToken cancellationToken
+        );
     }
 }

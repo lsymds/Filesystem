@@ -29,7 +29,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsNotObviouslyADirectoryException" />
         /// <exception cref="DirectoryNotFoundException" />
         /// <exception cref="DirectoryAlreadyExistsException" />
-        Task<DirectoryRepresentation> CopyAsync(
+        Task<CopyDirectoryResponse> CopyAsync(
             CopyDirectoryRequest copyDirectoryRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -52,7 +52,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsRelativeException" />
         /// <exception cref="PathIsNotObviouslyADirectoryException" />
         /// <exception cref="DirectoryAlreadyExistsException" />
-        Task<DirectoryRepresentation> CreateAsync(
+        Task<CreateDirectoryResponse> CreateAsync(
             CreateDirectoryRequest createDirectoryRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -76,7 +76,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsRelativeException" />
         /// <exception cref="PathIsNotObviouslyADirectoryException" />
         /// <exception cref="DirectoryNotFoundException" />
-        Task DeleteAsync(
+        Task<DeleteDirectoryResponse> DeleteAsync(
             DeleteDirectoryRequest deleteDirectoryRequest, 
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -126,7 +126,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsNotObviouslyADirectoryException" />
         /// <exception cref="DirectoryNotFoundException" />
         /// <exception cref="DirectoryAlreadyExistsException" />
-        Task<DirectoryRepresentation> MoveAsync(
+        Task<MoveDirectoryResponse> MoveAsync(
             MoveDirectoryRequest moveDirectoryRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default

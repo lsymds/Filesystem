@@ -14,7 +14,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Act.
             Func<Task> func = async () => await FileManager.TouchAsync(
-                new TouchFileRequest { FilePath = "a".AsBaselineFilesystemPath() },
+                new TouchFileRequest {FilePath = "a".AsBaselineFilesystemPath()},
                 "foo"
             );
             
@@ -54,14 +54,14 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
             // Assert.
             await func.Should().ThrowExactlyAsync<PathIsADirectoryException>();
         }
-        
+
         [Fact]
         public async Task It_Invokes_The_Matching_Adapters_Touch_File_Method()
         {
             // Arrange.
             Adapter
                 .Setup(x => x.TouchFileAsync(It.IsAny<TouchFileRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new FileRepresentation { Path = new PathRepresentation() })
+                .ReturnsAsync(new TouchFileResponse {File = new FileRepresentation {Path = new PathRepresentation()}})
                 .Verifiable();
             
             // Act.

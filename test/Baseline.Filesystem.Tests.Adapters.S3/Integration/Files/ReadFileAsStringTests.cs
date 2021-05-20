@@ -39,7 +39,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             var fileContents = await FileManager.ReadAsStringAsync(new ReadFileAsStringRequest { FilePath = path });
             
             // Assert.
-            fileContents.Should().Be("you should check these contents");
+            fileContents.FileContents.Should().Be("you should check these contents");
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             var fileContents = await FileManager.ReadAsStringAsync(new ReadFileAsStringRequest { FilePath = path });
             
             // Assert.
-            fileContents.Should().Be("you should check these contents");
+            fileContents.FileContents.Should().Be("you should check these contents");
         }
     }
 }

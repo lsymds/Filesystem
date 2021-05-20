@@ -5,9 +5,9 @@ namespace Baseline.Filesystem.Tests.Fixtures
 {
     public class SuccessfulOutcomeAdapter : IAdapter
     {
-        public Task<DirectoryRepresentation> CopyDirectoryAsync(CopyDirectoryRequest copyDirectoryRequest, CancellationToken cancellationToken)
+        public Task<CopyDirectoryResponse> CopyDirectoryAsync(CopyDirectoryRequest copyDirectoryRequest, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new DirectoryRepresentation());
+            return Task.FromResult(new CopyDirectoryResponse());
         }
 
         public Task<CopyFileResponse> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken)
@@ -15,19 +15,19 @@ namespace Baseline.Filesystem.Tests.Fixtures
             return Task.FromResult(new CopyFileResponse());
         }
 
-        public Task<DirectoryRepresentation> CreateDirectoryAsync(CreateDirectoryRequest createDirectoryRequest, CancellationToken cancellationToken)
+        public Task<CreateDirectoryResponse> CreateDirectoryAsync(CreateDirectoryRequest createDirectoryRequest, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new DirectoryRepresentation());
+            return Task.FromResult(new CreateDirectoryResponse());
         }
 
-        public Task DeleteDirectoryAsync(DeleteDirectoryRequest deleteDirectoryRequest, CancellationToken cancellationToken)
+        public Task<DeleteDirectoryResponse> DeleteDirectoryAsync(DeleteDirectoryRequest deleteDirectoryRequest, CancellationToken cancellationToken)
         {
-            return Task.CompletedTask;
+            return Task.FromResult(new DeleteDirectoryResponse());
         }
 
-        public Task DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken)
+        public Task<DeleteFileResponse> DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken)
         {
-            return Task.CompletedTask;
+            return Task.FromResult(new DeleteFileResponse());
         }
 
         public Task<FileExistsResponse> FileExistsAsync(FileExistsRequest fileExistsRequest, CancellationToken cancellationToken)
@@ -35,9 +35,9 @@ namespace Baseline.Filesystem.Tests.Fixtures
             return Task.FromResult(new FileExistsResponse { FileExists = true });
         }
 
-        public Task<FileRepresentation> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken)
+        public Task<GetFileResponse> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FileRepresentation());
+            return Task.FromResult(new GetFileResponse());
         }
 
         public Task<ListDirectoryContentsResponse> ListDirectoryContentsAsync(ListDirectoryContentsRequest listDirectoryContentsRequest,
@@ -46,30 +46,30 @@ namespace Baseline.Filesystem.Tests.Fixtures
             return Task.FromResult(new ListDirectoryContentsResponse());
         }
 
-        public Task<DirectoryRepresentation> MoveDirectoryAsync(MoveDirectoryRequest moveDirectoryRequest, CancellationToken cancellationToken)
+        public Task<MoveDirectoryResponse> MoveDirectoryAsync(MoveDirectoryRequest moveDirectoryRequest, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new DirectoryRepresentation());
+            return Task.FromResult(new MoveDirectoryResponse());
         }
 
-        public Task<FileRepresentation> MoveFileAsync(MoveFileRequest moveFileRequest, CancellationToken cancellationToken)
+        public Task<MoveFileResponse> MoveFileAsync(MoveFileRequest moveFileRequest, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FileRepresentation());
+            return Task.FromResult(new MoveFileResponse());
         }
 
-        public Task<string> ReadFileAsStringAsync(
+        public Task<ReadFileAsStringResponse> ReadFileAsStringAsync(
             ReadFileAsStringRequest readFileAsStringRequest,
             CancellationToken cancellationToken
         )
         {
-            return Task.FromResult("file contents");
+            return Task.FromResult(new ReadFileAsStringResponse { FileContents = "file contents" });
         }
 
-        public Task<FileRepresentation> TouchFileAsync(
+        public Task<TouchFileResponse> TouchFileAsync(
             TouchFileRequest touchFileRequest,
             CancellationToken cancellationToken
         )
         {
-            return Task.FromResult(new FileRepresentation());
+            return Task.FromResult(new TouchFileResponse());
         }
 
         public Task<WriteStreamToFileResponse> WriteStreamToFileAsync(
@@ -80,12 +80,12 @@ namespace Baseline.Filesystem.Tests.Fixtures
             return Task.FromResult(new WriteStreamToFileResponse());
         }
 
-        public Task WriteTextToFileAsync(
+        public Task<WriteTextToFileResponse> WriteTextToFileAsync(
             WriteTextToFileRequest writeTextToFileRequest,
             CancellationToken cancellationToken
         )
         {
-            return Task.CompletedTask;
+            return Task.FromResult(new WriteTextToFileResponse());
         }
 
         public Task<GetFilePublicUrlResponse> GetFilePublicUrlAsync(
