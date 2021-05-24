@@ -19,7 +19,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<FileRepresentation> CopyAsync(
+        public async Task<CopyFileResponse> CopyAsync(
             CopyFileRequest copyFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -37,7 +37,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task DeleteAsync(
+        public async Task<DeleteFileResponse> DeleteAsync(
             DeleteFileRequest deleteFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -45,7 +45,7 @@ namespace Baseline.Filesystem
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(deleteFileRequest);
 
-            await GetAdapter(adapter)
+            return await GetAdapter(adapter)
                 .DeleteFileAsync(
                     deleteFileRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
@@ -55,7 +55,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<bool> ExistsAsync(
+        public async Task<FileExistsResponse> ExistsAsync(
             FileExistsRequest fileExistsRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -73,7 +73,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<FileRepresentation> GetAsync(
+        public async Task<GetFileResponse> GetAsync(
             GetFileRequest getFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -109,7 +109,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<FileRepresentation> MoveAsync(
+        public async Task<MoveFileResponse> MoveAsync(
             MoveFileRequest moveFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -127,7 +127,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<string> ReadAsStringAsync(
+        public async Task<ReadFileAsStringResponse> ReadAsStringAsync(
             ReadFileAsStringRequest readFileAsStringRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -145,7 +145,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<FileRepresentation> TouchAsync(
+        public async Task<TouchFileResponse> TouchAsync(
             TouchFileRequest touchFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -181,7 +181,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task WriteTextAsync(
+        public async Task<WriteTextToFileResponse> WriteTextAsync(
             WriteTextToFileRequest writeTextToFileRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -189,7 +189,7 @@ namespace Baseline.Filesystem
         {
             WriteTextToFileRequestValidator.ValidateAndThrowIfUnsuccessful(writeTextToFileRequest);
             
-            await GetAdapter(adapter)
+            return await GetAdapter(adapter)
                 .WriteTextToFileAsync(
                     writeTextToFileRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken

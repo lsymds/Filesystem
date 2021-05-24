@@ -14,7 +14,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Act.
             Func<Task> func = async () => await FileManager.ReadAsStringAsync(
-                new ReadFileAsStringRequest { FilePath = "a".AsBaselineFilesystemPath() },
+                new ReadFileAsStringRequest {FilePath = "a".AsBaselineFilesystemPath()},
                 "foo"
             );
             
@@ -56,23 +56,23 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
             // Assert.
             await func.Should().ThrowExactlyAsync<PathIsADirectoryException>();
         }
-        
+
         [Fact]
         public async Task It_Invokes_The_Matching_Adapters_ReadFileAsString_Method()
         {
             // Arrange.
             Adapter
                 .Setup(x => x.ReadFileAsStringAsync(It.IsAny<ReadFileAsStringRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync("foo")
+                .ReturnsAsync(new ReadFileAsStringResponse {FileContents = "foo"})
                 .Verifiable();
             
             // Act.
             var response = await FileManager.ReadAsStringAsync(
-                new ReadFileAsStringRequest { FilePath = "a".AsBaselineFilesystemPath() }
+                new ReadFileAsStringRequest {FilePath = "a".AsBaselineFilesystemPath()}
             );
             
             // Assert.
-            response.Should().Be("foo");
+            response.FileContents.Should().Be("foo");
             Adapter.VerifyAll();
         }
     }

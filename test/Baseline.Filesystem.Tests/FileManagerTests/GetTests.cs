@@ -61,7 +61,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
             // Arrange.
             Adapter
                 .Setup(x => x.GetFileAsync(It.IsAny<GetFileRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new FileRepresentation { Path = new PathRepresentation() })
+                .ReturnsAsync(new GetFileResponse { File = new FileRepresentation { Path = new PathRepresentation() } })
                 .Verifiable();
             
             // Act.

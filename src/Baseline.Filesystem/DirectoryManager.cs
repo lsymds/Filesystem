@@ -20,7 +20,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<DirectoryRepresentation> CopyAsync(
+        public async Task<CopyDirectoryResponse> CopyAsync(
             CopyDirectoryRequest copyDirectoryRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -38,7 +38,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<DirectoryRepresentation> CreateAsync(
+        public async Task<CreateDirectoryResponse> CreateAsync(
             CreateDirectoryRequest createDirectoryRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -56,7 +56,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task DeleteAsync(
+        public async Task<DeleteDirectoryResponse> DeleteAsync(
             DeleteDirectoryRequest deleteDirectoryRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default
@@ -64,7 +64,7 @@ namespace Baseline.Filesystem
         {
             BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(deleteDirectoryRequest);
             
-            await GetAdapter(adapter)
+            return await GetAdapter(adapter)
                 .DeleteDirectoryAsync(
                     deleteDirectoryRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)), 
                     cancellationToken
@@ -102,7 +102,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<DirectoryRepresentation> MoveAsync(
+        public async Task<MoveDirectoryResponse> MoveAsync(
             MoveDirectoryRequest moveDirectoryRequest,
             string adapter = "default",
             CancellationToken cancellationToken = default

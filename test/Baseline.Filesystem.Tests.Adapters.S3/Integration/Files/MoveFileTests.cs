@@ -61,7 +61,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             });
             
             // Assert.
-            fileContents.Should().Be("abc");
+            fileContents.FileContents.Should().Be("abc");
         }
 
         [Fact]

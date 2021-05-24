@@ -92,7 +92,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
             // Arrange.
             Adapter
                 .Setup(x => x.CopyFileAsync(It.IsAny<CopyFileRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new FileRepresentation())
+                .ReturnsAsync(new CopyFileResponse())
                 .Verifiable();
             
             // Act.

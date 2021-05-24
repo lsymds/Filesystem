@@ -23,7 +23,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             );
             
             // Assert.
-            response.Should().BeTrue();
+            response.FileExists.Should().BeTrue();
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             );
             
             // Assert.
-            response.Should().BeFalse();
+            response.FileExists.Should().BeFalse();
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             );
             
             // Assert.
-            response.Should().BeTrue();
+            response.FileExists.Should().BeTrue();
         }
     }
 }

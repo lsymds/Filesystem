@@ -92,7 +92,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
             // Arrange.
             Adapter
                 .Setup(x => x.MoveFileAsync(It.IsAny<MoveFileRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new FileRepresentation())
+                .ReturnsAsync(new MoveFileResponse { DestinationFile = new FileRepresentation() })
                 .Verifiable();
             
             // Act.

@@ -37,7 +37,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             
             // Assert.
             await ExpectDirectoryToExistAsync(directory);
-            response.Path.Should().BeEquivalentTo(directory);
+            response.Directory.Path.Should().BeEquivalentTo(directory);
         }
 
         [Fact]
@@ -53,7 +53,11 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             
             // Assert.
             await ExpectDirectoryToExistAsync(directory);
-            response.Path.Should().BeEquivalentTo(CombinedPathWithRootPathForAssertion(directory), x => x.Excluding(y => y.GetPathTree));
+            response
+                .Directory
+                .Path
+                .Should()
+                .BeEquivalentTo(CombinedPathWithRootPathForAssertion(directory), x => x.Excluding(y => y.GetPathTree));
         }
     }
 }

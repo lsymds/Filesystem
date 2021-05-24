@@ -29,7 +29,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             
             // Assert.
             var response = await FileManager.GetAsync(new GetFileRequest {FilePath = path});
-            response.Path.Should().Be(path);
+            response.File.Path.Should().Be(path);
         }
 
         [Fact]
@@ -45,7 +45,11 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             
             // Assert.
             var response = await FileManager.GetAsync(new GetFileRequest {FilePath = path});
-            response.Path.Should().BeEquivalentTo(CombinedPathWithRootPathForAssertion(path), x => x.Excluding(y => y.GetPathTree));
+            response
+                .File
+                .Path
+                .Should()
+                .BeEquivalentTo(CombinedPathWithRootPathForAssertion(path), x => x.Excluding(y => y.GetPathTree));
         }
     }
 }

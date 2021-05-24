@@ -56,7 +56,7 @@ namespace Baseline.Filesystem.Tests
                         It.IsAny<CancellationToken>()
                     )
                 )
-                .ReturnsAsync(true)
+                .ReturnsAsync(new FileExistsResponse { FileExists = true })
                 .Verifiable();
 
             // Act.

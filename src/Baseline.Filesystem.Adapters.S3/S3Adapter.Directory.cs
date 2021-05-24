@@ -14,48 +14,58 @@ namespace Baseline.Filesystem
     public partial class S3Adapter
     {
         /// <inheritdoc />
-        public async Task<DirectoryRepresentation> CopyDirectoryAsync(
+        public async Task<CopyDirectoryResponse> CopyDirectoryAsync(
             CopyDirectoryRequest copyDirectoryRequest,
             CancellationToken cancellationToken
         )
         {
-            await EnsureDirectoryExistsAsync(copyDirectoryRequest.SourceDirectoryPath, cancellationToken).ConfigureAwait(false);
-            await EnsureDirectoryDoesNotExistAsync(copyDirectoryRequest.DestinationDirectoryPath, cancellationToken).ConfigureAwait(false);
+            await EnsureDirectoryExistsAsync(copyDirectoryRequest.SourceDirectoryPath, cancellationToken)
+                .ConfigureAwait(false);
+            await EnsureDirectoryDoesNotExistAsync(copyDirectoryRequest.DestinationDirectoryPath, cancellationToken)
+                .ConfigureAwait(false);
 
             await CopyDirectoryInternalAsync(
                 copyDirectoryRequest.SourceDirectoryPath,
                 copyDirectoryRequest.DestinationDirectoryPath,
                 cancellationToken
             ).ConfigureAwait(false);
-            
-            return new DirectoryRepresentation {Path = copyDirectoryRequest.DestinationDirectoryPath};
+
+            return new CopyDirectoryResponse
+            {
+                DestinationDirectory = new DirectoryRepresentation {Path = copyDirectoryRequest.DestinationDirectoryPath}
+            };
         }
 
         /// <inheritdoc />
-        public async Task<DirectoryRepresentation> CreateDirectoryAsync(
+        public async Task<CreateDirectoryResponse> CreateDirectoryAsync(
             CreateDirectoryRequest createDirectoryRequest,
             CancellationToken cancellationToken
         )
         {
-            await EnsureDirectoryDoesNotExistAsync(createDirectoryRequest.DirectoryPath, cancellationToken).ConfigureAwait(false);
+            await EnsureDirectoryDoesNotExistAsync(createDirectoryRequest.DirectoryPath, cancellationToken)
+                .ConfigureAwait(false);
 
             var pathToCreate = new PathCombinationBuilder(
                 createDirectoryRequest.DirectoryPath,
                 ".keep".AsBaselineFilesystemPath()
             ).Build();
-            
+
             await TouchFileInternalAsync(pathToCreate, cancellationToken).ConfigureAwait(false);
 
-            return new DirectoryRepresentation {Path = createDirectoryRequest.DirectoryPath};
+            return new CreateDirectoryResponse
+            {
+                Directory = new DirectoryRepresentation {Path = createDirectoryRequest.DirectoryPath}
+            };
         }
 
         /// <inheritdoc />
-        public async Task DeleteDirectoryAsync(
+        public async Task<DeleteDirectoryResponse> DeleteDirectoryAsync(
             DeleteDirectoryRequest deleteDirectoryRequest,
             CancellationToken cancellationToken
         )
         {
-            await EnsureDirectoryExistsAsync(deleteDirectoryRequest.DirectoryPath, cancellationToken).ConfigureAwait(false);
+            await EnsureDirectoryExistsAsync(deleteDirectoryRequest.DirectoryPath, cancellationToken)
+                .ConfigureAwait(false);
 
             await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 deleteDirectoryRequest.DirectoryPath,
@@ -69,6 +79,8 @@ namespace Baseline.Filesystem
                 ).ConfigureAwait(false),
                 cancellationToken
             ).ConfigureAwait(false);
+
+            return new DeleteDirectoryResponse();
         }
 
         /// <inheritdoc />
@@ -77,11 +89,12 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            await EnsureDirectoryExistsAsync(listDirectoryContentsRequest.DirectoryPath, cancellationToken).ConfigureAwait(false);
+            await EnsureDirectoryExistsAsync(listDirectoryContentsRequest.DirectoryPath, cancellationToken)
+                .ConfigureAwait(false);
 
             var directorysContents = new List<PathRepresentation>();
             var addedDirectoryPaths = new Dictionary<string, PathRepresentation>();
-            
+
             var filesWithinDirectory = await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 listDirectoryContentsRequest.DirectoryPath,
                 null,
@@ -91,7 +104,7 @@ namespace Baseline.Filesystem
             foreach (var file in filesWithinDirectory)
             {
                 var baselineFilePath = file.Key.AsBaselineFilesystemPath();
-                
+
                 if (file.Key.Contains("/"))
                 {
                     foreach (var p in baselineFilePath.GetPathTree())
@@ -105,21 +118,23 @@ namespace Baseline.Filesystem
                         directorysContents.Add(p);
                     }
                 }
-                
+
                 directorysContents.Add(baselineFilePath);
             }
-    
-            return new ListDirectoryContentsResponse { Contents = directorysContents };
+
+            return new ListDirectoryContentsResponse {Contents = directorysContents};
         }
 
         /// <inheritdoc />
-        public async Task<DirectoryRepresentation> MoveDirectoryAsync(
+        public async Task<MoveDirectoryResponse> MoveDirectoryAsync(
             MoveDirectoryRequest moveDirectoryRequest,
             CancellationToken cancellationToken
         )
         {
-            await EnsureDirectoryExistsAsync(moveDirectoryRequest.SourceDirectoryPath, cancellationToken).ConfigureAwait(false);
-            await EnsureDirectoryDoesNotExistAsync(moveDirectoryRequest.DestinationDirectoryPath, cancellationToken).ConfigureAwait(false);
+            await EnsureDirectoryExistsAsync(moveDirectoryRequest.SourceDirectoryPath, cancellationToken)
+                .ConfigureAwait(false);
+            await EnsureDirectoryDoesNotExistAsync(moveDirectoryRequest.DestinationDirectoryPath, cancellationToken)
+                .ConfigureAwait(false);
 
             var sourceFiles = await CopyDirectoryInternalAsync(
                 moveDirectoryRequest.SourceDirectoryPath,
@@ -140,7 +155,13 @@ namespace Baseline.Filesystem
                 )
             ).ConfigureAwait(false);
 
-            return new DirectoryRepresentation {Path = moveDirectoryRequest.DestinationDirectoryPath};
+            return new MoveDirectoryResponse
+            {
+                DestinationDirectory = new DirectoryRepresentation
+                {
+                    Path = moveDirectoryRequest.DestinationDirectoryPath
+                }
+            };
         }
 
         /// <summary>
@@ -181,7 +202,7 @@ namespace Baseline.Filesystem
         /// <param name="directoryPath">The directory path to be checked.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         private async Task EnsureDirectoryExistsAsync(
-            PathRepresentation directoryPath, 
+            PathRepresentation directoryPath,
             CancellationToken cancellationToken
         )
         {
@@ -226,6 +247,6 @@ namespace Baseline.Filesystem
                 },
                 cancellationToken
             ).ConfigureAwait(false);
-        } 
+        }
     }
 }
