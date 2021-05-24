@@ -335,21 +335,53 @@ namespace Baseline.Filesystem
         }
         
         /// <summary>
+        /// Loops through all of the files under a particular path prefix and performs an action until actions are performed
+        /// on each page within the paginated result set. Returns every file that was retrieved as part of the loop.
+        /// </summary>
+        /// <param name="path">The path prefix to retrieve files under.</param>
+        /// <param name="action">An optional action to perform on the returned response.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        private async Task<List<S3Object>> ListAndReturnPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
+            PathRepresentation path,
+            Func<ListObjectsResponse, Task> action = null,
+            CancellationToken cancellationToken = default
+        )
+        {
+            var objects = new List<S3Object>();
+
+            await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
+                path,
+                async r =>
+                {
+                    objects.AddRange(r.S3Objects);
+
+                    if (action == null)
+                    {
+                        return;
+                    }
+                    
+                    await action.Invoke(r).ConfigureAwait(false);
+                },
+                cancellationToken
+            ).ConfigureAwait(false);
+
+            return objects;
+        }
+        
+        /// <summary>
         /// Retrieves all of the files under a particular path prefix and performs an action until actions are performed
         /// on each page within the paginated result set.
         /// </summary>
         /// <param name="path">The path prefix to retrieve files under.</param>
         /// <param name="action">An optional action to perform on the returned response.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
-        /// <returns>The S3 objects listed under the path for any bulk remedial actions.</returns>
-        private async Task<List<S3Object>> ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
+        private async Task ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
             PathRepresentation path,
             Func<ListObjectsResponse, Task> action = null,
             CancellationToken cancellationToken = default
         )
         {
             string marker = null;
-            var objects = new List<S3Object>();
             
             ListObjectsResponse objectsInPrefix;
             do
@@ -362,7 +394,6 @@ namespace Baseline.Filesystem
                 }
 
                 marker = objectsInPrefix.NextMarker;
-                objects.AddRange(objectsInPrefix.S3Objects);
 
                 if (action == null)
                 {
@@ -371,8 +402,6 @@ namespace Baseline.Filesystem
                 
                 await action(objectsInPrefix).ConfigureAwait(false);
             } while (objectsInPrefix.IsTruncated);
-
-            return objects;
         }
     }
 }

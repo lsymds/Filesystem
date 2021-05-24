@@ -83,6 +83,29 @@ namespace Baseline.Filesystem
         );
 
         /// <summary>
+        /// Iterates through a directory's contents, executing a function for each directory and file in a recursive
+        /// fashion.
+        /// </summary>
+        /// <param name="iterateDirectoryContentsRequest">
+        /// The request which contains information about which directory to iterate through and which action to execute.
+        /// </param>
+        /// <param name="adapter">The adapter to run the list operation against.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsNotObviouslyADirectoryException" />
+        /// <exception cref="DirectoryNotFoundException" />
+        Task<IterateDirectoryContentsResponse> IterateContentsAsync(
+            IterateDirectoryContentsRequest iterateDirectoryContentsRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        );
+
+        /// <summary>
         /// Lists the directory's contents, returning the available paths as a flat list. Directories will be
         /// returned in the list prior to any child files/directories.
         /// </summary>
