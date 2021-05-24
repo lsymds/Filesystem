@@ -67,7 +67,7 @@ namespace Baseline.Filesystem
             await EnsureDirectoryExistsAsync(deleteDirectoryRequest.DirectoryPath, cancellationToken)
                 .ConfigureAwait(false);
 
-            await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
+            await ListAndReturnPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 deleteDirectoryRequest.DirectoryPath,
                 async response => await _s3Client.DeleteObjectsAsync(
                     new DeleteObjectsRequest
@@ -84,6 +84,35 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
+        public async Task<IterateDirectoryContentsResponse> IterateDirectoryContentsAsync(
+            IterateDirectoryContentsRequest iterateDirectoryContentsRequest,
+            CancellationToken cancellationToken
+        )
+        {
+            await EnsureDirectoryExistsAsync(iterateDirectoryContentsRequest.DirectoryPath, cancellationToken)
+                .ConfigureAwait(false);
+
+            await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
+                iterateDirectoryContentsRequest.DirectoryPath,
+                async r =>
+                {
+                    var pathTracker = new Dictionary<string, PathRepresentation>();
+                    foreach (var file in r.S3Objects)
+                    {
+                        var tree = BuildOrderedPathTree(file.Key.AsBaselineFilesystemPath(), pathTracker);
+                        foreach (var treeItem in tree)
+                        {
+                            await iterateDirectoryContentsRequest.Action(treeItem);    
+                        }
+                    }
+                },
+                cancellationToken
+            ).ConfigureAwait(false);
+
+            return new IterateDirectoryContentsResponse();
+        }
+
+        /// <inheritdoc />
         public async Task<ListDirectoryContentsResponse> ListDirectoryContentsAsync(
             ListDirectoryContentsRequest listDirectoryContentsRequest,
             CancellationToken cancellationToken = default
@@ -93,34 +122,21 @@ namespace Baseline.Filesystem
                 .ConfigureAwait(false);
 
             var directorysContents = new List<PathRepresentation>();
-            var addedDirectoryPaths = new Dictionary<string, PathRepresentation>();
+            var pathTracker = new Dictionary<string, PathRepresentation>();
 
-            var filesWithinDirectory = await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
+            await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 listDirectoryContentsRequest.DirectoryPath,
-                null,
+                r =>
+                {
+                    r.S3Objects.ForEach(
+                        o => directorysContents.AddRange(
+                            BuildOrderedPathTree(o.Key.AsBaselineFilesystemPath(), pathTracker)
+                        )
+                    );
+                    return Task.CompletedTask;
+                },
                 cancellationToken
             ).ConfigureAwait(false);
-
-            foreach (var file in filesWithinDirectory)
-            {
-                var baselineFilePath = file.Key.AsBaselineFilesystemPath();
-
-                if (file.Key.Contains("/"))
-                {
-                    foreach (var p in baselineFilePath.GetPathTree())
-                    {
-                        if (addedDirectoryPaths.ContainsKey(p.NormalisedPath))
-                        {
-                            continue;
-                        }
-
-                        addedDirectoryPaths.Add(p.NormalisedPath, p);
-                        directorysContents.Add(p);
-                    }
-                }
-
-                directorysContents.Add(baselineFilePath);
-            }
 
             return new ListDirectoryContentsResponse {Contents = directorysContents};
         }
@@ -225,7 +241,7 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken
         )
         {
-            return await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
+            return await ListAndReturnPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 sourcePath,
                 async objects =>
                 {
@@ -247,6 +263,35 @@ namespace Baseline.Filesystem
                 },
                 cancellationToken
             ).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Builds and returns an ordered path tree from a path returned from the S3 API.
+        /// </summary>
+        /// <param name="basePath">The path to create a tree from.</param>
+        /// <param name="directoryPathTracker">A collection of paths that have already been executed.</param>
+        private IEnumerable<PathRepresentation> BuildOrderedPathTree(
+            PathRepresentation basePath,
+            Dictionary<string, PathRepresentation> directoryPathTracker
+        )
+        {
+            var addedDirectoryPaths = directoryPathTracker ?? new Dictionary<string, PathRepresentation>();
+            
+            if (basePath.OriginalPath.Contains("/"))
+            {
+                foreach (var p in basePath.GetPathTree())
+                {
+                    if (addedDirectoryPaths.ContainsKey(p.NormalisedPath))
+                    {
+                        continue;
+                    }
+
+                    addedDirectoryPaths.Add(p.NormalisedPath, p);
+                    yield return p;
+                }
+            }
+
+            yield return basePath;
         }
     }
 }

@@ -8,8 +8,6 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
 {
     public class ListDirectoryContentsTests : BaseS3AdapterIntegrationTest
     {
-        private readonly PathRepresentation _directoryPath = RandomDirectoryPathRepresentation();
-
         [Fact]
         public async Task It_Lists_The_Contents_Of_A_Simple_Directory()
         {

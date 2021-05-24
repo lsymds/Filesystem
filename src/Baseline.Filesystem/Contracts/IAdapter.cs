@@ -14,7 +14,6 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="copyDirectoryRequest">The request containing information about the directory to copy.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        /// <returns>The information about the directory that was created (the destination directory).</returns>
         Task<CopyDirectoryResponse> CopyDirectoryAsync(
             CopyDirectoryRequest copyDirectoryRequest,
             CancellationToken cancellationToken
@@ -34,7 +33,6 @@ namespace Baseline.Filesystem
         /// The request containing information about the directory to create.
         /// </param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        /// <returns>The information about the directory that was created (the destination directory).</returns>
         Task<CreateDirectoryResponse> CreateDirectoryAsync(
             CreateDirectoryRequest createDirectoryRequest,
             CancellationToken cancellationToken
@@ -62,7 +60,6 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="fileExistsRequest">The request containing information about the file to check.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        /// <returns>Whether or not the file defined in the request exists.</returns>
         Task<FileExistsResponse> FileExistsAsync(FileExistsRequest fileExistsRequest, CancellationToken cancellationToken);
         
         /// <summary>
@@ -70,7 +67,6 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="getFileRequest">The request containing information about the file to retrieve.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        /// <returns>The information about the requested file.</returns>
         Task<GetFileResponse> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken);
 
         /// <summary>
@@ -86,13 +82,25 @@ namespace Baseline.Filesystem
         );
         
         /// <summary>
+        /// Iterates through a directory's contents within an adapter's store, executing a function for each
+        /// directory and file in a recursive fashion.
+        /// </summary>
+        /// <param name="iterateDirectoryContentsRequest">
+        /// The request which contains information about which directory to iterate through and which action to execute.
+        /// </param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        Task<IterateDirectoryContentsResponse> IterateDirectoryContentsAsync(
+            IterateDirectoryContentsRequest iterateDirectoryContentsRequest,
+            CancellationToken cancellationToken
+        );
+        
+        /// <summary>
         /// Lists the directory's contents from within the adapter's data store.
         /// </summary>
         /// <param name="listDirectoryContentsRequest">
         /// The request which contains information about which directory to list the contents for.
         /// </param>
         /// <param name="cancellationToken">A cancellation token.</param>
-        /// <returns>A response containing the available paths in the directory.</returns>
         Task<ListDirectoryContentsResponse> ListDirectoryContentsAsync(
             ListDirectoryContentsRequest listDirectoryContentsRequest,
             CancellationToken cancellationToken = default
@@ -103,7 +111,6 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="moveDirectoryRequest">The request containing information about the directory to move.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        /// <returns>The information about the directory that was created (the destination directory).</returns>
         Task<MoveDirectoryResponse> MoveDirectoryAsync(
             MoveDirectoryRequest moveDirectoryRequest,
             CancellationToken cancellationToken
@@ -116,7 +123,6 @@ namespace Baseline.Filesystem
         /// The request containing information about the file to move and where to move it to.
         /// </param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        /// <returns>The information about the destination file of the move request.</returns>
         Task<MoveFileResponse> MoveFileAsync(MoveFileRequest moveFileRequest, CancellationToken cancellationToken);
 
         /// <summary>
@@ -126,7 +132,6 @@ namespace Baseline.Filesystem
         /// The request containing information about the file to read the contents of.
         /// </param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        /// <returns>The file's contents.</returns>
         Task<ReadFileAsStringResponse> ReadFileAsStringAsync(
             ReadFileAsStringRequest readFileAsStringRequest,
             CancellationToken cancellationToken
@@ -137,7 +142,6 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="touchFileRequest">The request containing information about the file to touch.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        /// <returns>The information about the file that was created.</returns>
         Task<TouchFileResponse> TouchFileAsync(TouchFileRequest touchFileRequest, CancellationToken cancellationToken);
 
         /// <summary>
@@ -146,7 +150,6 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="writeStreamToFileRequest">The request containing information about what to write and to where.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
-        /// <returns>A response containing information about the operation.</returns>
         Task<WriteStreamToFileResponse> WriteStreamToFileAsync(
             WriteStreamToFileRequest writeStreamToFileRequest,
             CancellationToken cancellationToken

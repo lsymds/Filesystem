@@ -72,7 +72,44 @@ namespace Baseline.Filesystem
                 .WrapExternalExceptionsAsync(adapter)
                 .ConfigureAwait(false);
         }
-        
+
+        /// <inheritdoc />
+        public async Task<IterateDirectoryContentsResponse> IterateContentsAsync(
+            IterateDirectoryContentsRequest iterateDirectoryContentsRequest, 
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        )
+        {
+            IterateDirectoryContentsRequestValidator.ValidateAndThrowIfUnsuccessful(iterateDirectoryContentsRequest);
+
+            var request = new IterateDirectoryContentsRequest
+            {
+                DirectoryPath = iterateDirectoryContentsRequest.DirectoryPath,
+                Action = async path =>
+                {
+                    if (!AdapterHasRootPath(adapter))
+                    {
+                        await iterateDirectoryContentsRequest.Action(path);
+                        return;
+                    }
+
+                    var pathWithoutRoot = new[] {path}.RemoveRootPath(GetAdapterRootPath(adapter)).ToList();
+                    if (pathWithoutRoot.Any())
+                    {
+                        await iterateDirectoryContentsRequest.Action(pathWithoutRoot.First());   
+                    }
+                }
+            };
+
+            return await GetAdapter(adapter)
+                .IterateDirectoryContentsAsync(
+                    request.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    cancellationToken
+                )
+                .WrapExternalExceptionsAsync(adapter)
+                .ConfigureAwait(false);
+        }
+
         /// <inheritdoc />
         public async Task<ListDirectoryContentsResponse> ListContentsAsync(
             ListDirectoryContentsRequest listDirectoryContentsRequest,
