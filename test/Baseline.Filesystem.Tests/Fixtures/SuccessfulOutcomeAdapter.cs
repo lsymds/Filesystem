@@ -62,6 +62,11 @@ namespace Baseline.Filesystem.Tests.Fixtures
             return Task.FromResult(new MoveFileResponse());
         }
 
+        public Task<ReadFileAsStreamResponse> ReadAsStreamAsync(ReadFileAsStreamRequest readFileAsStreamRequest, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(new ReadFileAsStreamResponse());
+        }
+
         public Task<ReadFileAsStringResponse> ReadFileAsStringAsync(
             ReadFileAsStringRequest readFileAsStringRequest,
             CancellationToken cancellationToken

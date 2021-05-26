@@ -126,6 +126,20 @@ namespace Baseline.Filesystem
         Task<MoveFileResponse> MoveFileAsync(MoveFileRequest moveFileRequest, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Retrieves a file from the adapter's data store and reads and returns its contents into a stream.
+        /// </summary>
+        /// <param name="readFileAsStreamRequest">
+        /// The request containing information about the file to read the contents of.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The cancellation token used to cancel asynchronous requests if required.
+        /// </param>
+        Task<ReadFileAsStreamResponse> ReadAsStreamAsync(
+            ReadFileAsStreamRequest readFileAsStreamRequest,
+            CancellationToken cancellationToken
+        );
+
+        /// <summary>
         /// Retrieves a file from the adapter's data store and reads its contents as a string.
         /// </summary>
         /// <param name="readFileAsStringRequest">

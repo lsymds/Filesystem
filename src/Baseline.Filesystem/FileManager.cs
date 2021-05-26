@@ -127,6 +127,24 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
+        public async Task<ReadFileAsStreamResponse> ReadAsStreamAsync(
+            ReadFileAsStreamRequest readFileAsStreamRequest, 
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        )
+        {
+            BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(readFileAsStreamRequest);
+
+            return await GetAdapter(adapter)
+                .ReadAsStreamAsync(
+                    readFileAsStreamRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
+                    cancellationToken
+                )
+                .WrapExternalExceptionsAsync(adapter)
+                .ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
         public async Task<ReadFileAsStringResponse> ReadAsStringAsync(
             ReadFileAsStringRequest readFileAsStringRequest,
             string adapter = "default",
