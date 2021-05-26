@@ -136,7 +136,7 @@ namespace Baseline.Filesystem
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(readFileAsStreamRequest);
 
             return await GetAdapter(adapter)
-                .ReadAsStreamAsync(
+                .ReadFileAsStreamAsync(
                     readFileAsStreamRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
                 )

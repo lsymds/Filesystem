@@ -134,7 +134,7 @@ namespace Baseline.Filesystem
         /// <param name="cancellationToken">
         /// The cancellation token used to cancel asynchronous requests if required.
         /// </param>
-        Task<ReadFileAsStreamResponse> ReadAsStreamAsync(
+        Task<ReadFileAsStreamResponse> ReadFileAsStreamAsync(
             ReadFileAsStreamRequest readFileAsStreamRequest,
             CancellationToken cancellationToken
         );

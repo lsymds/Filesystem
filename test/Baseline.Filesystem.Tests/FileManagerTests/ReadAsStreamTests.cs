@@ -64,7 +64,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Arrange.
             Adapter
-                .Setup(x => x.ReadAsStreamAsync(It.IsAny<ReadFileAsStreamRequest>(), It.IsAny<CancellationToken>()))
+                .Setup(x => x.ReadFileAsStreamAsync(It.IsAny<ReadFileAsStreamRequest>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new ReadFileAsStreamResponse {FileContents = new MemoryStream(Encoding.UTF8.GetBytes("foo"))})
                 .Verifiable();
             

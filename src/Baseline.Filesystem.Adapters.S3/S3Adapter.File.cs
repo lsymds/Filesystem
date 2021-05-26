@@ -120,7 +120,7 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
-        public async Task<ReadFileAsStreamResponse> ReadAsStreamAsync(
+        public async Task<ReadFileAsStreamResponse> ReadFileAsStreamAsync(
             ReadFileAsStreamRequest readFileAsStreamRequest, 
             CancellationToken cancellationToken
         )
