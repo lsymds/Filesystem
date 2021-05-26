@@ -133,7 +133,13 @@ namespace Baseline.Filesystem
                 cancellationToken
             ).ConfigureAwait(false);
 
-            return new ReadFileAsStreamResponse { FileContents = file.ResponseStream };
+            await using var responseStream = file.ResponseStream;
+            
+            var streamToReturn = new MemoryStream();
+            await responseStream.CopyToAsync(streamToReturn, cancellationToken);
+            streamToReturn.Seek(0, SeekOrigin.Begin);
+            
+            return new ReadFileAsStreamResponse { FileContents = streamToReturn };
         }
 
         /// <inheritdoc />
