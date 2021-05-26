@@ -120,6 +120,23 @@ namespace Baseline.Filesystem
         }
 
         /// <inheritdoc />
+        public async Task<ReadFileAsStreamResponse> ReadFileAsStreamAsync(
+            ReadFileAsStreamRequest readFileAsStreamRequest, 
+            CancellationToken cancellationToken
+        )
+        {
+            await EnsureFileExistsAsync(readFileAsStreamRequest.FilePath, cancellationToken).ConfigureAwait(false);
+            
+            var file = await _s3Client.GetObjectAsync(
+                _adapterConfiguration.BucketName,
+                readFileAsStreamRequest.FilePath.NormalisedPath,
+                cancellationToken
+            ).ConfigureAwait(false);
+
+            return new ReadFileAsStreamResponse { FileContents = file.ResponseStream };
+        }
+
+        /// <inheritdoc />
         public async Task<ReadFileAsStringResponse> ReadFileAsStringAsync(
             ReadFileAsStringRequest readFileAsStringRequest,
             CancellationToken cancellationToken
@@ -133,9 +150,10 @@ namespace Baseline.Filesystem
                 cancellationToken
             ).ConfigureAwait(false);
 
+            using var streamReader = new StreamReader(file.ResponseStream);
             return new ReadFileAsStringResponse
             {
-                FileContents = await new StreamReader(file.ResponseStream).ReadToEndAsync().ConfigureAwait(false)
+                FileContents = await streamReader.ReadToEndAsync().ConfigureAwait(false)
             };
         }
 

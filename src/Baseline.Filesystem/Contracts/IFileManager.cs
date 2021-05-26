@@ -145,6 +145,30 @@ namespace Baseline.Filesystem
         );
 
         /// <summary>
+        /// Reads a file's contents into a stream and returns it.
+        /// </summary>
+        /// <param name="readFileAsStreamRequest">
+        /// The request containing information about the file to read the contents of.
+        /// </param>
+        /// <param name="adapter">The adapter where the file to read the contents of is stored.</param>
+        /// <param name="cancellationToken">
+        /// The cancellation token used to cancel asynchronous requests if required.
+        /// </param>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="AdapterNotFoundException" />
+        /// <exception cref="AdapterProviderOperationException" />
+        /// <exception cref="PathIsBlankException" />
+        /// <exception cref="PathContainsInvalidCharacterException" />
+        /// <exception cref="PathIsRelativeException" />
+        /// <exception cref="PathIsADirectoryException" />
+        /// <exception cref="FileNotFoundException" />
+        Task<ReadFileAsStreamResponse> ReadAsStreamAsync(
+            ReadFileAsStreamRequest readFileAsStreamRequest,
+            string adapter = "default",
+            CancellationToken cancellationToken = default
+        );
+
+        /// <summary>
         /// Reads a file's contents into a string.
         /// </summary>
         /// <param name="readFileAsStringRequest">

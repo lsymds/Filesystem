@@ -38,7 +38,7 @@ namespace Baseline.Filesystem.Internal.Extensions
         /// <param name="task">The asynchronous task that could potentially throw an external exception.</param>
         /// <param name="adapterName">The name of the adapter that the exception occurred in.</param>
         /// <returns>
-        /// A task yielding the same response as the <param name="task" /> parameter providing it does not throw
+        /// A task yielding the same response as the <see cref="task" /> parameter providing it does not throw
         /// any exceptions.
         /// </returns>
         public static async Task<TResponse> WrapExternalExceptionsAsync<TResponse>(
