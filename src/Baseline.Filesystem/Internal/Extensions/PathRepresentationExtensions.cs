@@ -9,6 +9,20 @@ namespace Baseline.Filesystem.Internal.Extensions
     internal static class PathRepresentationExtensions
     {
         /// <summary>
+        /// Removes the root path from an single path representations.
+        /// </summary>
+        /// <param name="source">A path representation to remove the root path from.</param>
+        /// <param name="rootPath">The root path to remove.</param>
+        /// <returns>A new path with the root path removed.</returns>
+        public static PathRepresentation RemoveRootPath(
+            this PathRepresentation source,
+            PathRepresentation rootPath
+        )
+        {
+            return new[] {source}.RemoveRootPath(rootPath).First();
+        }
+        
+        /// <summary>
         /// Removes the root path from an enumerable collection of path representations.
         /// </summary>
         /// <param name="source">A collection of path representations to remove the root path from.</param>

@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using Baseline.Filesystem.Internal.Extensions;
+
 namespace Baseline.Filesystem
 {
     /// <summary>
