@@ -133,6 +133,11 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
+                .RemoveRootPathsAsync(
+                    r => r.DestinationFile.Path,
+                    (r, p) => r.DestinationFile.Path = p,
+                    GetAdapterRootPath(adapter)
+                )
                 .ConfigureAwait(false);
         }
 
@@ -187,6 +192,11 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
+                .RemoveRootPathsAsync(
+                    r => r.File.Path,
+                    (r, p) => r.File.Path = p,
+                    GetAdapterRootPath(adapter)
+                )
                 .ConfigureAwait(false);
         }
 
