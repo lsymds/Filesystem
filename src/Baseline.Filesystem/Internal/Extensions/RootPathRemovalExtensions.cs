@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Baseline.Filesystem.Internal.Extensions
 {
+    /// <summary>
+    /// Extension methods related to the removal of root paths from <see cref="PathRepresentation"/> instances.
+    /// </summary>
     internal static class RootPathRemovalExtensions
     {
         /// <summary>
@@ -13,6 +16,7 @@ namespace Baseline.Filesystem.Internal.Extensions
         /// <param name="obj">The object that has a path that might contain the root path.</param>
         /// <param name="getter">A lambda used to retrieve the value to modify.</param>
         /// <param name="setter">A lambda used to set the value that was modified.</param>
+        /// <param name="rootPath">The root path of the adapter (if present).</param>
         internal static async Task<TResponse> RemoveRootPathsAsync<TResponse>(
             this Task<TResponse> obj, 
             Func<TResponse, PathRepresentation> getter, 
@@ -39,6 +43,7 @@ namespace Baseline.Filesystem.Internal.Extensions
         /// <param name="obj">The entity that contains root paths that need removing.</param>
         /// <param name="getter">A selector to use to retrieve the path that needs modifying.</param>
         /// <param name="setter">A function used to modify the path of an entity.</param>
+        /// <param name="rootPath">The root path of the adapter (if present).</param>
         internal static async Task<TResponse> RemoveRootPathsAsync<TResponse>(
             this Task<TResponse> obj, 
             Func<TResponse, IEnumerable<PathRepresentation>> getter, 
