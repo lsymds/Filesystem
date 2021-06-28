@@ -121,11 +121,6 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
             return $"{(RootPath ?? string.Empty)}{path.NormalisedPath}";
         }
 
-        protected PathRepresentation CombinedPathWithRootPathForAssertion(PathRepresentation path)
-        {
-            return RootPath == null ? path : new PathCombinationBuilder(RootPath.AsBaselineFilesystemPath(), path).Build();
-        }
-
         protected static string RandomDirectoryPath(bool includeBlank = false)
         {
             var directories = new[]

@@ -57,7 +57,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
                 .Directory
                 .Path
                 .Should()
-                .BeEquivalentTo(CombinedPathWithRootPathForAssertion(directory), x => x.Excluding(y => y.GetPathTree));
+                .BeEquivalentTo(directory, x => x.Excluding(y => y.GetPathTree));
         }
     }
 }

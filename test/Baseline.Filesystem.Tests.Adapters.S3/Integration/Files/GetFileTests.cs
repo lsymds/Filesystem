@@ -39,17 +39,18 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             ReconfigureManagerInstances(true);
             
             var path = RandomFilePathRepresentation();
+            
+            await CreateFileAndWriteTextAsync(path);
 
             // Act.
-            await CreateFileAndWriteTextAsync(path);
+            var response = await FileManager.GetAsync(new GetFileRequest {FilePath = path});
             
             // Assert.
-            var response = await FileManager.GetAsync(new GetFileRequest {FilePath = path});
             response
                 .File
                 .Path
                 .Should()
-                .BeEquivalentTo(CombinedPathWithRootPathForAssertion(path), x => x.Excluding(y => y.GetPathTree));
+                .BeEquivalentTo(path, x => x.Excluding(y => y.GetPathTree));
         }
     }
 }
