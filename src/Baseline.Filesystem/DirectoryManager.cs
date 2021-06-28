@@ -34,6 +34,11 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
+                .RemoveRootPathsAsync(
+                    x => x.DestinationDirectory.Path, 
+                    (o, p) => o.DestinationDirectory.Path = p, 
+                    GetAdapterRootPath(adapter)
+                )
                 .ConfigureAwait(false);
         }
 
@@ -52,6 +57,11 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
+                .RemoveRootPathsAsync(
+                    r => r.Directory.Path,
+                    (r, p) => r.Directory.Path = p,
+                    GetAdapterRootPath(adapter)
+                )
                 .ConfigureAwait(false);
         }
 
@@ -92,7 +102,7 @@ namespace Baseline.Filesystem
                         await iterateDirectoryContentsRequest.Action(path);
                         return;
                     }
-
+                    
                     var pathWithoutRoot = new[] {path}.RemoveRootPath(GetAdapterRootPath(adapter)).ToList();
                     if (pathWithoutRoot.Any())
                     {
@@ -119,23 +129,18 @@ namespace Baseline.Filesystem
         {
             BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(listDirectoryContentsRequest);
 
-            var response = await GetAdapter(adapter)
+            return await GetAdapter(adapter)
                 .ListDirectoryContentsAsync(
                     listDirectoryContentsRequest.CloneAndCombinePathsWithRootPath(GetAdapterRootPath(adapter)),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
+                .RemoveRootPathsAsync(
+                    r => r.Contents,
+                    (ri, p) => ri.Contents = p.ToList(),
+                    GetAdapterRootPath(adapter)
+                )
                 .ConfigureAwait(false);
-
-            if (!AdapterHasRootPath(adapter))
-            {
-                return response;
-            }
-
-            return new ListDirectoryContentsResponse
-            {
-                Contents = response.Contents.RemoveRootPath(GetAdapterRootPath(adapter)).ToList()
-            };
         }
 
         /// <inheritdoc />
@@ -153,6 +158,11 @@ namespace Baseline.Filesystem
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(adapter)
+                .RemoveRootPathsAsync(
+                    r => r.DestinationDirectory.Path,
+                    (r, p) => r.DestinationDirectory.Path = p,
+                    GetAdapterRootPath(adapter)
+                )
                 .ConfigureAwait(false);
         }
     }

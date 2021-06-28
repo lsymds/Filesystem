@@ -1,6 +1,8 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace Baseline.Filesystem.Tests.DirectoryManagerTests
@@ -64,6 +66,29 @@ namespace Baseline.Filesystem.Tests.DirectoryManagerTests
             
             // Assert.
             await func.Should().ThrowExactlyAsync<PathIsNotObviouslyADirectoryException>();
+        }
+        
+        [Fact]
+        public async Task It_Removes_A_Root_Path_Returned_From_The_Adapter()
+        {
+            // Arrange.
+            Reconfigure(true);
+
+            Adapter.Setup(x => x.CreateDirectoryAsync(It.IsAny<CreateDirectoryRequest>(), CancellationToken.None))
+                .ReturnsAsync(new CreateDirectoryResponse
+                {
+                    Directory = new DirectoryRepresentation { Path = $"root/a/b/".AsBaselineFilesystemPath() }
+                });
+
+            // Act.
+            var response = await DirectoryManager.CreateAsync(new CreateDirectoryRequest
+            {
+                DirectoryPath = "a/b/".AsBaselineFilesystemPath()
+            });
+
+            // Assert.
+            response.Directory.Path.NormalisedPath.Should().NotContain("root");
+            response.Directory.Path.OriginalPath.Should().Be("a/b/");
         }
     }
 }

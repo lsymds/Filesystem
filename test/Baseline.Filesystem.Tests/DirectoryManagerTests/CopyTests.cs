@@ -1,11 +1,13 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace Baseline.Filesystem.Tests.DirectoryManagerTests
 {
-    public class CopyTests : BaseManagerUsageTest
+    public class  CopyTests : BaseManagerUsageTest
     {
         [Fact]
         public async Task It_Throws_An_Exception_When_The_Adapter_Is_Not_Registered()
@@ -83,6 +85,30 @@ namespace Baseline.Filesystem.Tests.DirectoryManagerTests
             
             // Assert.
             await func.Should().ThrowExactlyAsync<PathIsNotObviouslyADirectoryException>();
+        }
+
+        [Fact]
+        public async Task It_Removes_A_Root_Path_Returned_From_The_Adapter()
+        {
+            // Arrange.
+            Reconfigure(true);
+
+            Adapter.Setup(x => x.CopyDirectoryAsync(It.IsAny<CopyDirectoryRequest>(), CancellationToken.None))
+                .ReturnsAsync(new CopyDirectoryResponse
+                {
+                    DestinationDirectory = new DirectoryRepresentation { Path = $"root/a/b/".AsBaselineFilesystemPath() }
+                });
+
+            // Act.
+            var response = await DirectoryManager.CopyAsync(new CopyDirectoryRequest
+            {
+                SourceDirectoryPath = "a/a/".AsBaselineFilesystemPath(),
+                DestinationDirectoryPath = "a/b/".AsBaselineFilesystemPath()
+            });
+
+            // Assert.
+            response.DestinationDirectory.Path.NormalisedPath.Should().NotContain("root");
+            response.DestinationDirectory.Path.OriginalPath.Should().Be("a/b/");
         }
     }
 }

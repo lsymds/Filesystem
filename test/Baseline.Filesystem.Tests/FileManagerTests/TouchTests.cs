@@ -70,5 +70,28 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
             // Assert.
             Adapter.VerifyAll();
         }
+        
+        [Fact]
+        public async Task It_Removes_A_Root_Path_Returned_From_The_Adapter()
+        {
+            // Arrange.
+            Reconfigure(true);
+
+            Adapter.Setup(x => x.TouchFileAsync(It.IsAny<TouchFileRequest>(), CancellationToken.None))
+                .ReturnsAsync(new TouchFileResponse
+                {
+                    File = new FileRepresentation { Path = $"root/a/b/c.txt".AsBaselineFilesystemPath() }
+                });
+
+            // Act.
+            var response = await FileManager.TouchAsync(new TouchFileRequest
+            {
+                FilePath = "a/b/c.txt".AsBaselineFilesystemPath(),
+            });
+
+            // Assert.
+            response.File.Path.NormalisedPath.Should().NotContain("root");
+            response.File.Path.OriginalPath.Should().Be("a/b/c.txt");
+        }
     }
 }
