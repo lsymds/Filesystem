@@ -19,7 +19,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
             );
             
             // Assert.
-            await func.Should().ThrowAsync<AdapterNotFoundException>();
+            await func.Should().ThrowAsync<StoreNotFoundException>();
         }
 
         [Fact]

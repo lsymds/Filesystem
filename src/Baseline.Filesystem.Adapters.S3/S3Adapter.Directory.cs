@@ -197,7 +197,7 @@ namespace Baseline.Filesystem
         }
 
         /// <summary>
-        /// Checks a directory does not exist within the adapter's S3 bucket, and throws an exception if it does.
+        /// Checks a directory does not exist within the store's S3 bucket, and throws an exception if it does.
         /// </summary>
         /// <param name="directoryPath">The directory path to be checked.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
@@ -213,7 +213,7 @@ namespace Baseline.Filesystem
         }
 
         /// <summary>
-        /// Checks a directory exists within the adapter's S3 bucket, and throws an exception if it doesn't.
+        /// Checks a directory exists within the store's S3 bucket, and throws an exception if it doesn't.
         /// </summary>
         /// <param name="directoryPath">The directory path to be checked.</param>
         /// <param name="cancellationToken">A cancellation token.</param>

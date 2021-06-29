@@ -10,7 +10,7 @@ namespace Baseline.Filesystem.Tests.DirectoryManagerTests
     public class  CopyTests : BaseManagerUsageTest
     {
         [Fact]
-        public async Task It_Throws_An_Exception_When_The_Adapter_Is_Not_Registered()
+        public async Task It_Throws_An_Exception_When_The_Store_Is_Not_Registered()
         {
             // Act.
             Func<Task> func = () => DirectoryManager.CopyAsync(
@@ -23,7 +23,7 @@ namespace Baseline.Filesystem.Tests.DirectoryManagerTests
             );
             
             // Assert.
-            await func.Should().ThrowExactlyAsync<AdapterNotFoundException>();
+            await func.Should().ThrowExactlyAsync<StoreNotFoundException>();
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace Baseline.Filesystem.Tests.DirectoryManagerTests
         }
 
         [Fact]
-        public async Task It_Removes_A_Root_Path_Returned_From_The_Adapter()
+        public async Task It_Removes_A_Root_Path_Returned_From_The_Store()
         {
             // Arrange.
             Reconfigure(true);

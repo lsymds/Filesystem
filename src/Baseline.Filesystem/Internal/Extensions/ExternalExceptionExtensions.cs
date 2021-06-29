@@ -13,8 +13,8 @@ namespace Baseline.Filesystem.Internal.Extensions
         /// it's an unmanaged exception wraps it.
         /// </summary>
         /// <param name="task">The asynchronous task that could potentially throw an external exception.</param>
-        /// <param name="adapterName">The name of the adapter that the exception occurred in.</param>
-        public static async Task WrapExternalExceptionsAsync(this Task task, string adapterName)
+        /// <param name="storeName">The name of the store that the exception occurred in.</param>
+        public static async Task WrapExternalExceptionsAsync(this Task task, string storeName)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace Baseline.Filesystem.Internal.Extensions
                     throw;
                 }
 
-                throw e.CreateAdapterException(adapterName);
+                throw e.CreateStoreAdapterException(storeName);
             }
         }
         
@@ -36,14 +36,10 @@ namespace Baseline.Filesystem.Internal.Extensions
         /// it's an unmanaged exception wraps it.
         /// </summary>
         /// <param name="task">The asynchronous task that could potentially throw an external exception.</param>
-        /// <param name="adapterName">The name of the adapter that the exception occurred in.</param>
-        /// <returns>
-        /// A task yielding the same response as the <see cref="task" /> parameter providing it does not throw
-        /// any exceptions.
-        /// </returns>
+        /// <param name="storeName">The name of the store that the exception occurred in.</param>
         public static async Task<TResponse> WrapExternalExceptionsAsync<TResponse>(
             this Task<TResponse> task,
-            string adapterName
+            string storeName
         )
         {
             try
@@ -57,21 +53,21 @@ namespace Baseline.Filesystem.Internal.Extensions
                     throw;
                 }
                 
-                throw e.CreateAdapterException(adapterName);
+                throw e.CreateStoreAdapterException(storeName);
             }
         }
         
         /// <summary>
-        /// Creates a <see cref="AdapterProviderOperationException"/> for a given exception and adapter name with a
+        /// Creates a <see cref="StoreAdapterOperationException"/> for a given exception and store name with a
         /// consistent message.
         /// </summary>
         /// <param name="e">The exception to use as the inner exception.</param>
-        /// <param name="adapterName">The name of the adapter the exception was thrown from.</param>
-        /// <returns>An <see cref="AdapterProviderOperationException"/> which wraps the original exception.</returns>
-        private static AdapterProviderOperationException CreateAdapterException(this Exception e, string adapterName)
+        /// <param name="storeName">The name of the store the exception was thrown from.</param>
+        private static StoreAdapterOperationException CreateStoreAdapterException(this Exception e, string storeName)
         {
-            return new AdapterProviderOperationException(
-                $"Unhandled exception thrown from adapter ({adapterName}), potentially whilst communicating with its API. See the inner exception for details.",
+            return new StoreAdapterOperationException(
+                $"Unhandled exception thrown from the adapter for store '{storeName}', potentially whilst communicating " +
+                $"with its API. See the inner exception for details.",
                 e
             );
         }

@@ -1,9 +1,9 @@
 namespace Baseline.Filesystem
 {
     /// <summary>
-    /// Configuration class containing all of the properties and information required to register an adapter.
+    /// Configuration class containing all of the properties and information required to register a store.
     /// </summary>
-    public class AdapterRegistration
+    public class StoreRegistration
     {
         /// <summary>
         /// Gets or sets the adapter instance to be registered.
@@ -11,7 +11,7 @@ namespace Baseline.Filesystem
         public IAdapter Adapter { get; set; }
         
         /// <summary>
-        /// Gets or sets the name of the adapter.
+        /// Gets or sets the name of the store.
         /// </summary>
         public string Name { get; set; } = "default";
         

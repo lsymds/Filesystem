@@ -8,22 +8,21 @@ namespace Baseline.Filesystem
     public static class BaselineFilesystemBuilderExtensions
     {
         /// <summary>
-        /// Adds an adapter registration to be included in the built <see cref="IAdapterManager"/> class. The name of
-        /// the adapter defaults to "default", and there is no requirement for a root path to be included.
+        /// Adds a store registration to be included in the built <see cref="IStoreManager"/> class. The name of
+        /// the store defaults to "default", and there is no requirement for a root path to be included.
         /// </summary>
         /// <param name="builder">The current builder instance.</param>
-        /// <param name="adapterRegistrationBuilder">
-        /// A lambda function used to modify a new adapter registration builder.
+        /// <param name="storeRegistrationBuilder">
+        /// A lambda function used to modify a new store registration builder.
         /// </param>
-        /// <returns>The current builder instance, with the configured adapter registration added to it.</returns>
-        public static BaselineFilesystemBuilder AddAdapterRegistration(
+        public static BaselineFilesystemBuilder AddStoreRegistration(
             this BaselineFilesystemBuilder builder,
-            Action<AdapterRegistrationBuilder> adapterRegistrationBuilder)
+            Action<StoreRegistrationBuilder> storeRegistrationBuilder)
         {
-            var registration = new AdapterRegistrationBuilder();
-            adapterRegistrationBuilder(registration);
+            var registration = new StoreRegistrationBuilder();
+            storeRegistrationBuilder(registration);
             
-            builder.AdapterRegistrations.Add(registration);
+            builder.StoreRegistrations.Add(registration);
 
             return builder;
         }

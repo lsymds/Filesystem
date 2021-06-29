@@ -15,13 +15,9 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="serviceCollection">The service collection to add the Baseline.Filesystem dependencies to.</param>
         /// <param name="builder">
-        /// A lambda function used to fluently configure the Baseline.Filesystem dependencies, adding adapters and
+        /// A lambda function used to fluently configure the Baseline.Filesystem dependencies, adding stores and
         /// default configurations.
         /// </param>
-        /// <returns>
-        /// The same service collection now configures with the Baseline.Filesystem dependencies to enable fluent
-        /// service registration.
-        /// </returns>
         public static IServiceCollection UseBaselineFilesystem(
             this IServiceCollection serviceCollection,
             Action<BaselineFilesystemBuilder> builder
@@ -31,21 +27,21 @@ namespace Baseline.Filesystem
             builder(filesystemBuilder);
             
             return serviceCollection
-                .AddSingleton<IAdapterManager>(serviceProvider =>
+                .AddSingleton<IStoreManager>(serviceProvider =>
                 {
-                    var adapterManager = new AdapterManager();
+                    var storeManager = new StoreManager();
                 
-                    foreach (var adapterRegistration in filesystemBuilder.AdapterRegistrations)
+                    foreach (var storeRegistration in filesystemBuilder.StoreRegistrations)
                     {
-                        adapterManager.Register(new AdapterRegistration
+                        storeManager.Register(new StoreRegistration
                         {
-                            Name = adapterRegistration.Name,
-                            Adapter = adapterRegistration.Resolver(serviceProvider),
-                            RootPath = adapterRegistration.RootPath
+                            Name = storeRegistration.Name,
+                            Adapter = storeRegistration.Resolver(serviceProvider),
+                            RootPath = storeRegistration.RootPath
                         });
                     }
 
-                    return adapterManager;
+                    return storeManager;
                 })
                 .AddSingleton<IFileManager, FileManager>()
                 .AddSingleton<IDirectoryManager, DirectoryManager>();

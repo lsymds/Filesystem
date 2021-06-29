@@ -55,8 +55,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
                 S3Client = S3Client
             });
             
-            var adapterManager = new AdapterManager();
-            adapterManager.Register(new AdapterRegistration
+            var adapterManager = new StoreManager();
+            adapterManager.Register(new StoreRegistration
             {
                 Adapter = adapter, 
                 RootPath = RootPath?.AsBaselineFilesystemPath()

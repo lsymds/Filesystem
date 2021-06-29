@@ -1,68 +1,68 @@
 using System;
-using FluentAssertions;
 using Baseline.Filesystem.Tests.Fixtures;
+using FluentAssertions;
 using Xunit;
 
-namespace Baseline.Filesystem.Tests.AdapterManagerTests
+namespace Baseline.Filesystem.Tests.StoreManagerTests
 {
-    public class RegisterTests : BaseAdapterManagerTest
+    public class RegisterTests : BaseStoreManagerTest
     {
         [Fact]
-        public void It_Registers_An_Adapter_With_A_Normalised_Name()
+        public void It_Registers_A_Store_With_A_Normalised_Name()
         {
             // Arrange.
-            AdapterManager.Register(new AdapterRegistration
+            StoreManager.Register(new StoreRegistration
             {
                 Adapter = new SuccessfulOutcomeAdapter(),
                 Name = "my-NAMIng-ConVentION"
             });
             
             // Act.
-            var result = AdapterManager.Get("my-naming-convention");
+            var result = StoreManager.Get("my-naming-convention");
             
             // Assert.
             result.Should().NotBeNull();
         }
 
         [Fact]
-        public void It_Throws_An_Exception_When_An_Adapter_Is_Already_Registered_With_That_Name()
+        public void It_Throws_An_Exception_When_A_Store_Is_Already_Registered_With_That_Name()
         {
             // Arrange.
-            AdapterManager.Register(new AdapterRegistration
+            StoreManager.Register(new StoreRegistration
             {
                 Adapter = new SuccessfulOutcomeAdapter(),
                 Name = "my-NAMIng-ConVentION"
             });
             
             // Act.
-            Action func = () => AdapterManager.Register(new AdapterRegistration
+            Action func = () => StoreManager.Register(new StoreRegistration
             {
                 Adapter = new SuccessfulOutcomeAdapter(),
                 Name = "my-naming-convention"
             });
             
             // Assert.
-            func.Should().ThrowExactly<AdapterAlreadyRegisteredException>();
+            func.Should().ThrowExactly<StoreAlreadyRegisteredException>();
         }
 
         [Fact]
-        public void It_Registers_With_A_Default_Adapter_Name_If_One_Is_Not_Specified()
+        public void It_Registers_With_A_Default_Store_Name_If_One_Is_Not_Specified()
         {
             // Arrange.
-            AdapterManager.Register(new AdapterRegistration { Adapter = new SuccessfulOutcomeAdapter() });
+            StoreManager.Register(new StoreRegistration { Adapter = new SuccessfulOutcomeAdapter() });
             
             // Act.
-            var result = AdapterManager.Get("default");
+            var result = StoreManager.Get("default");
             
             // Assert.
             result.Should().NotBeNull();
         }
 
         [Fact]
-        public void It_Throws_An_Exception_When_The_Root_Path_For_An_Adapter_Is_Not_Obviously_A_Directory()
+        public void It_Throws_An_Exception_When_The_Root_Path_For_A_Store_Is_Not_Obviously_A_Directory()
         {
             // Act.
-            Action sut = () => AdapterManager.Register(new AdapterRegistration
+            Action sut = () => StoreManager.Register(new StoreRegistration
             {
                 Adapter = new SuccessfulOutcomeAdapter(),
                 RootPath = "not/an/obvious/directory".AsBaselineFilesystemPath()
