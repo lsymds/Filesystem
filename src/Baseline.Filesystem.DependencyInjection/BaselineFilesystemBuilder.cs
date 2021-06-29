@@ -9,9 +9,9 @@ namespace Baseline.Filesystem
     public class BaselineFilesystemBuilder
     {
         /// <summary>
-        /// Gets the collection of adapter registrations to register in the service collection.
+        /// Gets the collection of store registrations to register in the service collection.
         /// </summary>
-        internal List<AdapterRegistrationBuilder> AdapterRegistrations { get; } = 
-            new List<AdapterRegistrationBuilder>();
+        internal List<StoreRegistrationBuilder> StoreRegistrations { get; } = 
+            new List<StoreRegistrationBuilder>();
     }
 }

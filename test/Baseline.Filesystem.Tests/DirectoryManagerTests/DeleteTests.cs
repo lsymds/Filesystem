@@ -8,7 +8,7 @@ namespace Baseline.Filesystem.Tests.DirectoryManagerTests
     public class DeleteTests : BaseManagerUsageTest
     {
         [Fact]
-        public async Task It_Throws_An_Exception_When_The_Adapter_Is_Not_Registered()
+        public async Task It_Throws_An_Exception_When_The_Store_Is_Not_Registered()
         {
             // Act.
             Func<Task> func = () => DirectoryManager.DeleteAsync(
@@ -17,7 +17,7 @@ namespace Baseline.Filesystem.Tests.DirectoryManagerTests
             );
             
             // Assert.
-            await func.Should().ThrowExactlyAsync<AdapterNotFoundException>();
+            await func.Should().ThrowExactlyAsync<StoreNotFoundException>();
         }
 
         [Fact]

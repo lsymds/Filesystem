@@ -20,7 +20,7 @@ namespace Baseline.Filesystem.Tests.DirectoryManagerTests
             );
             
             // Assert.
-            await func.Should().ThrowExactlyAsync<AdapterNotFoundException>();
+            await func.Should().ThrowExactlyAsync<StoreNotFoundException>();
         }
 
         [Fact]

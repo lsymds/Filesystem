@@ -31,8 +31,8 @@ namespace Baseline.Filesystem.Tests
             // Assert.
             await act
                 .Should()
-                .ThrowExactlyAsync<AdapterProviderOperationException>()
-                .WithMessage("Unhandled exception thrown from adapter (default), potentially whilst communicating with " +
+                .ThrowExactlyAsync<StoreAdapterOperationException>()
+                .WithMessage("Unhandled exception thrown from the adapter for store 'default', potentially whilst communicating with " +
                              "its API. See the inner exception for details.");
         }
 

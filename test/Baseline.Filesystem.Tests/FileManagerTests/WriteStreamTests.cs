@@ -12,7 +12,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
     public class WriteStreamTests : BaseManagerUsageTest
     {
         [Fact]
-        public async Task It_Throws_An_Exception_If_The_Requested_Adapter_Name_Is_Not_Registered()
+        public async Task It_Throws_An_Exception_If_The_Requested_Store_Name_Is_Not_Registered()
         {
             // Act.
             Func<Task> func = async () => await FileManager.WriteStreamAsync(
@@ -25,7 +25,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
             );
             
             // Assert.
-            await func.Should().ThrowAsync<AdapterNotFoundException>();
+            await func.Should().ThrowAsync<StoreNotFoundException>();
         }
 
         [Fact]

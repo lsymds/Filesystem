@@ -10,7 +10,7 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
     public class SimpleDependencyInjectionTests : BaseS3AdapterIntegrationTest
     {
         [Fact]
-        public async Task It_Can_Register_A_Single_Adapter()
+        public async Task It_Can_Register_A_Single_Store()
         {
             // Arrange.
             var filePath = RandomFilePathRepresentation();
@@ -20,9 +20,9 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
             var serviceCollection = new ServiceCollection();
             serviceCollection.UseBaselineFilesystem(baselineFilesystemBuilder =>
             {
-                baselineFilesystemBuilder.AddAdapterRegistration(adapterRegistrationBuilder =>
+                baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
                 {
-                    adapterRegistrationBuilder
+                    storeRegistrationBuilder
                         .WithName("default")
                         .UsingS3Adapter(adapterConfiguration =>
                         {
@@ -34,8 +34,8 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             // Assert.
-            var adapterManager = serviceProvider.GetService<IAdapterManager>();
-            adapterManager.Get("default").Adapter.Should().BeOfType<S3Adapter>();
+            var storeManager = serviceProvider.GetService<IStoreManager>();
+            storeManager.Get("default").Adapter.Should().BeOfType<S3Adapter>();
 
             var fileManager = serviceProvider.GetService<IFileManager>();
             var fileContents = await fileManager.ReadAsStringAsync(
@@ -48,7 +48,7 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
         }
 
         [Fact]
-        public async Task It_Can_Register_An_Adapter_Using_The_Service_Provider()
+        public async Task It_Can_Register_A_Store_Using_The_Service_Provider()
         {
             // Arrange.
             var filePath = RandomFilePathRepresentation();
@@ -59,9 +59,9 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
             serviceCollection.AddSingleton<IAmazonS3>(S3Client);
             serviceCollection.UseBaselineFilesystem(baselineFilesystemBuilder =>
             {
-                baselineFilesystemBuilder.AddAdapterRegistration(adapterRegistrationBuilder =>
+                baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
                 {
-                    adapterRegistrationBuilder
+                    storeRegistrationBuilder
                         .WithName("default")
                         .UsingS3Adapter((services, adapterConfiguration) =>
                         {
@@ -73,8 +73,8 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             // Assert.
-            var adapterManager = serviceProvider.GetService<IAdapterManager>();
-            adapterManager.Get("default").Adapter.Should().BeOfType<S3Adapter>();
+            var storeManager = serviceProvider.GetService<IStoreManager>();
+            storeManager.Get("default").Adapter.Should().BeOfType<S3Adapter>();
 
             var fileManager = serviceProvider.GetService<IFileManager>();
             var fileContents = await fileManager.ReadAsStringAsync(
@@ -87,7 +87,7 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
         }
         
         [Fact]
-        public async Task It_Can_Register_Multiple_Adapters()
+        public async Task It_Can_Register_Multiple_Stores()
         {
             // Arrange.
             var filePath = RandomFilePathRepresentation();
@@ -97,9 +97,9 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
             var serviceCollection = new ServiceCollection();
             serviceCollection.UseBaselineFilesystem(baselineFilesystemBuilder =>
             {
-                baselineFilesystemBuilder.AddAdapterRegistration(adapterRegistrationBuilder =>
+                baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
                 {
-                    adapterRegistrationBuilder
+                    storeRegistrationBuilder
                         .WithName("default")
                         .UsingS3Adapter(adapterConfiguration =>
                         {
@@ -108,9 +108,9 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
                         });
                 });
 
-                baselineFilesystemBuilder.AddAdapterRegistration(adapterRegistrationBuilder =>
+                baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
                 {
-                    adapterRegistrationBuilder
+                    storeRegistrationBuilder
                         .WithName("second")
                         .UsingS3Adapter(adapterConfiguration =>
                         {
@@ -122,9 +122,9 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             // Assert.
-            var adapterManager = serviceProvider.GetService<IAdapterManager>();
-            adapterManager.Get("default").Adapter.Should().BeOfType<S3Adapter>();
-            adapterManager.Get("second").Adapter.Should().BeOfType<S3Adapter>();
+            var storeManager = serviceProvider.GetService<IStoreManager>();
+            storeManager.Get("default").Adapter.Should().BeOfType<S3Adapter>();
+            storeManager.Get("second").Adapter.Should().BeOfType<S3Adapter>();
 
             var fileManager = serviceProvider.GetService<IFileManager>();
             var fileContents = await fileManager.ReadAsStringAsync(
@@ -149,9 +149,9 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
             var serviceCollection = new ServiceCollection();
             serviceCollection.UseBaselineFilesystem(baselineFilesystemBuilder =>
             {
-                baselineFilesystemBuilder.AddAdapterRegistration(adapterRegistrationBuilder =>
+                baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
                 {
-                    adapterRegistrationBuilder
+                    storeRegistrationBuilder
                         .WithName("default")
                         .WithRootPath(RootPath.AsBaselineFilesystemPath())
                         .UsingS3Adapter(adapterConfiguration =>
@@ -164,8 +164,8 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             // Assert.
-            var adapterManager = serviceProvider.GetService<IAdapterManager>();
-            adapterManager.Get("default").Adapter.Should().BeOfType<S3Adapter>();
+            var storeManager = serviceProvider.GetService<IStoreManager>();
+            storeManager.Get("default").Adapter.Should().BeOfType<S3Adapter>();
 
             var fileManager = serviceProvider.GetService<IFileManager>();
             var fileContents = await fileManager.ReadAsStringAsync(
