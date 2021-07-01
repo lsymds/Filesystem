@@ -39,7 +39,7 @@ namespace Baseline.Filesystem
         /// <param name="resolver">A lambda function used to resolve an <see cref="IAdapter"/> implementation.</param>
         public static StoreRegistrationBuilder WithAdapter(
             this StoreRegistrationBuilder builder,
-            Func<IServiceProvider, IAdapter> resolver
+            Func<IAdapter> resolver
         )
         {
             builder.Resolver = resolver;

@@ -22,6 +22,6 @@ namespace Baseline.Filesystem
         /// Gets or sets the lambda function used to resolve an <see cref="IAdapter"/> instance that becomes the store's
         /// data provider.
         /// </summary>
-        internal Func<IServiceProvider, IAdapter> Resolver { get; set; }
+        internal Func<IAdapter> Resolver { get; set; }
     }
 }
