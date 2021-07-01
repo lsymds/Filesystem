@@ -57,13 +57,13 @@ namespace Baseline.Filesystem.Tests.DependencyInjection
             // Act.
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IAmazonS3>(S3Client);
-            serviceCollection.UseBaselineFilesystem(baselineFilesystemBuilder =>
+            serviceCollection.UseBaselineFilesystem((services, baselineFilesystemBuilder) =>
             {
                 baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
                 {
                     storeRegistrationBuilder
                         .WithName("default")
-                        .UsingS3Adapter((services, adapterConfiguration) =>
+                        .UsingS3Adapter(adapterConfiguration =>
                         {
                             adapterConfiguration.BucketName = GeneratedBucketName;
                             adapterConfiguration.S3Client = services.GetService<IAmazonS3>();
