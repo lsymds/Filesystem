@@ -9,9 +9,10 @@ namespace Baseline.Filesystem
     public class IterateDirectoryContentsRequest : BaseSingleDirectoryRequest<IterateDirectoryContentsRequest>
     {
         /// <summary>
-        /// Gets or sets the action to perform on each file or directory within the requested directory.
+        /// Gets or sets a delegate to perform on each file or directory within the requested directory. Returning a
+        /// `false` boolean from the delegate will stop iterating further.
         /// </summary>
-        public Func<PathRepresentation, Task> Action { get; set; }
+        public Func<PathRepresentation, Task<bool>> Action { get; set; }
 
         /// <inheritdoc />
         internal override IterateDirectoryContentsRequest ShallowClone()

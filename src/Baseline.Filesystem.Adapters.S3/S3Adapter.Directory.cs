@@ -102,9 +102,15 @@ namespace Baseline.Filesystem
                         var tree = BuildOrderedPathTree(file.Key.AsBaselineFilesystemPath(), pathTracker);
                         foreach (var treeItem in tree)
                         {
-                            await iterateDirectoryContentsRequest.Action(treeItem);    
+                            var @continue = await iterateDirectoryContentsRequest.Action(treeItem);
+                            if (!@continue)
+                            {
+                                return false;
+                            }
                         }
                     }
+
+                    return true;
                 },
                 cancellationToken
             ).ConfigureAwait(false);
@@ -133,7 +139,7 @@ namespace Baseline.Filesystem
                             BuildOrderedPathTree(o.Key.AsBaselineFilesystemPath(), pathTracker)
                         )
                     );
-                    return Task.CompletedTask;
+                    return Task.FromResult(true);
                 },
                 cancellationToken
             ).ConfigureAwait(false);

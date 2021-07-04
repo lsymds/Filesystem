@@ -99,15 +99,16 @@ namespace Baseline.Filesystem
                 {
                     if (!StoreHasRootPath(store))
                     {
-                        await iterateDirectoryContentsRequest.Action(path);
-                        return;
+                        return await iterateDirectoryContentsRequest.Action(path);
                     }
                     
                     var pathWithoutRoot = new[] {path}.RemoveRootPath(GetStoreRootPath(store)).ToList();
                     if (pathWithoutRoot.Any())
                     {
-                        await iterateDirectoryContentsRequest.Action(pathWithoutRoot.First());   
+                        return await iterateDirectoryContentsRequest.Action(pathWithoutRoot.First());
                     }
+
+                    return true;
                 }
             };
 
