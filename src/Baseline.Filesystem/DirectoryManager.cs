@@ -95,18 +95,18 @@ namespace Baseline.Filesystem
             var request = new IterateDirectoryContentsRequest
             {
                 DirectoryPath = iterateDirectoryContentsRequest.DirectoryPath,
-                Action = async path =>
+                Action = async (path, exit) =>
                 {
                     if (!StoreHasRootPath(store))
                     {
-                        await iterateDirectoryContentsRequest.Action(path);
+                        await iterateDirectoryContentsRequest.Action(path, exit);
                         return;
                     }
                     
                     var pathWithoutRoot = new[] {path}.RemoveRootPath(GetStoreRootPath(store)).ToList();
                     if (pathWithoutRoot.Any())
                     {
-                        await iterateDirectoryContentsRequest.Action(pathWithoutRoot.First());   
+                        await iterateDirectoryContentsRequest.Action(pathWithoutRoot.First(), exit);   
                     }
                 }
             };

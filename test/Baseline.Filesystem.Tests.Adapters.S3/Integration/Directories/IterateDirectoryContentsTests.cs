@@ -21,7 +21,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             await DirectoryManager.IterateContentsAsync(new IterateDirectoryContentsRequest
             {
                 DirectoryPath = "simple/".AsBaselineFilesystemPath(),
-                Action = paths =>
+                Action = (paths, _) =>
                 { 
                     files.Add(paths);
                     return Task.CompletedTask;
@@ -52,7 +52,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             await DirectoryManager.IterateContentsAsync(new IterateDirectoryContentsRequest
             {
                 DirectoryPath = "a/".AsBaselineFilesystemPath(),
-                Action = paths =>
+                Action = (paths, _) =>
                 {
                     files.Add(paths);
                     return Task.CompletedTask;
@@ -91,7 +91,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             await DirectoryManager.IterateContentsAsync(new IterateDirectoryContentsRequest
             {
                 DirectoryPath = "a-dir/".AsBaselineFilesystemPath(),
-                Action = p =>
+                Action = (p, _) =>
                 {
                     files.Add(p);
                     return Task.CompletedTask;
@@ -121,7 +121,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             await DirectoryManager.IterateContentsAsync(new IterateDirectoryContentsRequest
             {
                 DirectoryPath = "simple/".AsBaselineFilesystemPath(),
-                Action = p =>
+                Action = (p, _) =>
                 {
                     files.Add(p);
                     return Task.CompletedTask;
@@ -154,7 +154,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             await DirectoryManager.IterateContentsAsync(new IterateDirectoryContentsRequest
             {
                 DirectoryPath = "a/".AsBaselineFilesystemPath(),
-                Action = p =>
+                Action = (p, _) =>
                 {
                     files.Add(p);
                     return Task.CompletedTask;
@@ -176,6 +176,39 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             files.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f" && x.FinalPathPartIsObviouslyADirectory);
             files.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g" && x.FinalPathPartIsObviouslyADirectory);
             files.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g/.keep");
+        }
+
+        [Fact]
+        public async Task It_Can_Exit_An_Iteration_Early()
+        {
+            // Arrange.
+            ReconfigureManagerInstances(true);
+
+            var count = 0;
+            
+            await CreateFileAndWriteTextAsync("a/file.txt".AsBaselineFilesystemPath());
+            await CreateFileAndWriteTextAsync("a/another-file.txt".AsBaselineFilesystemPath());
+            await CreateFileAndWriteTextAsync("a/third-file.txt".AsBaselineFilesystemPath());
+
+            // Act.
+            await DirectoryManager.IterateContentsAsync(new IterateDirectoryContentsRequest
+            {
+                DirectoryPath = "a/".AsBaselineFilesystemPath(),
+                Action = (p, exit) =>
+                {
+                    count += 1;
+                    
+                    if (count == 2)
+                    {
+                        exit();
+                    }
+
+                    return Task.CompletedTask;
+                }
+            });
+
+            // Assert.
+            count.Should().Be(2);
         }
     }
 }
