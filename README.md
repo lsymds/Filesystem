@@ -13,5 +13,4 @@ To learn more about contributing to the project, please read our contribution gu
 
 ## Documentation
 
-Documentation for this project is available on our project documentation site: [https://docs.baselineproject.xyz/filesystem/]
-(https://docs.baselineproject.xyz/filesystem/).
+Documentation for this project is available on our project documentation site: [https://docs.baselineproject.xyz/filesystem/](https://docs.baselineproject.xyz/filesystem/).
