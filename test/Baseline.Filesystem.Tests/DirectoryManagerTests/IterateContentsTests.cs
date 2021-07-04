@@ -15,7 +15,7 @@ namespace Baseline.Filesystem.Tests.DirectoryManagerTests
                 new IterateDirectoryContentsRequest
                 {
                     DirectoryPath = "i/am/a/directory/".AsBaselineFilesystemPath(), 
-                    Action = (_, __) => null
+                    Action = (_) => null
                 },
                 "non-existent"
             );
@@ -39,7 +39,7 @@ namespace Baseline.Filesystem.Tests.DirectoryManagerTests
         {
             // Act.
             Func<Task> func = () => DirectoryManager.IterateContentsAsync(
-                new IterateDirectoryContentsRequest { Action = (_, __) => null }
+                new IterateDirectoryContentsRequest { Action = (_) => null }
             );
             
             // Assert.
@@ -53,7 +53,7 @@ namespace Baseline.Filesystem.Tests.DirectoryManagerTests
             Func<Task> func = () => DirectoryManager.IterateContentsAsync(new IterateDirectoryContentsRequest()
             {
                 DirectoryPath = "i/am/not/a/directory/but-a-path.jpeg".AsBaselineFilesystemPath(),
-                Action = (_, __) => null
+                Action = (_) => null
             });
             
             // Assert.

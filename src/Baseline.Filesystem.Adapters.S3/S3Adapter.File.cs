@@ -375,16 +375,17 @@ namespace Baseline.Filesystem
 
             await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 path,
-                async (r, _) =>
+                async (r) =>
                 {
                     objects.AddRange(r.S3Objects);
 
                     if (action == null)
                     {
-                        return;
+                        return true;
                     }
                     
                     await action.Invoke(r).ConfigureAwait(false);
+                    return true;
                 },
                 cancellationToken
             ).ConfigureAwait(false);
@@ -401,12 +402,11 @@ namespace Baseline.Filesystem
         /// <param name="cancellationToken">A cancellation token.</param>
         private async Task ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
             PathRepresentation path,
-            Func<ListObjectsResponse, ExitIteration, Task> action = null,
+            Func<ListObjectsResponse, Task<bool>> action = null,
             CancellationToken cancellationToken = default
         )
         {
             string marker = null;
-            var exit = false;
             
             ListObjectsResponse objectsInPrefix;
             do
@@ -425,8 +425,12 @@ namespace Baseline.Filesystem
                     continue;
                 }
                 
-                await action(objectsInPrefix, () => exit = true).ConfigureAwait(false);
-            } while (objectsInPrefix.IsTruncated && !exit);
+                var @continue = await action(objectsInPrefix).ConfigureAwait(false);
+                if (!@continue)
+                {
+                    break;
+                }
+            } while (objectsInPrefix.IsTruncated);
         }
     }
 }

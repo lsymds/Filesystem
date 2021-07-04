@@ -94,7 +94,7 @@ namespace Baseline.Filesystem
 
             await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 iterateDirectoryContentsRequest.DirectoryPath,
-                async (r, exit) =>
+                async r =>
                 {
                     var pathTracker = new Dictionary<string, PathRepresentation>();
                     foreach (var file in r.S3Objects)
@@ -102,9 +102,15 @@ namespace Baseline.Filesystem
                         var tree = BuildOrderedPathTree(file.Key.AsBaselineFilesystemPath(), pathTracker);
                         foreach (var treeItem in tree)
                         {
-                            await iterateDirectoryContentsRequest.Action(treeItem, exit);    
+                            var @continue = await iterateDirectoryContentsRequest.Action(treeItem);
+                            if (!@continue)
+                            {
+                                return false;
+                            }
                         }
                     }
+
+                    return true;
                 },
                 cancellationToken
             ).ConfigureAwait(false);
@@ -126,14 +132,14 @@ namespace Baseline.Filesystem
 
             await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 listDirectoryContentsRequest.DirectoryPath,
-                (r, _) =>
+                r =>
                 {
                     r.S3Objects.ForEach(
                         o => directorysContents.AddRange(
                             BuildOrderedPathTree(o.Key.AsBaselineFilesystemPath(), pathTracker)
                         )
                     );
-                    return Task.CompletedTask;
+                    return Task.FromResult(true);
                 },
                 cancellationToken
             ).ConfigureAwait(false);
