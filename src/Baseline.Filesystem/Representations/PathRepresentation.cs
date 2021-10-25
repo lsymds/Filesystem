@@ -89,7 +89,7 @@ namespace Baseline.Filesystem
 
                 if (splitPaths.Length < 2)
                 {
-                    return null;
+                    return string.Empty;
                 }
 
                 return $".{splitPaths.Last().ToLower()}";
