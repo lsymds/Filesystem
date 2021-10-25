@@ -66,7 +66,7 @@ namespace Baseline.Filesystem
         /// Gets whether or not the final path part was obviously intended to be a directory (i.e. it ended with a
         /// terminating slash).
         /// </summary>
-        public bool FinalPathPartIsObviouslyADirectory => FinalPathPart.EndsWith("/");
+        public bool FinalPathPartIsObviouslyADirectory => OriginalPath.EndsWith("/");
 
         /// <summary>
         /// Retrieves the extension of the path (if it has one) prefixed with a '.' (i.e. .xml). Will return an empty
@@ -114,6 +114,33 @@ namespace Baseline.Filesystem
         }
 
         /// <summary>
+        /// Identifies and returns whether an unidentified object is equal to the current <see cref="PathRepresentation"/>
+        /// instance.
+        /// </summary>
+        /// <param name="obj">The object to compare to the current <see cref="PathRepresentation"/> instance.</param>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            
+            if (obj is PathRepresentation pathRepresentation)
+            {
+                return NormalisedPath == pathRepresentation.NormalisedPath &&
+                       FinalPathPartIsObviouslyADirectory == pathRepresentation.FinalPathPartIsObviouslyADirectory;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Retrieves the hash code for the current <see cref="PathRepresentation" /> instance.
+        /// </summary>
+        public override int GetHashCode()
+        {
+            return NormalisedPath.GetHashCode() + FinalPathPartIsObviouslyADirectory.GetHashCode();
+        }
+
+        /// <summary>
         /// Compares two paths and identifies if they're equal.
         /// </summary>
         /// <param name="left">The left hand side of the == comparison.</param>
@@ -139,36 +166,6 @@ namespace Baseline.Filesystem
         /// <param name="left">The left hand side of the != comparison.</param>
         /// <param name="right">The right hand side of the != comparison.</param>
         public static bool operator !=(PathRepresentation left, PathRepresentation right) => !(left == right);
-        
-        /// <summary>
-        /// Identifies and returns whether the current <see cref="PathRepresentation"/> equals the one specified.
-        /// </summary>
-        /// <param name="other">The path representation to compare to the current one.</param>
-        protected bool Equals(PathRepresentation other)
-        {
-            return NormalisedPath == other.NormalisedPath;
-        }
-
-        /// <summary>
-        /// Identifies and returns whether an unidentified object is equal to the current <see cref="PathRepresentation"/>
-        /// instance.
-        /// </summary>
-        /// <param name="obj">The object to compare to the current <see cref="PathRepresentation"/> instance.</param>
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((PathRepresentation) obj);
-        }
-
-        /// <summary>
-        /// Retrieves the hash code for the current <see cref="PathRepresentation" /> instance.
-        /// </summary>
-        public override int GetHashCode()
-        {
-            return NormalisedPath.GetHashCode();
-        }
 
         /// <summary>
         /// Combines the current path representation with a base path representation, wherein the base path
