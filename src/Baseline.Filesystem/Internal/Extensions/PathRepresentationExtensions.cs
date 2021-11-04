@@ -38,7 +38,7 @@ namespace Baseline.Filesystem.Internal.Extensions
                 // Remove any occurrences where the path is equivalent to a representation of a root path. For example,
                 // if there was a root path of a/b and pathRepresentation was a/b, it would be filtered out and not
                 // returned.
-                if (rootPath.GetPathTree().Any(x => x.NormalisedPath == pathRepresentation.NormalisedPath))
+                if (rootPath.GetPathTree().Any(x => x == pathRepresentation))
                 {
                     continue;
                 }

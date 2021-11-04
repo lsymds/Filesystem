@@ -47,7 +47,6 @@ namespace Baseline.Filesystem
             {
                 GetPathTree = () => BuildPathTree(path),
                 FinalPathPart = finalPathPart,
-                FinalPathPartIsObviouslyADirectory = path.EndsWith("/"),
                 NormalisedPath = normalisedPath,
                 OriginalPath = path
             };

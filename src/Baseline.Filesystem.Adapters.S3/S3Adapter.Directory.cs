@@ -21,6 +21,7 @@ namespace Baseline.Filesystem
         {
             await EnsureDirectoryExistsAsync(copyDirectoryRequest.SourceDirectoryPath, cancellationToken)
                 .ConfigureAwait(false);
+            
             await EnsureDirectoryDoesNotExistAsync(copyDirectoryRequest.DestinationDirectoryPath, cancellationToken)
                 .ConfigureAwait(false);
 
