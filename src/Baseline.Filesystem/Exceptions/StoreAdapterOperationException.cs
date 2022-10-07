@@ -16,8 +16,6 @@ namespace Baseline.Filesystem
         /// <param name="message">The reason why the exception was thrown.</param>
         /// <param name="innerException">The exception that caused this wrapped one to be thrown (if any).</param>
         public StoreAdapterOperationException(string message, Exception innerException = null)
-            : base(message, innerException)
-        {
-        }
+            : base(message, innerException) { }
     }
 }

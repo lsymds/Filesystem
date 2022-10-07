@@ -9,8 +9,7 @@ namespace Baseline.Filesystem
         /// Initialises a new instance of the <see cref="DirectoryNotFoundException"/> class.
         /// </summary>
         /// <param name="path">The requested path that does not exist.</param>
-        public DirectoryNotFoundException(string path) : base($"The directory ({path}) was not found.")
-        {
-        }
+        public DirectoryNotFoundException(string path)
+            : base($"The directory ({path}) was not found.") { }
     }
 }

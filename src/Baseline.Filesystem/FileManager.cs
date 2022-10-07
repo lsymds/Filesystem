@@ -14,9 +14,7 @@ namespace Baseline.Filesystem
         /// Initialises a new <see cref="FileManager" /> instance with all of its required dependencies.
         /// </summary>
         /// <param name="storeManager">A store manager implementation.</param>
-        public FileManager(IStoreManager storeManager) : base(storeManager)
-        {
-        }
+        public FileManager(IStoreManager storeManager) : base(storeManager) { }
 
         /// <inheritdoc />
         public async Task<CopyFileResponse> CopyAsync(
@@ -25,8 +23,10 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            BaseSourceAndDestinationFileRequestValidator.ValidateAndThrowIfUnsuccessful(copyFileRequest);
-            
+            BaseSourceAndDestinationFileRequestValidator.ValidateAndThrowIfUnsuccessful(
+                copyFileRequest
+            );
+
             return await GetAdapter(store)
                 .CopyFileAsync(
                     copyFileRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
@@ -70,7 +70,7 @@ namespace Baseline.Filesystem
 
             return await GetAdapter(store)
                 .FileExistsAsync(
-                    fileExistsRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)), 
+                    fileExistsRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(store)
@@ -85,7 +85,7 @@ namespace Baseline.Filesystem
         )
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(getFileRequest);
-    
+
             return await GetAdapter(store)
                 .GetFileAsync(
                     getFileRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
@@ -107,11 +107,15 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            GetFilePublicUrlRequestValidator.ValidateAndThrowIfUnsuccessful(getFilePublicUrlRequest);
+            GetFilePublicUrlRequestValidator.ValidateAndThrowIfUnsuccessful(
+                getFilePublicUrlRequest
+            );
 
             return await GetAdapter(store)
                 .GetFilePublicUrlAsync(
-                    getFilePublicUrlRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)), 
+                    getFilePublicUrlRequest.CloneAndCombinePathsWithRootPath(
+                        GetStoreRootPath(store)
+                    ),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(store)
@@ -125,7 +129,9 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            BaseSourceAndDestinationFileRequestValidator.ValidateAndThrowIfUnsuccessful(moveFileRequest);
+            BaseSourceAndDestinationFileRequestValidator.ValidateAndThrowIfUnsuccessful(
+                moveFileRequest
+            );
 
             return await GetAdapter(store)
                 .MoveFileAsync(
@@ -143,7 +149,7 @@ namespace Baseline.Filesystem
 
         /// <inheritdoc />
         public async Task<ReadFileAsStreamResponse> ReadAsStreamAsync(
-            ReadFileAsStreamRequest readFileAsStreamRequest, 
+            ReadFileAsStreamRequest readFileAsStreamRequest,
             string store = "default",
             CancellationToken cancellationToken = default
         )
@@ -152,7 +158,9 @@ namespace Baseline.Filesystem
 
             return await GetAdapter(store)
                 .ReadFileAsStreamAsync(
-                    readFileAsStreamRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
+                    readFileAsStreamRequest.CloneAndCombinePathsWithRootPath(
+                        GetStoreRootPath(store)
+                    ),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(store)
@@ -170,7 +178,9 @@ namespace Baseline.Filesystem
 
             return await GetAdapter(store)
                 .ReadFileAsStringAsync(
-                    readFileAsStringRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
+                    readFileAsStringRequest.CloneAndCombinePathsWithRootPath(
+                        GetStoreRootPath(store)
+                    ),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(store)
@@ -185,7 +195,7 @@ namespace Baseline.Filesystem
         )
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(touchFileRequest);
-            
+
             return await GetAdapter(store)
                 .TouchFileAsync(
                     touchFileRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
@@ -207,11 +217,15 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            WriteStreamToFileRequestValidator.ValidateAndThrowIfUnsuccessful(writeStreamToFileRequest);
+            WriteStreamToFileRequestValidator.ValidateAndThrowIfUnsuccessful(
+                writeStreamToFileRequest
+            );
 
             return await GetAdapter(store)
                 .WriteStreamToFileAsync(
-                    writeStreamToFileRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
+                    writeStreamToFileRequest.CloneAndCombinePathsWithRootPath(
+                        GetStoreRootPath(store)
+                    ),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(store)
@@ -226,10 +240,12 @@ namespace Baseline.Filesystem
         )
         {
             WriteTextToFileRequestValidator.ValidateAndThrowIfUnsuccessful(writeTextToFileRequest);
-            
+
             return await GetAdapter(store)
                 .WriteTextToFileAsync(
-                    writeTextToFileRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
+                    writeTextToFileRequest.CloneAndCombinePathsWithRootPath(
+                        GetStoreRootPath(store)
+                    ),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(store)

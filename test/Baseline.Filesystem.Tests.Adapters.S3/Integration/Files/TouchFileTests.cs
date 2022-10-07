@@ -25,12 +25,12 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         {
             // Arrange.
             ReconfigureManagerInstances(true);
-            
+
             var path = RandomFilePathRepresentation();
 
             // Act.
             await CreateFileAndWriteTextAsync(path);
-            
+
             // Assert.
             await ExpectFileToExistAsync(path);
             (await ReadFileAsStringAsync(path)).Should().BeEmpty();

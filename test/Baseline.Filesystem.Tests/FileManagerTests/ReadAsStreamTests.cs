@@ -15,11 +15,12 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         public async Task It_Throws_An_Exception_If_The_Requested_Adapter_Name_Is_Not_Registered()
         {
             // Act.
-            Func<Task> func = async () => await FileManager.ReadAsStreamAsync(
-                new ReadFileAsStreamRequest {FilePath = "a".AsBaselineFilesystemPath()},
-                "foo"
-            );
-            
+            Func<Task> func = async () =>
+                await FileManager.ReadAsStreamAsync(
+                    new ReadFileAsStreamRequest { FilePath = "a".AsBaselineFilesystemPath() },
+                    "foo"
+                );
+
             // Assert.
             await func.Should().ThrowAsync<StoreNotFoundException>();
         }
@@ -29,7 +30,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Act.
             Func<Task> func = async () => await FileManager.ReadAsStreamAsync(null);
-            
+
             // Assert.
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -38,8 +39,9 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         public async Task It_Throws_An_Exception_If_The_Path_For_The_Request_Was_Null()
         {
             // Act.
-            Func<Task> func = async () => await FileManager.ReadAsStreamAsync(new ReadFileAsStreamRequest());
-            
+            Func<Task> func = async () =>
+                await FileManager.ReadAsStreamAsync(new ReadFileAsStreamRequest());
+
             // Assert.
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -52,9 +54,10 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
 
             // Act.
             Func<Task> func = async () =>
-                await FileManager.ReadAsStreamAsync(new ReadFileAsStreamRequest { FilePath = path }
-            );
-            
+                await FileManager.ReadAsStreamAsync(
+                    new ReadFileAsStreamRequest { FilePath = path }
+                );
+
             // Assert.
             await func.Should().ThrowExactlyAsync<PathIsADirectoryException>();
         }
@@ -64,17 +67,30 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Arrange.
             Adapter
-                .Setup(x => x.ReadFileAsStreamAsync(It.IsAny<ReadFileAsStreamRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new ReadFileAsStreamResponse {FileContents = new MemoryStream(Encoding.UTF8.GetBytes("foo"))})
+                .Setup(
+                    x =>
+                        x.ReadFileAsStreamAsync(
+                            It.IsAny<ReadFileAsStreamRequest>(),
+                            It.IsAny<CancellationToken>()
+                        )
+                )
+                .ReturnsAsync(
+                    new ReadFileAsStreamResponse
+                    {
+                        FileContents = new MemoryStream(Encoding.UTF8.GetBytes("foo"))
+                    }
+                )
                 .Verifiable();
-            
+
             // Act.
             var response = await FileManager.ReadAsStreamAsync(
-                new ReadFileAsStreamRequest {FilePath = "a".AsBaselineFilesystemPath()}
+                new ReadFileAsStreamRequest { FilePath = "a".AsBaselineFilesystemPath() }
             );
-            
+
             // Assert.
-            (await new StreamReader(response.FileContents).ReadToEndAsync()).Should().Be("foo");
+            (await new StreamReader(response.FileContents).ReadToEndAsync())
+                .Should()
+                .Be("foo");
             Adapter.VerifyAll();
         }
     }

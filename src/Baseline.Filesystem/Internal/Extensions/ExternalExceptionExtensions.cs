@@ -30,7 +30,7 @@ namespace Baseline.Filesystem.Internal.Extensions
                 throw e.CreateStoreAdapterException(storeName);
             }
         }
-        
+
         /// <summary>
         /// Wraps any external exceptions thrown from the task and, if it's a Baseline exception rethrows it, but if
         /// it's an unmanaged exception wraps it.
@@ -52,22 +52,25 @@ namespace Baseline.Filesystem.Internal.Extensions
                 {
                     throw;
                 }
-                
+
                 throw e.CreateStoreAdapterException(storeName);
             }
         }
-        
+
         /// <summary>
         /// Creates a <see cref="StoreAdapterOperationException"/> for a given exception and store name with a
         /// consistent message.
         /// </summary>
         /// <param name="e">The exception to use as the inner exception.</param>
         /// <param name="storeName">The name of the store the exception was thrown from.</param>
-        private static StoreAdapterOperationException CreateStoreAdapterException(this Exception e, string storeName)
+        private static StoreAdapterOperationException CreateStoreAdapterException(
+            this Exception e,
+            string storeName
+        )
         {
             return new StoreAdapterOperationException(
-                $"Unhandled exception thrown from the adapter for store '{storeName}', potentially whilst communicating " +
-                $"with its API. See the inner exception for details.",
+                $"Unhandled exception thrown from the adapter for store '{storeName}', potentially whilst communicating "
+                    + $"with its API. See the inner exception for details.",
                 e
             );
         }

@@ -11,7 +11,7 @@ namespace Baseline.Filesystem
         /// Gets or sets the S3 client to use in the adapter.
         /// </summary>
         public IAmazonS3 S3Client { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the bucket name used in the S3 adapter's actions.
         /// </summary>

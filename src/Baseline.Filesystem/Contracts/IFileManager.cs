@@ -33,7 +33,7 @@ namespace Baseline.Filesystem
             string store = "default",
             CancellationToken cancellationToken = default
         );
-        
+
         /// <summary>
         /// Deletes a file from the relevant store's file system.
         /// </summary>
@@ -55,7 +55,7 @@ namespace Baseline.Filesystem
             string store = "default",
             CancellationToken cancellationToken = default
         );
-        
+
         /// <summary>
         /// Gets whether or not the file defined by the request exists in the relevant store's file system.
         /// </summary>
@@ -79,7 +79,7 @@ namespace Baseline.Filesystem
             string store = "default",
             CancellationToken cancellationToken = default
         );
-        
+
         /// <summary>
         /// Gets a file's information from the relevant store's file system. This method does NOT retrieve the file's
         /// contents. Instead, you should use one of the more appropriate methods to do that.
@@ -103,7 +103,7 @@ namespace Baseline.Filesystem
             string store = "default",
             CancellationToken cancellationToken = default
         );
-        
+
         /// <summary>
         /// Retrieves a publicly accessible URL for the file defined in the request.
         /// </summary>
@@ -192,7 +192,7 @@ namespace Baseline.Filesystem
             string store = "default",
             CancellationToken cancellationToken = default
         );
-        
+
         /// <summary>
         /// Touches (creates without content) a file in the relevant store's file system.
         /// </summary>

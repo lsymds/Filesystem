@@ -10,7 +10,7 @@ namespace Baseline.Filesystem.Tests.Builders
         {
             // Arrange.
             var originalPath = new PathRepresentationBuilder("users/foo/bar").Build();
-            
+
             // Act.
             var path = new PathCombinationBuilder(originalPath).Build();
 
@@ -23,17 +23,23 @@ namespace Baseline.Filesystem.Tests.Builders
         {
             // Arrange.
             var firstPath = new PathRepresentationBuilder("C:/users/foo/bar").Build();
-            var secondPath = new PathRepresentationBuilder("another/simple/directory/structure").Build();
+            var secondPath = new PathRepresentationBuilder(
+                "another/simple/directory/structure"
+            ).Build();
             var thirdPath = new PathRepresentationBuilder("image.jpeg").Build();
-            
+
             // Act.
             var combinedPath = new PathCombinationBuilder(firstPath, secondPath, thirdPath).Build();
-            
+
             // Assert.
             combinedPath.FinalPathPart.Should().Be("image.jpeg");
             combinedPath.FinalPathPartIsObviouslyADirectory.Should().BeFalse();
-            combinedPath.OriginalPath.Should().Be("C:/users/foo/bar/another/simple/directory/structure/image.jpeg");
-            combinedPath.NormalisedPath.Should().Be("C:/users/foo/bar/another/simple/directory/structure/image.jpeg");
+            combinedPath.OriginalPath
+                .Should()
+                .Be("C:/users/foo/bar/another/simple/directory/structure/image.jpeg");
+            combinedPath.NormalisedPath
+                .Should()
+                .Be("C:/users/foo/bar/another/simple/directory/structure/image.jpeg");
         }
 
         [Fact]
@@ -41,8 +47,8 @@ namespace Baseline.Filesystem.Tests.Builders
         {
             // Act.
             var combinedPath = new PathCombinationBuilder(
-                "a".AsBaselineFilesystemPath(), 
-                "b/c/d".AsBaselineFilesystemPath(), 
+                "a".AsBaselineFilesystemPath(),
+                "b/c/d".AsBaselineFilesystemPath(),
                 "e/f/g/".AsBaselineFilesystemPath()
             ).Build();
 

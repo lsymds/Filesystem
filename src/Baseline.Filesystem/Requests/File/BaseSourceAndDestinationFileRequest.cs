@@ -11,7 +11,7 @@ namespace Baseline.Filesystem
         /// Gets or sets the source path.
         /// </summary>
         public PathRepresentation SourceFilePath { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the destination path.
         /// </summary>
@@ -36,7 +36,7 @@ namespace Baseline.Filesystem
             cloned.DestinationFilePath = cloned.DestinationFilePath.CombineWithBase(rootPath);
             return cloned;
         }
-        
+
         /// <summary>
         /// Clones the current instance for path updates. Some properties do not need to be cloned (for example path
         /// representations) as they're never modified.

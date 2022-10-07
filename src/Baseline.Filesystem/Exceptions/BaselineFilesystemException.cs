@@ -13,8 +13,6 @@ namespace Baseline.Filesystem
         /// <param name="message">The message to include in the exception.</param>
         /// <param name="innerException">The inner exception to include in the exception.</param>
         protected BaselineFilesystemException(string message, Exception innerException = null)
-            : base(message, innerException)
-        {
-        }
+            : base(message, innerException) { }
     }
 }

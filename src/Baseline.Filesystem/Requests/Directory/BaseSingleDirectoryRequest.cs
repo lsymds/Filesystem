@@ -29,7 +29,7 @@ namespace Baseline.Filesystem
             cloned.DirectoryPath = cloned.DirectoryPath.CombineWithBase(rootPath);
             return cloned;
         }
-        
+
         /// <summary>
         /// Clones the current instance for path updates. Some properties do not need to be cloned (for example path
         /// representations) as they're never modified.
@@ -37,10 +37,7 @@ namespace Baseline.Filesystem
         /// <returns>A clone of the current instance.</returns>
         internal override T ShallowClone()
         {
-            return new T
-            {
-                DirectoryPath = DirectoryPath
-            };
+            return new T { DirectoryPath = DirectoryPath };
         }
     }
 }

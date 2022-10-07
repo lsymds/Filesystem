@@ -10,8 +10,8 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="path">The requested path that already exists.</param>
         public DirectoryAlreadyExistsException(string path)
-            : base($"The directory ({path}) already exists and cannot be created, copied to or moved to.")
-        {
-        }
+            : base(
+                $"The directory ({path}) already exists and cannot be created, copied to or moved to."
+            ) { }
     }
 }

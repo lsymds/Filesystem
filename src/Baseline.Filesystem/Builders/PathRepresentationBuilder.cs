@@ -11,7 +11,7 @@ namespace Baseline.Filesystem
     public class PathRepresentationBuilder
     {
         private readonly string _originalPath;
-        
+
         /// <summary>
         /// Initialises a new instance of the <see cref="PathRepresentationBuilder" /> class, referencing the original
         /// path.
@@ -41,7 +41,9 @@ namespace Baseline.Filesystem
         private static PathRepresentation BuildPathRepresentation(string path)
         {
             var normalisedPath = NormalisePath(path);
-            var (_, finalPathPart) = DirectoriesAndFinalPathPartFromSplitPath(normalisedPath.Split('/'));
+            var (_, finalPathPart) = DirectoriesAndFinalPathPartFromSplitPath(
+                normalisedPath.Split('/')
+            );
 
             return new PathRepresentation
             {
@@ -64,10 +66,16 @@ namespace Baseline.Filesystem
                 yield break;
             }
 
-            var pathSplitByDirectory = path.Substring(0, path.LastIndexOf("/", StringComparison.Ordinal) + 1).Split("/");
+            var pathSplitByDirectory = path.Substring(
+                    0,
+                    path.LastIndexOf("/", StringComparison.Ordinal) + 1
+                )
+                .Split("/");
             var currentPath = string.Empty;
 
-            foreach (var p in pathSplitByDirectory.Where(pathSplit => !string.IsNullOrEmpty(pathSplit)))
+            foreach (
+                var p in pathSplitByDirectory.Where(pathSplit => !string.IsNullOrEmpty(pathSplit))
+            )
             {
                 currentPath += p + "/";
                 yield return currentPath.AsBaselineFilesystemPath();

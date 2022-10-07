@@ -10,12 +10,12 @@ namespace Baseline.Filesystem
         /// Gets or sets the source directory path.
         /// </summary>
         public PathRepresentation SourceDirectoryPath { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the destination directory path.
         /// </summary>
         public PathRepresentation DestinationDirectoryPath { get; set; }
-        
+
         /// <summary>
         /// Combines the paths belonging to this request with a root path, if the root path is not null.
         /// </summary>
@@ -32,10 +32,12 @@ namespace Baseline.Filesystem
 
             var cloned = ShallowClone();
             cloned.SourceDirectoryPath = cloned.SourceDirectoryPath.CombineWithBase(rootPath);
-            cloned.DestinationDirectoryPath = cloned.DestinationDirectoryPath.CombineWithBase(rootPath);
+            cloned.DestinationDirectoryPath = cloned.DestinationDirectoryPath.CombineWithBase(
+                rootPath
+            );
             return cloned;
         }
-        
+
         /// <summary>
         /// Clones the current instance for path updates. Some properties do not need to be cloned (for example path
         /// representations) as they're never modified.

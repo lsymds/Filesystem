@@ -9,8 +9,10 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
     public class WriteStreamToFileTests : BaseS3AdapterIntegrationTest
     {
         private readonly PathRepresentation _filePath = RandomFilePathRepresentation();
-        private readonly Stream _stream = new MemoryStream(Encoding.UTF8.GetBytes("hello stream my old friend"));
-        
+        private readonly Stream _stream = new MemoryStream(
+            Encoding.UTF8.GetBytes("hello stream my old friend")
+        );
+
         [Fact]
         public async Task It_Successfully_Writes_A_Stream_To_A_File()
         {
@@ -18,13 +20,15 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             await ExpectFileNotToExistAsync(_filePath);
 
             // Act.
-            await FileManager.WriteStreamAsync(new WriteStreamToFileRequest
-            {
-                FilePath = _filePath,
-                ContentType = "application/json",
-                Stream = _stream
-            });
-            
+            await FileManager.WriteStreamAsync(
+                new WriteStreamToFileRequest
+                {
+                    FilePath = _filePath,
+                    ContentType = "application/json",
+                    Stream = _stream
+                }
+            );
+
             // Assert.
             var fileContents = await ReadFileAsStringAsync(_filePath);
             fileContents.Should().Be("hello stream my old friend");
@@ -36,17 +40,19 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         {
             // Arrange.
             _stream.Seek(5, SeekOrigin.Begin);
-            
+
             await ExpectFileNotToExistAsync(_filePath);
 
             // Act.
-            await FileManager.WriteStreamAsync(new WriteStreamToFileRequest
-            {
-                FilePath = _filePath,
-                ContentType = "application/json",
-                Stream = _stream
-            });
-            
+            await FileManager.WriteStreamAsync(
+                new WriteStreamToFileRequest
+                {
+                    FilePath = _filePath,
+                    ContentType = "application/json",
+                    Stream = _stream
+                }
+            );
+
             // Assert.
             var fileContents = await ReadFileAsStringAsync(_filePath);
             fileContents.Should().Be("hello stream my old friend");
@@ -58,17 +64,19 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         {
             // Arrange.
             ReconfigureManagerInstances(true);
-            
+
             await ExpectFileNotToExistAsync(_filePath);
 
             // Act.
-            await FileManager.WriteStreamAsync(new WriteStreamToFileRequest
-            {
-                FilePath = _filePath,
-                ContentType = "application/json",
-                Stream = _stream
-            });
-            
+            await FileManager.WriteStreamAsync(
+                new WriteStreamToFileRequest
+                {
+                    FilePath = _filePath,
+                    ContentType = "application/json",
+                    Stream = _stream
+                }
+            );
+
             // Assert.
             var fileContents = await ReadFileAsStringAsync(_filePath);
             fileContents.Should().Be("hello stream my old friend");

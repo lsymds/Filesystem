@@ -2,7 +2,5 @@ using System;
 
 namespace Baseline.Filesystem.Tests.Fixtures
 {
-    public class ExternalException : Exception
-    {        
-    }
+    public class ExternalException : Exception { }
 }

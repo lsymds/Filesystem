@@ -19,9 +19,13 @@ namespace Baseline.Filesystem.Internal.Validators.Directories
             {
                 throw new ArgumentNullException(nameof(directoryRequest));
             }
-            
-            DirectoryPathValidator.ValidateAndThrowIfUnsuccessful(directoryRequest.SourceDirectoryPath);
-            DirectoryPathValidator.ValidateAndThrowIfUnsuccessful(directoryRequest.DestinationDirectoryPath);
+
+            DirectoryPathValidator.ValidateAndThrowIfUnsuccessful(
+                directoryRequest.SourceDirectoryPath
+            );
+            DirectoryPathValidator.ValidateAndThrowIfUnsuccessful(
+                directoryRequest.DestinationDirectoryPath
+            );
         }
     }
 }

@@ -9,12 +9,12 @@ namespace Baseline.Filesystem
         /// Gets or sets the adapter instance to be registered.
         /// </summary>
         public IAdapter Adapter { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the name of the store.
         /// </summary>
         public string Name { get; set; } = "default";
-        
+
         /// <summary>
         /// <para>
         /// Gets or sets an optional root path which is always combined with a path specified in any call to any methods
@@ -48,7 +48,7 @@ namespace Baseline.Filesystem
         ///             If, in the future, I decide I want to use a physical file system, I can use the file system adapter,
         ///             configure its root path accordingly, and not have to change anything within my application.
         ///         </description>
-        ///     </item> 
+        ///     </item>
         /// </list>
         /// </para>
         /// </summary>

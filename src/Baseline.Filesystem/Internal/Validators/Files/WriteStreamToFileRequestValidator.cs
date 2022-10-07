@@ -12,7 +12,9 @@ namespace Baseline.Filesystem.Internal.Validators.Files
         /// Throws an exception if it does not validate successfully.
         /// </summary>
         /// <param name="writeStreamToFileRequest">The request to validate.</param>
-        public static void ValidateAndThrowIfUnsuccessful(WriteStreamToFileRequest writeStreamToFileRequest)
+        public static void ValidateAndThrowIfUnsuccessful(
+            WriteStreamToFileRequest writeStreamToFileRequest
+        )
         {
             BaseSingleFileRequestValidator.ValidateAndThrowIfUnsuccessful(writeStreamToFileRequest);
 
@@ -23,7 +25,10 @@ namespace Baseline.Filesystem.Internal.Validators.Files
 
             if (!writeStreamToFileRequest.Stream.CanRead)
             {
-                throw new ArgumentException("Provided stream is not readable.", nameof(writeStreamToFileRequest.Stream));
+                throw new ArgumentException(
+                    "Provided stream is not readable.",
+                    nameof(writeStreamToFileRequest.Stream)
+                );
             }
         }
     }

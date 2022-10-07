@@ -13,11 +13,12 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         public async Task It_Throws_An_Exception_If_The_Requested_Adapter_Name_Is_Not_Registered()
         {
             // Act.
-            Func<Task> func = async () => await FileManager.GetPublicUrlAsync(
-                new GetFilePublicUrlRequest { FilePath = "a".AsBaselineFilesystemPath() },
-                "foo"
-            );
-            
+            Func<Task> func = async () =>
+                await FileManager.GetPublicUrlAsync(
+                    new GetFilePublicUrlRequest { FilePath = "a".AsBaselineFilesystemPath() },
+                    "foo"
+                );
+
             // Assert.
             await func.Should().ThrowAsync<StoreNotFoundException>();
         }
@@ -27,7 +28,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Act.
             Func<Task> func = async () => await FileManager.GetPublicUrlAsync(null);
-            
+
             // Assert.
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -36,8 +37,9 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         public async Task It_Throws_An_Exception_If_The_Path_For_The_Request_Was_Null()
         {
             // Act.
-            Func<Task> func = async () => await FileManager.GetPublicUrlAsync(new GetFilePublicUrlRequest());
-            
+            Func<Task> func = async () =>
+                await FileManager.GetPublicUrlAsync(new GetFilePublicUrlRequest());
+
             // Assert.
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -47,13 +49,13 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Arrange.
             var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
-            
+
             // Act.
-            Func<Task> func = async () => await FileManager.GetPublicUrlAsync(new GetFilePublicUrlRequest
-            {
-                FilePath = path
-            });
-            
+            Func<Task> func = async () =>
+                await FileManager.GetPublicUrlAsync(
+                    new GetFilePublicUrlRequest { FilePath = path }
+                );
+
             // Assert.
             await func.Should().ThrowExactlyAsync<PathIsADirectoryException>();
         }
@@ -63,36 +65,41 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Arrange.
             var path = "/users/Foo/bar/Destiny/XYZ/BARTINO.txt".AsBaselineFilesystemPath();
-            
+
             // Act.
-            Func<Task> func = async () => await FileManager.GetPublicUrlAsync(new GetFilePublicUrlRequest
-            {
-                FilePath = path,
-                Expiry = DateTime.Now
-            });
-            
+            Func<Task> func = async () =>
+                await FileManager.GetPublicUrlAsync(
+                    new GetFilePublicUrlRequest { FilePath = path, Expiry = DateTime.Now }
+                );
+
             // Assert.
-            await func
-                .Should()
+            await func.Should()
                 .ThrowExactlyAsync<ArgumentException>()
-                .WithMessage("Expiry cannot be less than 10 seconds away from the current time. (Parameter 'Expiry')");
+                .WithMessage(
+                    "Expiry cannot be less than 10 seconds away from the current time. (Parameter 'Expiry')"
+                );
         }
-        
+
         [Fact]
         public async Task It_Invokes_The_Matching_Adapters_Get_File_Method_And_Wraps_The_Response()
         {
             // Arrange.
             Adapter
-                .Setup(x => x.GetFilePublicUrlAsync(It.IsAny<GetFilePublicUrlRequest>(), It.IsAny<CancellationToken>()))
+                .Setup(
+                    x =>
+                        x.GetFilePublicUrlAsync(
+                            It.IsAny<GetFilePublicUrlRequest>(),
+                            It.IsAny<CancellationToken>()
+                        )
+                )
                 .ReturnsAsync(new GetFilePublicUrlResponse { Url = "https://www.google.com" })
                 .Verifiable();
-            
+
             // Act.
-            var response = await FileManager.GetPublicUrlAsync(new GetFilePublicUrlRequest
-            {
-                FilePath = "a".AsBaselineFilesystemPath()
-            });
-            
+            var response = await FileManager.GetPublicUrlAsync(
+                new GetFilePublicUrlRequest { FilePath = "a".AsBaselineFilesystemPath() }
+            );
+
             // Assert.
             response.Url.Should().Be("https://www.google.com");
             Adapter.VerifyAll();

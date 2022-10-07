@@ -13,11 +13,10 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="originalPath">The path that caused the exception to be thrown.</param>
         public PathContainsInvalidCharacterException(string originalPath)
-            : base(originalPath,
-                $"The path '{originalPath}' contains an invalid character which is not allowed in Baseline.Filesystem. For more " +
-                "information, see the documentation."
-            )
-        {
-        }
+            : base(
+                originalPath,
+                $"The path '{originalPath}' contains an invalid character which is not allowed in Baseline.Filesystem. For more "
+                    + "information, see the documentation."
+            ) { }
     }
 }

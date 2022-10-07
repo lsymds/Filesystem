@@ -11,13 +11,11 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         public async Task It_Throws_An_Exception_If_File_Does_Not_Exist()
         {
             // Act.
-            Func<Task> func = async () => await FileManager.DeleteAsync(
-                new DeleteFileRequest
-                {
-                    FilePath = RandomFilePathRepresentation()
-                }
-            );
-            
+            Func<Task> func = async () =>
+                await FileManager.DeleteAsync(
+                    new DeleteFileRequest { FilePath = RandomFilePathRepresentation() }
+                );
+
             // Assert.
             await func.Should().ThrowExactlyAsync<FileNotFoundException>();
         }
@@ -29,14 +27,14 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             var filePath = RandomFilePathRepresentation();
 
             await CreateFileAndWriteTextAsync(filePath);
-            
-            await ExpectFileToExistAsync(filePath); 
+
+            await ExpectFileToExistAsync(filePath);
 
             // Act.
-            await FileManager.DeleteAsync(new DeleteFileRequest {FilePath = filePath});
-            
+            await FileManager.DeleteAsync(new DeleteFileRequest { FilePath = filePath });
+
             // Assert.
-            await ExpectFileNotToExistAsync(filePath); 
+            await ExpectFileNotToExistAsync(filePath);
         }
 
         [Fact]
@@ -44,18 +42,18 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         {
             // Arrange.
             ReconfigureManagerInstances(true);
-            
+
             var filePath = RandomFilePathRepresentation();
 
             await CreateFileAndWriteTextAsync(filePath);
-            
-            await ExpectFileToExistAsync(filePath); 
+
+            await ExpectFileToExistAsync(filePath);
 
             // Act.
-            await FileManager.DeleteAsync(new DeleteFileRequest {FilePath = filePath});
-            
+            await FileManager.DeleteAsync(new DeleteFileRequest { FilePath = filePath });
+
             // Assert.
-            await ExpectFileNotToExistAsync(filePath); 
+            await ExpectFileNotToExistAsync(filePath);
         }
     }
 }

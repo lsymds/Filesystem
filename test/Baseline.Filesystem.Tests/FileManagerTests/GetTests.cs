@@ -13,11 +13,12 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         public async Task It_Throws_An_Exception_If_The_Requested_Adapter_Name_Is_Not_Registered()
         {
             // Act.
-            Func<Task> func = async () => await FileManager.GetAsync(
-                new GetFileRequest { FilePath = "a".AsBaselineFilesystemPath() },
-                "foo"
-            );
-            
+            Func<Task> func = async () =>
+                await FileManager.GetAsync(
+                    new GetFileRequest { FilePath = "a".AsBaselineFilesystemPath() },
+                    "foo"
+                );
+
             // Assert.
             await func.Should().ThrowAsync<StoreNotFoundException>();
         }
@@ -27,7 +28,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Act.
             Func<Task> func = async () => await FileManager.GetAsync(null);
-            
+
             // Assert.
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -37,7 +38,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Act.
             Func<Task> func = async () => await FileManager.GetAsync(new GetFileRequest());
-            
+
             // Assert.
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -47,47 +48,62 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Arrange.
             var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
-            
+
             // Act.
-            Func<Task> func = async () => await FileManager.GetAsync(new GetFileRequest { FilePath = path });
-            
+            Func<Task> func = async () =>
+                await FileManager.GetAsync(new GetFileRequest { FilePath = path });
+
             // Assert.
             await func.Should().ThrowExactlyAsync<PathIsADirectoryException>();
         }
-        
+
         [Fact]
         public async Task It_Invokes_The_Matching_Adapters_Get_File_Method_And_Wraps_The_Response()
         {
             // Arrange.
             Adapter
-                .Setup(x => x.GetFileAsync(It.IsAny<GetFileRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetFileResponse { File = new FileRepresentation { Path = new PathRepresentation() } })
+                .Setup(
+                    x => x.GetFileAsync(It.IsAny<GetFileRequest>(), It.IsAny<CancellationToken>())
+                )
+                .ReturnsAsync(
+                    new GetFileResponse
+                    {
+                        File = new FileRepresentation { Path = new PathRepresentation() }
+                    }
+                )
                 .Verifiable();
-            
+
             // Act.
-            await FileManager.GetAsync(new GetFileRequest { FilePath = "a".AsBaselineFilesystemPath() });
-            
+            await FileManager.GetAsync(
+                new GetFileRequest { FilePath = "a".AsBaselineFilesystemPath() }
+            );
+
             // Assert.
             Adapter.VerifyAll();
         }
-        
+
         [Fact]
         public async Task It_Removes_A_Root_Path_Returned_From_The_Adapter()
         {
             // Arrange.
             Reconfigure(true);
 
-            Adapter.Setup(x => x.GetFileAsync(It.IsAny<GetFileRequest>(), CancellationToken.None))
-                .ReturnsAsync(new GetFileResponse
-                {
-                    File = new FileRepresentation { Path = $"root/a/b/c.txt".AsBaselineFilesystemPath() }
-                });
+            Adapter
+                .Setup(x => x.GetFileAsync(It.IsAny<GetFileRequest>(), CancellationToken.None))
+                .ReturnsAsync(
+                    new GetFileResponse
+                    {
+                        File = new FileRepresentation
+                        {
+                            Path = $"root/a/b/c.txt".AsBaselineFilesystemPath()
+                        }
+                    }
+                );
 
             // Act.
-            var response = await FileManager.GetAsync(new GetFileRequest
-            {
-                FilePath = "a/b/c.txt".AsBaselineFilesystemPath(),
-            });
+            var response = await FileManager.GetAsync(
+                new GetFileRequest { FilePath = "a/b/c.txt".AsBaselineFilesystemPath(), }
+            );
 
             // Assert.
             response.File.Path.NormalisedPath.Should().NotContain("root");

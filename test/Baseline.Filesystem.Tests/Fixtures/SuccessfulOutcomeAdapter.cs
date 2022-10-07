@@ -5,64 +5,98 @@ namespace Baseline.Filesystem.Tests.Fixtures
 {
     public class SuccessfulOutcomeAdapter : IAdapter
     {
-        public Task<CopyDirectoryResponse> CopyDirectoryAsync(CopyDirectoryRequest copyDirectoryRequest, CancellationToken cancellationToken)
+        public Task<CopyDirectoryResponse> CopyDirectoryAsync(
+            CopyDirectoryRequest copyDirectoryRequest,
+            CancellationToken cancellationToken
+        )
         {
             return Task.FromResult(new CopyDirectoryResponse());
         }
 
-        public Task<CopyFileResponse> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken)
+        public Task<CopyFileResponse> CopyFileAsync(
+            CopyFileRequest copyFileRequest,
+            CancellationToken cancellationToken
+        )
         {
             return Task.FromResult(new CopyFileResponse());
         }
 
-        public Task<CreateDirectoryResponse> CreateDirectoryAsync(CreateDirectoryRequest createDirectoryRequest, CancellationToken cancellationToken)
+        public Task<CreateDirectoryResponse> CreateDirectoryAsync(
+            CreateDirectoryRequest createDirectoryRequest,
+            CancellationToken cancellationToken
+        )
         {
             return Task.FromResult(new CreateDirectoryResponse());
         }
 
-        public Task<DeleteDirectoryResponse> DeleteDirectoryAsync(DeleteDirectoryRequest deleteDirectoryRequest, CancellationToken cancellationToken)
+        public Task<DeleteDirectoryResponse> DeleteDirectoryAsync(
+            DeleteDirectoryRequest deleteDirectoryRequest,
+            CancellationToken cancellationToken
+        )
         {
             return Task.FromResult(new DeleteDirectoryResponse());
         }
 
-        public Task<DeleteFileResponse> DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken)
+        public Task<DeleteFileResponse> DeleteFileAsync(
+            DeleteFileRequest deleteFileRequest,
+            CancellationToken cancellationToken
+        )
         {
             return Task.FromResult(new DeleteFileResponse());
         }
 
-        public Task<FileExistsResponse> FileExistsAsync(FileExistsRequest fileExistsRequest, CancellationToken cancellationToken)
+        public Task<FileExistsResponse> FileExistsAsync(
+            FileExistsRequest fileExistsRequest,
+            CancellationToken cancellationToken
+        )
         {
             return Task.FromResult(new FileExistsResponse { FileExists = true });
         }
 
-        public Task<GetFileResponse> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken)
+        public Task<GetFileResponse> GetFileAsync(
+            GetFileRequest getFileRequest,
+            CancellationToken cancellationToken
+        )
         {
             return Task.FromResult(new GetFileResponse());
         }
 
-        public Task<IterateDirectoryContentsResponse> IterateDirectoryContentsAsync(IterateDirectoryContentsRequest iterateDirectoryContentsRequest,
-            CancellationToken cancellationToken)
+        public Task<IterateDirectoryContentsResponse> IterateDirectoryContentsAsync(
+            IterateDirectoryContentsRequest iterateDirectoryContentsRequest,
+            CancellationToken cancellationToken
+        )
         {
             return Task.FromResult(new IterateDirectoryContentsResponse());
         }
 
-        public Task<ListDirectoryContentsResponse> ListDirectoryContentsAsync(ListDirectoryContentsRequest listDirectoryContentsRequest,
-            CancellationToken cancellationToken = default)
+        public Task<ListDirectoryContentsResponse> ListDirectoryContentsAsync(
+            ListDirectoryContentsRequest listDirectoryContentsRequest,
+            CancellationToken cancellationToken = default
+        )
         {
             return Task.FromResult(new ListDirectoryContentsResponse());
         }
 
-        public Task<MoveDirectoryResponse> MoveDirectoryAsync(MoveDirectoryRequest moveDirectoryRequest, CancellationToken cancellationToken)
+        public Task<MoveDirectoryResponse> MoveDirectoryAsync(
+            MoveDirectoryRequest moveDirectoryRequest,
+            CancellationToken cancellationToken
+        )
         {
             return Task.FromResult(new MoveDirectoryResponse());
         }
 
-        public Task<MoveFileResponse> MoveFileAsync(MoveFileRequest moveFileRequest, CancellationToken cancellationToken)
+        public Task<MoveFileResponse> MoveFileAsync(
+            MoveFileRequest moveFileRequest,
+            CancellationToken cancellationToken
+        )
         {
             return Task.FromResult(new MoveFileResponse());
         }
 
-        public Task<ReadFileAsStreamResponse> ReadFileAsStreamAsync(ReadFileAsStreamRequest readFileAsStreamRequest, CancellationToken cancellationToken)
+        public Task<ReadFileAsStreamResponse> ReadFileAsStreamAsync(
+            ReadFileAsStreamRequest readFileAsStreamRequest,
+            CancellationToken cancellationToken
+        )
         {
             return Task.FromResult(new ReadFileAsStreamResponse());
         }

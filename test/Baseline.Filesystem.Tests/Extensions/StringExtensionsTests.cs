@@ -10,14 +10,16 @@ namespace Baseline.Filesystem.Tests.Extensions
         {
             // Arrange.
             const string originalPath = "/users/foo/bar/xyz/Documents/my-DOCUmenT.xslx";
-            
+
             // Act.
             var pathRepresentation = originalPath.AsBaselineFilesystemPath();
-            
+
             // Assert.
             pathRepresentation.FinalPathPart.Should().Be("my-DOCUmenT.xslx");
             pathRepresentation.OriginalPath.Should().Be(originalPath);
-            pathRepresentation.NormalisedPath.Should().Be("users/foo/bar/xyz/Documents/my-DOCUmenT.xslx");
+            pathRepresentation.NormalisedPath
+                .Should()
+                .Be("users/foo/bar/xyz/Documents/my-DOCUmenT.xslx");
         }
     }
 }

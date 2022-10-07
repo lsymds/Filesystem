@@ -9,8 +9,9 @@ namespace Baseline.Filesystem
         /// Initialises a new instance of the <see cref="PathIsBlankException"/> class.
         /// </summary>
         public PathIsBlankException()
-            : base(string.Empty, "The path provided is null, empty or whitespace. Not a lot we can do with that!")
-        {
-        }
+            : base(
+                string.Empty,
+                "The path provided is null, empty or whitespace. Not a lot we can do with that!"
+            ) { }
     }
 }

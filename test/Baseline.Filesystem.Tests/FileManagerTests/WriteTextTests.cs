@@ -13,11 +13,16 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         public async Task It_Throws_An_Exception_If_The_Requested_Adapter_Name_Is_Not_Registered()
         {
             // Act.
-            Func<Task> func = async () => await FileManager.WriteTextAsync(
-                new WriteTextToFileRequest { FilePath = "a".AsBaselineFilesystemPath(), TextToWrite = string.Empty },
-                "foo"
-            );
-            
+            Func<Task> func = async () =>
+                await FileManager.WriteTextAsync(
+                    new WriteTextToFileRequest
+                    {
+                        FilePath = "a".AsBaselineFilesystemPath(),
+                        TextToWrite = string.Empty
+                    },
+                    "foo"
+                );
+
             // Assert.
             await func.Should().ThrowAsync<StoreNotFoundException>();
         }
@@ -27,7 +32,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Act.
             Func<Task> func = async () => await FileManager.WriteTextAsync(null);
-            
+
             // Assert.
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -36,8 +41,11 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         public async Task It_Throws_An_Exception_If_The_Path_For_The_Request_Was_Null()
         {
             // Act.
-            Func<Task> func = async () => await FileManager.WriteTextAsync(new WriteTextToFileRequest { TextToWrite = "foo" });
-            
+            Func<Task> func = async () =>
+                await FileManager.WriteTextAsync(
+                    new WriteTextToFileRequest { TextToWrite = "foo" }
+                );
+
             // Assert.
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -46,10 +54,11 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         public async Task It_Throws_An_Exception_If_The_TextToWrite_For_The_Request_Was_Null()
         {
             // Act.
-            Func<Task> func = async () => await FileManager.WriteTextAsync(
-                new WriteTextToFileRequest { FilePath = "a".AsBaselineFilesystemPath() }
-            );
-            
+            Func<Task> func = async () =>
+                await FileManager.WriteTextAsync(
+                    new WriteTextToFileRequest { FilePath = "a".AsBaselineFilesystemPath() }
+                );
+
             // Assert.
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -59,32 +68,40 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Arrange.
             var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
-            
+
             // Act.
-            Func<Task> func = async () => await FileManager.WriteTextAsync(
-                new WriteTextToFileRequest { FilePath = path, TextToWrite = "abc"}
-            );
-            
+            Func<Task> func = async () =>
+                await FileManager.WriteTextAsync(
+                    new WriteTextToFileRequest { FilePath = path, TextToWrite = "abc" }
+                );
+
             // Assert.
             await func.Should().ThrowExactlyAsync<PathIsADirectoryException>();
         }
-        
+
         [Fact]
         public async Task It_Invokes_The_Matching_Adapters_WriteTextToFile_Method()
         {
             // Arrange.
             Adapter
-                .Setup(x => x.WriteTextToFileAsync(
-                    It.Is<WriteTextToFileRequest>(d => d.TextToWrite == "abc"), 
-                    It.IsAny<CancellationToken>())
+                .Setup(
+                    x =>
+                        x.WriteTextToFileAsync(
+                            It.Is<WriteTextToFileRequest>(d => d.TextToWrite == "abc"),
+                            It.IsAny<CancellationToken>()
+                        )
                 )
                 .Verifiable();
-            
+
             // Act.
             await FileManager.WriteTextAsync(
-                new WriteTextToFileRequest { FilePath = "a".AsBaselineFilesystemPath(), TextToWrite = "abc"}
+                new WriteTextToFileRequest
+                {
+                    FilePath = "a".AsBaselineFilesystemPath(),
+                    TextToWrite = "abc"
+                }
             );
-            
+
             // Assert.
             Adapter.VerifyAll();
         }

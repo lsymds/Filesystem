@@ -12,12 +12,12 @@ namespace Baseline.Filesystem
         /// Gets or sets the name of the store.
         /// </summary>
         internal string Name { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the root path of the store.
         /// </summary>
         internal PathRepresentation RootPath { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the lambda function used to resolve an <see cref="IAdapter"/> instance that becomes the store's
         /// data provider.

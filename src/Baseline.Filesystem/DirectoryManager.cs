@@ -15,9 +15,7 @@ namespace Baseline.Filesystem
         /// Initialises a new <see cref="DirectoryManager" /> instance with all of its required dependencies.
         /// </summary>
         /// <param name="storeManager">A store manager implementation.</param>
-        public DirectoryManager(IStoreManager storeManager) : base(storeManager)
-        {
-        }
+        public DirectoryManager(IStoreManager storeManager) : base(storeManager) { }
 
         /// <inheritdoc />
         public async Task<CopyDirectoryResponse> CopyAsync(
@@ -26,17 +24,19 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            BaseSourceAndDestinationDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(copyDirectoryRequest);
+            BaseSourceAndDestinationDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(
+                copyDirectoryRequest
+            );
 
             return await GetAdapter(store)
                 .CopyDirectoryAsync(
-                    copyDirectoryRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)), 
+                    copyDirectoryRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(store)
                 .RemoveRootPathsAsync(
-                    x => x.DestinationDirectory.Path, 
-                    (o, p) => o.DestinationDirectory.Path = p, 
+                    x => x.DestinationDirectory.Path,
+                    (o, p) => o.DestinationDirectory.Path = p,
                     GetStoreRootPath(store)
                 )
                 .ConfigureAwait(false);
@@ -49,11 +49,15 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(createDirectoryRequest);
+            BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(
+                createDirectoryRequest
+            );
 
             return await GetAdapter(store)
                 .CreateDirectoryAsync(
-                    createDirectoryRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
+                    createDirectoryRequest.CloneAndCombinePathsWithRootPath(
+                        GetStoreRootPath(store)
+                    ),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(store)
@@ -72,11 +76,15 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(deleteDirectoryRequest);
-            
+            BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(
+                deleteDirectoryRequest
+            );
+
             return await GetAdapter(store)
                 .DeleteDirectoryAsync(
-                    deleteDirectoryRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)), 
+                    deleteDirectoryRequest.CloneAndCombinePathsWithRootPath(
+                        GetStoreRootPath(store)
+                    ),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(store)
@@ -85,12 +93,14 @@ namespace Baseline.Filesystem
 
         /// <inheritdoc />
         public async Task<IterateDirectoryContentsResponse> IterateContentsAsync(
-            IterateDirectoryContentsRequest iterateDirectoryContentsRequest, 
+            IterateDirectoryContentsRequest iterateDirectoryContentsRequest,
             string store = "default",
             CancellationToken cancellationToken = default
         )
         {
-            IterateDirectoryContentsRequestValidator.ValidateAndThrowIfUnsuccessful(iterateDirectoryContentsRequest);
+            IterateDirectoryContentsRequestValidator.ValidateAndThrowIfUnsuccessful(
+                iterateDirectoryContentsRequest
+            );
 
             var request = new IterateDirectoryContentsRequest
             {
@@ -101,11 +111,15 @@ namespace Baseline.Filesystem
                     {
                         return await iterateDirectoryContentsRequest.Action(path);
                     }
-                    
-                    var pathWithoutRoot = new[] {path}.RemoveRootPath(GetStoreRootPath(store)).ToList();
+
+                    var pathWithoutRoot = new[] { path }
+                        .RemoveRootPath(GetStoreRootPath(store))
+                        .ToList();
                     if (pathWithoutRoot.Any())
                     {
-                        return await iterateDirectoryContentsRequest.Action(pathWithoutRoot.First());
+                        return await iterateDirectoryContentsRequest.Action(
+                            pathWithoutRoot.First()
+                        );
                     }
 
                     return true;
@@ -128,11 +142,15 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(listDirectoryContentsRequest);
+            BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(
+                listDirectoryContentsRequest
+            );
 
             return await GetAdapter(store)
                 .ListDirectoryContentsAsync(
-                    listDirectoryContentsRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
+                    listDirectoryContentsRequest.CloneAndCombinePathsWithRootPath(
+                        GetStoreRootPath(store)
+                    ),
                     cancellationToken
                 )
                 .WrapExternalExceptionsAsync(store)
@@ -151,8 +169,10 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            BaseSourceAndDestinationDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(moveDirectoryRequest);
-            
+            BaseSourceAndDestinationDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(
+                moveDirectoryRequest
+            );
+
             return await GetAdapter(store)
                 .MoveDirectoryAsync(
                     moveDirectoryRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),

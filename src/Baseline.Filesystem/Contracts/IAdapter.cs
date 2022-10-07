@@ -18,13 +18,16 @@ namespace Baseline.Filesystem
             CopyDirectoryRequest copyDirectoryRequest,
             CancellationToken cancellationToken
         );
-        
+
         /// <summary>
         /// Copies a file from one location in the store to another.
         /// </summary>
         /// <param name="copyFileRequest">The request containing information about the file to copy.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        Task<CopyFileResponse> CopyFileAsync(CopyFileRequest copyFileRequest, CancellationToken cancellationToken);
+        Task<CopyFileResponse> CopyFileAsync(
+            CopyFileRequest copyFileRequest,
+            CancellationToken cancellationToken
+        );
 
         /// <summary>
         /// Creates a directory in a store.
@@ -44,30 +47,39 @@ namespace Baseline.Filesystem
         /// <param name="deleteDirectoryRequest">The request containing information about the directory to delete.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
         Task<DeleteDirectoryResponse> DeleteDirectoryAsync(
-            DeleteDirectoryRequest deleteDirectoryRequest, 
+            DeleteDirectoryRequest deleteDirectoryRequest,
             CancellationToken cancellationToken
         );
-        
+
         /// <summary>
         /// Deletes a file from a store.
         /// </summary>
         /// <param name="deleteFileRequest">The request containing information about the file to delete.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        Task<DeleteFileResponse> DeleteFileAsync(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken);
-        
+        Task<DeleteFileResponse> DeleteFileAsync(
+            DeleteFileRequest deleteFileRequest,
+            CancellationToken cancellationToken
+        );
+
         /// <summary>
         /// Checks whether a file exists or not in the store.
         /// </summary>
         /// <param name="fileExistsRequest">The request containing information about the file to check.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        Task<FileExistsResponse> FileExistsAsync(FileExistsRequest fileExistsRequest, CancellationToken cancellationToken);
-        
+        Task<FileExistsResponse> FileExistsAsync(
+            FileExistsRequest fileExistsRequest,
+            CancellationToken cancellationToken
+        );
+
         /// <summary>
         /// Gets a file's information (i.e. the name, path, extension, size etc) from the store.
         /// </summary>
         /// <param name="getFileRequest">The request containing information about the file to retrieve.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        Task<GetFileResponse> GetFileAsync(GetFileRequest getFileRequest, CancellationToken cancellationToken);
+        Task<GetFileResponse> GetFileAsync(
+            GetFileRequest getFileRequest,
+            CancellationToken cancellationToken
+        );
 
         /// <summary>
         /// Retrieves a public URL for a file from the store.
@@ -80,7 +92,7 @@ namespace Baseline.Filesystem
             GetFilePublicUrlRequest getFilePublicUrlRequest,
             CancellationToken cancellationToken
         );
-        
+
         /// <summary>
         /// Iterates through a directory's contents within a store, executing a function for each directory and file
         /// in a recursive fashion.
@@ -93,7 +105,7 @@ namespace Baseline.Filesystem
             IterateDirectoryContentsRequest iterateDirectoryContentsRequest,
             CancellationToken cancellationToken
         );
-        
+
         /// <summary>
         /// Lists the directory's contents from within the store.
         /// </summary>
@@ -123,7 +135,10 @@ namespace Baseline.Filesystem
         /// The request containing information about the file to move and where to move it to.
         /// </param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        Task<MoveFileResponse> MoveFileAsync(MoveFileRequest moveFileRequest, CancellationToken cancellationToken);
+        Task<MoveFileResponse> MoveFileAsync(
+            MoveFileRequest moveFileRequest,
+            CancellationToken cancellationToken
+        );
 
         /// <summary>
         /// Retrieves a file from the store and reads and returns its contents into a stream.
@@ -150,13 +165,16 @@ namespace Baseline.Filesystem
             ReadFileAsStringRequest readFileAsStringRequest,
             CancellationToken cancellationToken
         );
-        
+
         /// <summary>
         /// Touches (creates without content) a file in the store.
         /// </summary>
         /// <param name="touchFileRequest">The request containing information about the file to touch.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
-        Task<TouchFileResponse> TouchFileAsync(TouchFileRequest touchFileRequest, CancellationToken cancellationToken);
+        Task<TouchFileResponse> TouchFileAsync(
+            TouchFileRequest touchFileRequest,
+            CancellationToken cancellationToken
+        );
 
         /// <summary>
         /// Writes a stream to a file within the store, creating it if it doesn't exist or overwriting it if it does.
@@ -176,7 +194,7 @@ namespace Baseline.Filesystem
         /// </param>
         /// <param name="cancellationToken">The cancellation token used to cancel any asynchronous tasks.</param>
         Task<WriteTextToFileResponse> WriteTextToFileAsync(
-            WriteTextToFileRequest writeTextToFileRequest, 
+            WriteTextToFileRequest writeTextToFileRequest,
             CancellationToken cancellationToken
         );
     }

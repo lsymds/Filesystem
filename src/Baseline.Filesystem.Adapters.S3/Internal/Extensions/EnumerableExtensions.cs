@@ -14,7 +14,10 @@ namespace Baseline.Filesystem.Adapters.S3.Internal.Extensions
         /// <param name="source">The source enumerable to chunk.</param>
         /// <param name="chunkBy">The size to chunk the source enumerable into.</param>
         /// <returns>An enumerable yielding chunked enumerables of the configured size.</returns>
-        public static IEnumerable<IEnumerable<T>> ChunkBy<T>(this IEnumerable<T> source, int chunkBy)
+        public static IEnumerable<IEnumerable<T>> ChunkBy<T>(
+            this IEnumerable<T> source,
+            int chunkBy
+        )
         {
             var sourceEnumerated = source.ToList();
 

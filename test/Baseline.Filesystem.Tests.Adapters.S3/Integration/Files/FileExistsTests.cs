@@ -15,13 +15,8 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             await CreateFileAndWriteTextAsync(path);
 
             // Act.
-            var response = await FileManager.ExistsAsync(
-                new FileExistsRequest
-                {
-                    FilePath = path
-                }
-            );
-            
+            var response = await FileManager.ExistsAsync(new FileExistsRequest { FilePath = path });
+
             // Assert.
             response.FileExists.Should().BeTrue();
         }
@@ -31,12 +26,9 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         {
             // Act.
             var response = await FileManager.ExistsAsync(
-                new FileExistsRequest
-                {
-                    FilePath = RandomFilePathRepresentation()
-                }
+                new FileExistsRequest { FilePath = RandomFilePathRepresentation() }
             );
-            
+
             // Assert.
             response.FileExists.Should().BeFalse();
         }
@@ -46,19 +38,14 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         {
             // Arrange.
             ReconfigureManagerInstances(true);
-            
+
             var path = RandomFilePathRepresentation();
 
             await CreateFileAndWriteTextAsync(path);
 
             // Act.
-            var response = await FileManager.ExistsAsync(
-                new FileExistsRequest
-                {
-                    FilePath = path
-                }
-            );
-            
+            var response = await FileManager.ExistsAsync(new FileExistsRequest { FilePath = path });
+
             // Assert.
             response.FileExists.Should().BeTrue();
         }

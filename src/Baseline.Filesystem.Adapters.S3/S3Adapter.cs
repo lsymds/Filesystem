@@ -4,7 +4,7 @@ namespace Baseline.Filesystem
 {
     /// <summary>
     /// Provides the shared, directory/file agnostic functions of the <see cref="IAdapter"/> implementation for
-    /// Amazon's Simple Storage Service. 
+    /// Amazon's Simple Storage Service.
     /// </summary>
     public partial class S3Adapter : IAdapter
     {

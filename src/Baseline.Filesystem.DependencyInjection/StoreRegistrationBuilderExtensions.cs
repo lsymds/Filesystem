@@ -12,7 +12,10 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="builder">The current builder instance to modify.</param>
         /// <param name="name">The name to set against the store.</param>
-        public static StoreRegistrationBuilder WithName(this StoreRegistrationBuilder builder, string name)
+        public static StoreRegistrationBuilder WithName(
+            this StoreRegistrationBuilder builder,
+            string name
+        )
         {
             builder.Name = name;
             return builder;
@@ -31,7 +34,7 @@ namespace Baseline.Filesystem
             builder.RootPath = rootPath;
             return builder;
         }
-        
+
         /// <summary>
         /// Configures the adapter implementation to use for the store.
         /// </summary>

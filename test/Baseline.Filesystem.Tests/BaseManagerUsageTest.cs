@@ -22,11 +22,13 @@ namespace Baseline.Filesystem.Tests
             StoreManager = new StoreManager();
             DirectoryManager = new DirectoryManager(StoreManager);
             FileManager = new FileManager(StoreManager);
-            StoreManager.Register(new StoreRegistration
-            {
-                Adapter = Adapter.Object,
-                RootPath = useRootPath ? "root/".AsBaselineFilesystemPath() : null
-            });
+            StoreManager.Register(
+                new StoreRegistration
+                {
+                    Adapter = Adapter.Object,
+                    RootPath = useRootPath ? "root/".AsBaselineFilesystemPath() : null
+                }
+            );
         }
     }
 }
