@@ -17,14 +17,14 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
         protected string RootPath { get; private set; }
         protected readonly string GeneratedBucketName;
         protected readonly IAmazonS3 S3Client;
-        
+
         protected IFileManager FileManager;
         protected IDirectoryManager DirectoryManager;
 
         protected BaseS3AdapterIntegrationTest()
         {
             GeneratedBucketName = Guid.NewGuid().ToString();
-            
+
             S3Client = new AmazonS3Client(
                 new BasicAWSCredentials("abc", "def"),
                 new AmazonS3Config
@@ -35,8 +35,9 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
                 }
             );
 
-            S3Client.PutBucketAsync(GeneratedBucketName).Wait();
-            
+            S3Client.PutBucketAsync(new PutBucketRequest
+                { BucketRegion = S3Region.EUWest1, BucketName = GeneratedBucketName }).Wait();
+
             ReconfigureManagerInstances(false);
         }
 
@@ -48,20 +49,20 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
         protected void ReconfigureManagerInstances(bool useRootPath)
         {
             RootPath = useRootPath ? $"{RandomString(6)}/{RandomString(2)}/" : null;
-            
+
             var adapter = new S3Adapter(new S3AdapterConfiguration
             {
                 BucketName = GeneratedBucketName,
                 S3Client = S3Client
             });
-            
+
             var adapterManager = new StoreManager();
             adapterManager.Register(new StoreRegistration
             {
-                Adapter = adapter, 
+                Adapter = adapter,
                 RootPath = RootPath?.AsBaselineFilesystemPath()
             });
-            
+
             FileManager = new FileManager(adapterManager);
             DirectoryManager = new DirectoryManager(adapterManager);
         }
@@ -125,11 +126,11 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
         {
             var directories = new[]
             {
-                includeBlank ? "" : RandomString(), 
+                includeBlank ? "" : RandomString(),
                 $"{RandomString(12)}/{RandomString(4)}",
-                $"{RandomString(4)}/{RandomString(6)}/{RandomString(3)}/{RandomString(8)}", 
+                $"{RandomString(4)}/{RandomString(6)}/{RandomString(3)}/{RandomString(8)}",
                 $"{RandomString(6)}/{RandomString(3)}",
-                RandomString(12), 
+                RandomString(12),
                 RandomString(18)
             };
             var randomDirectory = directories[Random.Next(directories.Length)];
@@ -144,11 +145,11 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
 
         protected static PathRepresentation RandomFilePathRepresentation()
         {
-            var extensions = new[] {"txt", "jpg", "pdf", ".config.json" };
+            var extensions = new[] { "txt", "jpg", "pdf", ".config.json" };
             var fileNames = new[]
             {
-                $".{RandomString()}", 
-                $".{RandomString()}.config", 
+                $".{RandomString()}",
+                $".{RandomString()}.config",
                 $"{RandomString()}.{extensions[Random.Next(extensions.Length)]}"
             };
 
@@ -192,7 +193,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration
             });
             return objects != null && objects.S3Objects.Any();
         }
-        
+
         private static string RandomString(int length = 8)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
