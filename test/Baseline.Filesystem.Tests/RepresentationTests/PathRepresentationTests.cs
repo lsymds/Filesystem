@@ -11,7 +11,10 @@ namespace Baseline.Filesystem.Tests.RepresentationTests
         [InlineData("a/b/file.xml", ".xml")]
         [InlineData("a/b/file.config.json", ".json")]
         [InlineData("a/b/file.cOnFIG", ".config")]
-        public void It_Correctly_Retrieves_The_Files_Extension_If_There_Is_One(string path, string outcome)
+        public void It_Correctly_Retrieves_The_Files_Extension_If_There_Is_One(
+            string path,
+            string outcome
+        )
         {
             // Arrange.
             var pathRepresentation = path.AsBaselineFilesystemPath();
@@ -29,7 +32,10 @@ namespace Baseline.Filesystem.Tests.RepresentationTests
         [InlineData("a/b/file.xml", "file")]
         [InlineData("a/b/file.config.json", "file.config")]
         [InlineData("a/b/.xml/config.xml", "config")]
-        public void It_Correctly_Retrieves_The_File_Name_If_There_Is_One(string path, string outcome)
+        public void It_Correctly_Retrieves_The_File_Name_If_There_Is_One(
+            string path,
+            string outcome
+        )
         {
             // Arrange.
             var pathRepresentation = path.AsBaselineFilesystemPath();
@@ -49,7 +55,11 @@ namespace Baseline.Filesystem.Tests.RepresentationTests
         [InlineData("a/b/c/a.config", "a/b/c/a.config.example", false)]
         [InlineData("a/b/", "a/b/", true)]
         [InlineData("a/b/c/a.xml", "a/b/c/a.xml", true)]
-        public void It_Correctly_Compares_Two_Path_Representations(string left, string right, bool outcome)
+        public void It_Correctly_Compares_Two_Path_Representations(
+            string left,
+            string right,
+            bool outcome
+        )
         {
             // Arrange.
             var leftRepresentation = left?.AsBaselineFilesystemPath();

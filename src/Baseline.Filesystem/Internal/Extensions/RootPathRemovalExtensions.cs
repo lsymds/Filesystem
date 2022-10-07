@@ -18,19 +18,19 @@ namespace Baseline.Filesystem.Internal.Extensions
         /// <param name="setter">A lambda used to set the value that was modified.</param>
         /// <param name="rootPath">The root path of the adapter (if present).</param>
         internal static async Task<TResponse> RemoveRootPathsAsync<TResponse>(
-            this Task<TResponse> obj, 
-            Func<TResponse, PathRepresentation> getter, 
+            this Task<TResponse> obj,
+            Func<TResponse, PathRepresentation> getter,
             Action<TResponse, PathRepresentation> setter,
             PathRepresentation rootPath
         )
         {
             var objResult = await obj;
-            
+
             if (rootPath == null)
             {
                 return objResult;
             }
-            
+
             var withPathRemoved = getter(objResult).RemoveRootPath(rootPath);
             setter(objResult, withPathRemoved);
 
@@ -45,19 +45,19 @@ namespace Baseline.Filesystem.Internal.Extensions
         /// <param name="setter">A function used to modify the path of an entity.</param>
         /// <param name="rootPath">The root path of the adapter (if present).</param>
         internal static async Task<TResponse> RemoveRootPathsAsync<TResponse>(
-            this Task<TResponse> obj, 
-            Func<TResponse, IEnumerable<PathRepresentation>> getter, 
+            this Task<TResponse> obj,
+            Func<TResponse, IEnumerable<PathRepresentation>> getter,
             Action<TResponse, IEnumerable<PathRepresentation>> setter,
             PathRepresentation rootPath
         )
         {
             var objResult = await obj;
-            
+
             if (rootPath == null)
             {
                 return objResult;
             }
-            
+
             var withPathRemoved = getter(objResult).RemoveRootPath(rootPath);
             setter(objResult, withPathRemoved);
 
@@ -65,4 +65,3 @@ namespace Baseline.Filesystem.Internal.Extensions
         }
     }
 }
-

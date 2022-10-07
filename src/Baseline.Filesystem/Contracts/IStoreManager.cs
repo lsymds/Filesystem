@@ -1,8 +1,8 @@
 namespace Baseline.Filesystem
 {
     /// <summary>
-    /// Provides an interface for the management of stores. This is where the initial magic happens as Baseline.Filesystem allows 
-    /// the registration of multiple stores across many different provider adapters. The other Baseline.Filesystem interfaces and their 
+    /// Provides an interface for the management of stores. This is where the initial magic happens as Baseline.Filesystem allows
+    /// the registration of multiple stores across many different provider adapters. The other Baseline.Filesystem interfaces and their
     /// implementations (<see cref="IDirectoryManager" /> and <see cref="IFileManager" />) utilise implementations of
     /// this interface to become store aware.
     /// </summary>

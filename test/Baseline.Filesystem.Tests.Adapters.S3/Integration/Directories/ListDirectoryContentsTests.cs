@@ -17,16 +17,24 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             await CreateFileAndWriteTextAsync("simple/.config".AsBaselineFilesystemPath());
 
             // Act.
-            var contents = await DirectoryManager.ListContentsAsync(new ListDirectoryContentsRequest
-            {
-                DirectoryPath = "simple/".AsBaselineFilesystemPath()
-            });
+            var contents = await DirectoryManager.ListContentsAsync(
+                new ListDirectoryContentsRequest
+                {
+                    DirectoryPath = "simple/".AsBaselineFilesystemPath()
+                }
+            );
 
             // Assert.
             contents.Contents.Should().HaveCount(4);
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple" && x.FinalPathPartIsObviouslyADirectory);
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "simple" && x.FinalPathPartIsObviouslyADirectory
+                );
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/file.txt");
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/another-file.txt");
+            contents.Contents
+                .Should()
+                .ContainSingle(x => x.NormalisedPath == "simple/another-file.txt");
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/.config");
         }
 
@@ -41,28 +49,59 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             await CreateFileAndWriteTextAsync("a/c/d/e/f/g/.keep".AsBaselineFilesystemPath());
 
             // Act.
-            var contents = await DirectoryManager.ListContentsAsync(new ListDirectoryContentsRequest
-            {
-                DirectoryPath = "a/".AsBaselineFilesystemPath()
-            });
+            var contents = await DirectoryManager.ListContentsAsync(
+                new ListDirectoryContentsRequest { DirectoryPath = "a/".AsBaselineFilesystemPath() }
+            );
 
             // Assert.
             contents.Contents.Should().HaveCount(13);
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a" && x.FinalPathPartIsObviouslyADirectory);
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a" && x.FinalPathPartIsObviouslyADirectory
+                );
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/file.txt");
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/another-file.txt");
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b" && x.FinalPathPartIsObviouslyADirectory);
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/b" && x.FinalPathPartIsObviouslyADirectory
+                );
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/.config");
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/c" && x.FinalPathPartIsObviouslyADirectory);
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/b/c" && x.FinalPathPartIsObviouslyADirectory
+                );
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/c/.keep");
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c" && x.FinalPathPartIsObviouslyADirectory);
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d" && x.FinalPathPartIsObviouslyADirectory);
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e" && x.FinalPathPartIsObviouslyADirectory);
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f" && x.FinalPathPartIsObviouslyADirectory);
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g" && x.FinalPathPartIsObviouslyADirectory);
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/c" && x.FinalPathPartIsObviouslyADirectory
+                );
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/c/d" && x.FinalPathPartIsObviouslyADirectory
+                );
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/c/d/e" && x.FinalPathPartIsObviouslyADirectory
+                );
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/c/d/e/f" && x.FinalPathPartIsObviouslyADirectory
+                );
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/c/d/e/f/g" && x.FinalPathPartIsObviouslyADirectory
+                );
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g/.keep");
         }
-        
+
         [Fact]
         public async Task It_Lists_The_Contents_Of_A_Directory_With_A_Large_Number_Of_Files_In()
         {
@@ -71,13 +110,15 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             {
                 await CreateFileAndWriteTextAsync($"a-dir/{i}.txt".AsBaselineFilesystemPath());
             }
-            
+
             // Act.
-            var contents = await DirectoryManager.ListContentsAsync(new ListDirectoryContentsRequest
-            {
-                DirectoryPath = "a-dir/".AsBaselineFilesystemPath()
-            });
-            
+            var contents = await DirectoryManager.ListContentsAsync(
+                new ListDirectoryContentsRequest
+                {
+                    DirectoryPath = "a-dir/".AsBaselineFilesystemPath()
+                }
+            );
+
             // Assert.
             for (var i = 0; i < 1000; i++)
             {
@@ -95,16 +136,24 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             await CreateFileAndWriteTextAsync("simple/.config".AsBaselineFilesystemPath());
 
             // Act.
-            var contents = await DirectoryManager.ListContentsAsync(new ListDirectoryContentsRequest
-            {
-                DirectoryPath = "simple/".AsBaselineFilesystemPath()
-            });
+            var contents = await DirectoryManager.ListContentsAsync(
+                new ListDirectoryContentsRequest
+                {
+                    DirectoryPath = "simple/".AsBaselineFilesystemPath()
+                }
+            );
 
             // Assert.
             contents.Contents.Should().HaveCount(4);
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple" && x.FinalPathPartIsObviouslyADirectory);
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "simple" && x.FinalPathPartIsObviouslyADirectory
+                );
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/file.txt");
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/another-file.txt");
+            contents.Contents
+                .Should()
+                .ContainSingle(x => x.NormalisedPath == "simple/another-file.txt");
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/.config");
         }
 
@@ -120,25 +169,56 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             await CreateFileAndWriteTextAsync("a/c/d/e/f/g/.keep".AsBaselineFilesystemPath());
 
             // Act.
-            var contents = await DirectoryManager.ListContentsAsync(new ListDirectoryContentsRequest
-            {
-                DirectoryPath = "a/".AsBaselineFilesystemPath()
-            });
+            var contents = await DirectoryManager.ListContentsAsync(
+                new ListDirectoryContentsRequest { DirectoryPath = "a/".AsBaselineFilesystemPath() }
+            );
 
             // Assert.
             contents.Contents.Should().HaveCount(13);
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a" && x.FinalPathPartIsObviouslyADirectory);
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a" && x.FinalPathPartIsObviouslyADirectory
+                );
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/file.txt");
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/another-file.txt");
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b" && x.FinalPathPartIsObviouslyADirectory);
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/b" && x.FinalPathPartIsObviouslyADirectory
+                );
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/.config");
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/c" && x.FinalPathPartIsObviouslyADirectory);
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/b/c" && x.FinalPathPartIsObviouslyADirectory
+                );
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/c/.keep");
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c" && x.FinalPathPartIsObviouslyADirectory);
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d" && x.FinalPathPartIsObviouslyADirectory);
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e" && x.FinalPathPartIsObviouslyADirectory);
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f" && x.FinalPathPartIsObviouslyADirectory);
-            contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g" && x.FinalPathPartIsObviouslyADirectory);
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/c" && x.FinalPathPartIsObviouslyADirectory
+                );
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/c/d" && x.FinalPathPartIsObviouslyADirectory
+                );
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/c/d/e" && x.FinalPathPartIsObviouslyADirectory
+                );
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/c/d/e/f" && x.FinalPathPartIsObviouslyADirectory
+                );
+            contents.Contents
+                .Should()
+                .ContainSingle(
+                    x => x.NormalisedPath == "a/c/d/e/f/g" && x.FinalPathPartIsObviouslyADirectory
+                );
             contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g/.keep");
         }
     }

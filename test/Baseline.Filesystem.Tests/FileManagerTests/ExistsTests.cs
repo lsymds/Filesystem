@@ -13,11 +13,12 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         public async Task It_Throws_An_Exception_If_The_Requested_Adapter_Name_Is_Not_Registered()
         {
             // Act.
-            Func<Task> func = async () => await FileManager.ExistsAsync(
-                new FileExistsRequest { FilePath = "a".AsBaselineFilesystemPath() },
-                "foo"
-            );
-            
+            Func<Task> func = async () =>
+                await FileManager.ExistsAsync(
+                    new FileExistsRequest { FilePath = "a".AsBaselineFilesystemPath() },
+                    "foo"
+                );
+
             // Assert.
             await func.Should().ThrowAsync<StoreNotFoundException>();
         }
@@ -27,7 +28,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Act.
             Func<Task> func = async () => await FileManager.ExistsAsync(null);
-            
+
             // Assert.
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -37,7 +38,7 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Act.
             Func<Task> func = async () => await FileManager.ExistsAsync(new FileExistsRequest());
-            
+
             // Assert.
             await func.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -47,26 +48,35 @@ namespace Baseline.Filesystem.Tests.FileManagerTests
         {
             // Arrange.
             var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
-            
+
             // Act.
-            Func<Task> func = async () => await FileManager.ExistsAsync(new FileExistsRequest { FilePath = path });
-            
+            Func<Task> func = async () =>
+                await FileManager.ExistsAsync(new FileExistsRequest { FilePath = path });
+
             // Assert.
             await func.Should().ThrowExactlyAsync<PathIsADirectoryException>();
         }
-        
+
         [Fact]
         public async Task It_Invokes_The_Matching_Adapters_File_Exists_Method()
         {
             // Arrange.
             Adapter
-                .Setup(x => x.FileExistsAsync(It.IsAny<FileExistsRequest>(), It.IsAny<CancellationToken>()))
+                .Setup(
+                    x =>
+                        x.FileExistsAsync(
+                            It.IsAny<FileExistsRequest>(),
+                            It.IsAny<CancellationToken>()
+                        )
+                )
                 .ReturnsAsync(new FileExistsResponse { FileExists = false })
                 .Verifiable();
-            
+
             // Act.
-            var response = await FileManager.ExistsAsync(new FileExistsRequest { FilePath = "a".AsBaselineFilesystemPath() });
-            
+            var response = await FileManager.ExistsAsync(
+                new FileExistsRequest { FilePath = "a".AsBaselineFilesystemPath() }
+            );
+
             // Assert.
             response.FileExists.Should().BeFalse();
             Adapter.VerifyAll();

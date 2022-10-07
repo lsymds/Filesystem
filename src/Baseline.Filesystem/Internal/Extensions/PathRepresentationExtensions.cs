@@ -19,9 +19,9 @@ namespace Baseline.Filesystem.Internal.Extensions
             PathRepresentation rootPath
         )
         {
-            return new[] {source}.RemoveRootPath(rootPath).First();
+            return new[] { source }.RemoveRootPath(rootPath).First();
         }
-        
+
         /// <summary>
         /// Removes the root path from an enumerable collection of path representations.
         /// </summary>
@@ -42,10 +42,17 @@ namespace Baseline.Filesystem.Internal.Extensions
                 {
                     continue;
                 }
-                
-                var replacementPathRepresentation = pathRepresentation.FinalPathPartIsObviouslyADirectory ?
-                    (pathRepresentation.NormalisedPath + "/").ReplaceFirstOccurrence(rootPath.NormalisedPath + "/", string.Empty) :
-                    pathRepresentation.NormalisedPath.ReplaceFirstOccurrence(rootPath.NormalisedPath + "/", string.Empty);
+
+                var replacementPathRepresentation =
+                    pathRepresentation.FinalPathPartIsObviouslyADirectory
+                        ? (pathRepresentation.NormalisedPath + "/").ReplaceFirstOccurrence(
+                            rootPath.NormalisedPath + "/",
+                            string.Empty
+                        )
+                        : pathRepresentation.NormalisedPath.ReplaceFirstOccurrence(
+                            rootPath.NormalisedPath + "/",
+                            string.Empty
+                        );
 
                 if (string.IsNullOrWhiteSpace(replacementPathRepresentation))
                 {

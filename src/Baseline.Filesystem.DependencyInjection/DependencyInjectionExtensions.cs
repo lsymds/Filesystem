@@ -23,9 +23,11 @@ namespace Baseline.Filesystem
             Action<BaselineFilesystemBuilder> builder
         )
         {
-            return serviceCollection.UseBaselineFilesystem((_, filesystemBuilder) => builder(filesystemBuilder));
+            return serviceCollection.UseBaselineFilesystem(
+                (_, filesystemBuilder) => builder(filesystemBuilder)
+            );
         }
-        
+
         /// <summary>
         /// Adds the Baseline.Filesystem dependencies to the service collection container in a fluent way. The
         /// interface implementations (IAdapterManager, IFileManager, IDirectoryManager) are all registered as
@@ -46,17 +48,19 @@ namespace Baseline.Filesystem
                 {
                     var filesystemBuilder = new BaselineFilesystemBuilder();
                     builder(serviceProvider, filesystemBuilder);
-                    
+
                     var storeManager = new StoreManager();
-                
+
                     foreach (var storeRegistration in filesystemBuilder.StoreRegistrations)
                     {
-                        storeManager.Register(new StoreRegistration
-                        {
-                            Name = storeRegistration.Name,
-                            Adapter = storeRegistration.Resolver(),
-                            RootPath = storeRegistration.RootPath
-                        });
+                        storeManager.Register(
+                            new StoreRegistration
+                            {
+                                Name = storeRegistration.Name,
+                                Adapter = storeRegistration.Resolver(),
+                                RootPath = storeRegistration.RootPath
+                            }
+                        );
                     }
 
                     return storeManager;

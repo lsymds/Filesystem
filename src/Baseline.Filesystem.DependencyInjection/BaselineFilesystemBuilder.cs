@@ -11,7 +11,7 @@ namespace Baseline.Filesystem
         /// <summary>
         /// Gets the collection of store registrations to register in the service collection.
         /// </summary>
-        internal List<StoreRegistrationBuilder> StoreRegistrations { get; } = 
+        internal List<StoreRegistrationBuilder> StoreRegistrations { get; } =
             new List<StoreRegistrationBuilder>();
     }
 }

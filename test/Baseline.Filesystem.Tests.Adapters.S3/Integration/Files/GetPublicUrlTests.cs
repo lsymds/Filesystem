@@ -11,11 +11,11 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         public async Task It_Throws_An_Exception_If_The_File_Does_Not_Exist()
         {
             // Act.
-            Func<Task> act = async () => await FileManager.GetPublicUrlAsync(new GetFilePublicUrlRequest
-            {
-                FilePath = RandomFilePathRepresentation()
-            });
-            
+            Func<Task> act = async () =>
+                await FileManager.GetPublicUrlAsync(
+                    new GetFilePublicUrlRequest { FilePath = RandomFilePathRepresentation() }
+                );
+
             // Assert.
             await act.Should().ThrowExactlyAsync<FileNotFoundException>();
         }
@@ -29,15 +29,15 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             await CreateFileAndWriteTextAsync(path);
 
             // Act.
-            var response = await FileManager.GetPublicUrlAsync(new GetFilePublicUrlRequest
-            {
-                FilePath = path,
-                Expiry = DateTime.Today.AddDays(1)
-            });
-            
+            var response = await FileManager.GetPublicUrlAsync(
+                new GetFilePublicUrlRequest { FilePath = path, Expiry = DateTime.Today.AddDays(1) }
+            );
+
             // Assert.
             response.Expiry.Should().Be(DateTime.Today.AddDays(1));
-            response.Url.Should().StartWith($"https://localhost:4566/{GeneratedBucketName}/{path.OriginalPath}");
+            response.Url
+                .Should()
+                .StartWith($"https://localhost:4566/{GeneratedBucketName}/{path.OriginalPath}");
             response.Url.Should().Contain("X-Amz-Expires");
             response.Url.Should().Contain("X-Amz-Algorithm");
             response.Url.Should().Contain("X-Amz-SignedHeaders");
@@ -52,11 +52,10 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             await CreateFileAndWriteTextAsync(path);
 
             // Act.
-            var response = await FileManager.GetPublicUrlAsync(new GetFilePublicUrlRequest
-            {
-                FilePath = path
-            });
-            
+            var response = await FileManager.GetPublicUrlAsync(
+                new GetFilePublicUrlRequest { FilePath = path }
+            );
+
             // Assert.
             response.Expiry.Should().Be(DateTime.Today.AddDays(1));
         }
@@ -66,21 +65,23 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         {
             // Arrange.
             ReconfigureManagerInstances(true);
-            
+
             var path = RandomFilePathRepresentationWithPrefix("abc");
 
             await CreateFileAndWriteTextAsync(path);
 
             // Act.
-            var response = await FileManager.GetPublicUrlAsync(new GetFilePublicUrlRequest
-            {
-                FilePath = path,
-                Expiry = DateTime.Today.AddDays(1)
-            });
-            
+            var response = await FileManager.GetPublicUrlAsync(
+                new GetFilePublicUrlRequest { FilePath = path, Expiry = DateTime.Today.AddDays(1) }
+            );
+
             // Assert.
             response.Expiry.Should().Be(DateTime.Today.AddDays(1));
-            response.Url.Should().StartWith($"https://localhost:4566/{GeneratedBucketName}/{CombinePathWithRootPath(path)}");
+            response.Url
+                .Should()
+                .StartWith(
+                    $"https://localhost:4566/{GeneratedBucketName}/{CombinePathWithRootPath(path)}"
+                );
             response.Url.Should().Contain("X-Amz-Expires");
             response.Url.Should().Contain("X-Amz-Algorithm");
             response.Url.Should().Contain("X-Amz-SignedHeaders");

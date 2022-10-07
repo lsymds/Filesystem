@@ -9,19 +9,20 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
     {
         private readonly PathRepresentation _sourceFilePath = RandomFilePathRepresentation();
         private readonly PathRepresentation _destinationFilePath = RandomFilePathRepresentation();
-        
+
         [Fact]
         public async Task It_Throws_An_Exception_If_Source_Path_Does_Not_Exist()
         {
             // Act.
-            Func<Task> func = async () => await FileManager.CopyAsync(
-                new CopyFileRequest
-                {
-                    SourceFilePath = _sourceFilePath,
-                    DestinationFilePath = _destinationFilePath
-                }
-            );
-            
+            Func<Task> func = async () =>
+                await FileManager.CopyAsync(
+                    new CopyFileRequest
+                    {
+                        SourceFilePath = _sourceFilePath,
+                        DestinationFilePath = _destinationFilePath
+                    }
+                );
+
             // Assert.
             await func.Should().ThrowExactlyAsync<FileNotFoundException>();
         }
@@ -32,16 +33,17 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             // Arrange.
             await CreateFileAndWriteTextAsync(_sourceFilePath);
             await CreateFileAndWriteTextAsync(_destinationFilePath);
-            
+
             // Act.
-            Func<Task> func = async () => await FileManager.CopyAsync(
-                new CopyFileRequest
-                {
-                    SourceFilePath = _sourceFilePath,
-                    DestinationFilePath = _destinationFilePath
-                }
-            );
-            
+            Func<Task> func = async () =>
+                await FileManager.CopyAsync(
+                    new CopyFileRequest
+                    {
+                        SourceFilePath = _sourceFilePath,
+                        DestinationFilePath = _destinationFilePath
+                    }
+                );
+
             // Assert.
             await func.Should().ThrowExactlyAsync<FileAlreadyExistsException>();
         }
@@ -51,7 +53,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         {
             // Arrange.
             await CreateFileAndWriteTextAsync(_sourceFilePath, "[ 1, 2, 3 ]");
-            
+
             // Act.
             await FileManager.CopyAsync(
                 new CopyFileRequest
@@ -60,9 +62,9 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
                     DestinationFilePath = _destinationFilePath
                 }
             );
-            
+
             // Assert.
-            await ExpectFileToExistAsync(_sourceFilePath); 
+            await ExpectFileToExistAsync(_sourceFilePath);
             await ExpectFileToExistAsync(_destinationFilePath);
 
             var destinationContents = await ReadFileAsStringAsync(_destinationFilePath);
@@ -74,9 +76,9 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         {
             // Arrange.
             ReconfigureManagerInstances(true);
-            
+
             await CreateFileAndWriteTextAsync(_sourceFilePath, "[ 1, 2, 3 ]");
-            
+
             // Act.
             await FileManager.CopyAsync(
                 new CopyFileRequest
@@ -85,11 +87,11 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
                     DestinationFilePath = _destinationFilePath
                 }
             );
-            
+
             // Assert.
-            await ExpectFileToExistAsync(_sourceFilePath); 
+            await ExpectFileToExistAsync(_sourceFilePath);
             await ExpectFileToExistAsync(_destinationFilePath);
-            
+
             var destinationContents = await ReadFileAsStringAsync(_destinationFilePath);
             destinationContents.Should().Be("[ 1, 2, 3 ]");
         }

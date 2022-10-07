@@ -11,18 +11,22 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         {
             // Arrange.
             var path = RandomFilePathRepresentation();
-            
+
             // Act.
-            await FileManager.WriteTextAsync(new WriteTextToFileRequest
-            {
-                ContentType = "text/plain",
-                FilePath = path,
-                TextToWrite = "it-successfully-writes-simple-file-to-s3"
-            });
-            
+            await FileManager.WriteTextAsync(
+                new WriteTextToFileRequest
+                {
+                    ContentType = "text/plain",
+                    FilePath = path,
+                    TextToWrite = "it-successfully-writes-simple-file-to-s3"
+                }
+            );
+
             // Assert.
             await ExpectFileToExistAsync(path);
-            (await ReadFileAsStringAsync(path)).Should().Be("it-successfully-writes-simple-file-to-s3");
+            (await ReadFileAsStringAsync(path))
+                .Should()
+                .Be("it-successfully-writes-simple-file-to-s3");
         }
 
         [Fact]
@@ -30,20 +34,24 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         {
             // Arrange.
             ReconfigureManagerInstances(true);
-            
+
             var path = RandomFilePathRepresentation();
-            
+
             // Act.
-            await FileManager.WriteTextAsync(new WriteTextToFileRequest
-            {
-                ContentType = "text/plain",
-                FilePath = path,
-                TextToWrite = "it-successfully-writes-simple-file-to-s3"
-            });
-            
+            await FileManager.WriteTextAsync(
+                new WriteTextToFileRequest
+                {
+                    ContentType = "text/plain",
+                    FilePath = path,
+                    TextToWrite = "it-successfully-writes-simple-file-to-s3"
+                }
+            );
+
             // Assert.
             await ExpectFileToExistAsync(path);
-            (await ReadFileAsStringAsync(path)).Should().Be("it-successfully-writes-simple-file-to-s3");
+            (await ReadFileAsStringAsync(path))
+                .Should()
+                .Be("it-successfully-writes-simple-file-to-s3");
         }
     }
 }

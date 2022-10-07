@@ -10,7 +10,6 @@
         /// </summary>
         /// <param name="path">The path to the file that already exists.</param>
         public FileAlreadyExistsException(string path)
-            : base($"The file ({path}) already exists and cannot be written to.")
-        {}
+            : base($"The file ({path}) already exists and cannot be written to.") { }
     }
 }

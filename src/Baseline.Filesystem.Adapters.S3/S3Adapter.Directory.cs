@@ -9,7 +9,7 @@ using Baseline.Filesystem.Internal.Extensions;
 namespace Baseline.Filesystem
 {
     /// <summary>
-    /// Provides the directory based functions of an <see cref="IAdapter"/> for Amazon's Simple Storage Service. 
+    /// Provides the directory based functions of an <see cref="IAdapter"/> for Amazon's Simple Storage Service.
     /// </summary>
     public partial class S3Adapter
     {
@@ -19,21 +19,31 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken
         )
         {
-            await EnsureDirectoryExistsAsync(copyDirectoryRequest.SourceDirectoryPath, cancellationToken)
+            await EnsureDirectoryExistsAsync(
+                    copyDirectoryRequest.SourceDirectoryPath,
+                    cancellationToken
+                )
                 .ConfigureAwait(false);
-            
-            await EnsureDirectoryDoesNotExistAsync(copyDirectoryRequest.DestinationDirectoryPath, cancellationToken)
+
+            await EnsureDirectoryDoesNotExistAsync(
+                    copyDirectoryRequest.DestinationDirectoryPath,
+                    cancellationToken
+                )
                 .ConfigureAwait(false);
 
             await CopyDirectoryInternalAsync(
-                copyDirectoryRequest.SourceDirectoryPath,
-                copyDirectoryRequest.DestinationDirectoryPath,
-                cancellationToken
-            ).ConfigureAwait(false);
+                    copyDirectoryRequest.SourceDirectoryPath,
+                    copyDirectoryRequest.DestinationDirectoryPath,
+                    cancellationToken
+                )
+                .ConfigureAwait(false);
 
             return new CopyDirectoryResponse
             {
-                DestinationDirectory = new DirectoryRepresentation {Path = copyDirectoryRequest.DestinationDirectoryPath}
+                DestinationDirectory = new DirectoryRepresentation
+                {
+                    Path = copyDirectoryRequest.DestinationDirectoryPath
+                }
             };
         }
 
@@ -43,7 +53,10 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken
         )
         {
-            await EnsureDirectoryDoesNotExistAsync(createDirectoryRequest.DirectoryPath, cancellationToken)
+            await EnsureDirectoryDoesNotExistAsync(
+                    createDirectoryRequest.DirectoryPath,
+                    cancellationToken
+                )
                 .ConfigureAwait(false);
 
             var pathToCreate = new PathCombinationBuilder(
@@ -55,7 +68,10 @@ namespace Baseline.Filesystem
 
             return new CreateDirectoryResponse
             {
-                Directory = new DirectoryRepresentation {Path = createDirectoryRequest.DirectoryPath}
+                Directory = new DirectoryRepresentation
+                {
+                    Path = createDirectoryRequest.DirectoryPath
+                }
             };
         }
 
@@ -65,21 +81,30 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken
         )
         {
-            await EnsureDirectoryExistsAsync(deleteDirectoryRequest.DirectoryPath, cancellationToken)
+            await EnsureDirectoryExistsAsync(
+                    deleteDirectoryRequest.DirectoryPath,
+                    cancellationToken
+                )
                 .ConfigureAwait(false);
 
             await ListAndReturnPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
-                deleteDirectoryRequest.DirectoryPath,
-                async response => await _s3Client.DeleteObjectsAsync(
-                    new DeleteObjectsRequest
-                    {
-                        BucketName = _adapterConfiguration.BucketName,
-                        Objects = response.S3Objects.Select(x => new KeyVersion {Key = x.Key}).ToList()
-                    },
+                    deleteDirectoryRequest.DirectoryPath,
+                    async response =>
+                        await _s3Client
+                            .DeleteObjectsAsync(
+                                new DeleteObjectsRequest
+                                {
+                                    BucketName = _adapterConfiguration.BucketName,
+                                    Objects = response.S3Objects
+                                        .Select(x => new KeyVersion { Key = x.Key })
+                                        .ToList()
+                                },
+                                cancellationToken
+                            )
+                            .ConfigureAwait(false),
                     cancellationToken
-                ).ConfigureAwait(false),
-                cancellationToken
-            ).ConfigureAwait(false);
+                )
+                .ConfigureAwait(false);
 
             return new DeleteDirectoryResponse();
         }
@@ -90,31 +115,40 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken
         )
         {
-            await EnsureDirectoryExistsAsync(iterateDirectoryContentsRequest.DirectoryPath, cancellationToken)
+            await EnsureDirectoryExistsAsync(
+                    iterateDirectoryContentsRequest.DirectoryPath,
+                    cancellationToken
+                )
                 .ConfigureAwait(false);
 
             await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
-                iterateDirectoryContentsRequest.DirectoryPath,
-                async r =>
-                {
-                    var pathTracker = new Dictionary<string, PathRepresentation>();
-                    foreach (var file in r.S3Objects)
+                    iterateDirectoryContentsRequest.DirectoryPath,
+                    async r =>
                     {
-                        var tree = BuildOrderedPathTree(file.Key.AsBaselineFilesystemPath(), pathTracker);
-                        foreach (var treeItem in tree)
+                        var pathTracker = new Dictionary<string, PathRepresentation>();
+                        foreach (var file in r.S3Objects)
                         {
-                            var @continue = await iterateDirectoryContentsRequest.Action(treeItem);
-                            if (!@continue)
+                            var tree = BuildOrderedPathTree(
+                                file.Key.AsBaselineFilesystemPath(),
+                                pathTracker
+                            );
+                            foreach (var treeItem in tree)
                             {
-                                return false;
+                                var @continue = await iterateDirectoryContentsRequest.Action(
+                                    treeItem
+                                );
+                                if (!@continue)
+                                {
+                                    return false;
+                                }
                             }
                         }
-                    }
 
-                    return true;
-                },
-                cancellationToken
-            ).ConfigureAwait(false);
+                        return true;
+                    },
+                    cancellationToken
+                )
+                .ConfigureAwait(false);
 
             return new IterateDirectoryContentsResponse();
         }
@@ -125,27 +159,35 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken = default
         )
         {
-            await EnsureDirectoryExistsAsync(listDirectoryContentsRequest.DirectoryPath, cancellationToken)
+            await EnsureDirectoryExistsAsync(
+                    listDirectoryContentsRequest.DirectoryPath,
+                    cancellationToken
+                )
                 .ConfigureAwait(false);
 
             var directorysContents = new List<PathRepresentation>();
             var pathTracker = new Dictionary<string, PathRepresentation>();
 
             await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
-                listDirectoryContentsRequest.DirectoryPath,
-                r =>
-                {
-                    r.S3Objects.ForEach(
-                        o => directorysContents.AddRange(
-                            BuildOrderedPathTree(o.Key.AsBaselineFilesystemPath(), pathTracker)
-                        )
-                    );
-                    return Task.FromResult(true);
-                },
-                cancellationToken
-            ).ConfigureAwait(false);
+                    listDirectoryContentsRequest.DirectoryPath,
+                    r =>
+                    {
+                        r.S3Objects.ForEach(
+                            o =>
+                                directorysContents.AddRange(
+                                    BuildOrderedPathTree(
+                                        o.Key.AsBaselineFilesystemPath(),
+                                        pathTracker
+                                    )
+                                )
+                        );
+                        return Task.FromResult(true);
+                    },
+                    cancellationToken
+                )
+                .ConfigureAwait(false);
 
-            return new ListDirectoryContentsResponse {Contents = directorysContents};
+            return new ListDirectoryContentsResponse { Contents = directorysContents };
         }
 
         /// <inheritdoc />
@@ -154,29 +196,43 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken
         )
         {
-            await EnsureDirectoryExistsAsync(moveDirectoryRequest.SourceDirectoryPath, cancellationToken)
+            await EnsureDirectoryExistsAsync(
+                    moveDirectoryRequest.SourceDirectoryPath,
+                    cancellationToken
+                )
                 .ConfigureAwait(false);
-            await EnsureDirectoryDoesNotExistAsync(moveDirectoryRequest.DestinationDirectoryPath, cancellationToken)
+            await EnsureDirectoryDoesNotExistAsync(
+                    moveDirectoryRequest.DestinationDirectoryPath,
+                    cancellationToken
+                )
                 .ConfigureAwait(false);
 
             var sourceFiles = await CopyDirectoryInternalAsync(
-                moveDirectoryRequest.SourceDirectoryPath,
-                moveDirectoryRequest.DestinationDirectoryPath,
-                cancellationToken
-            ).ConfigureAwait(false);
+                    moveDirectoryRequest.SourceDirectoryPath,
+                    moveDirectoryRequest.DestinationDirectoryPath,
+                    cancellationToken
+                )
+                .ConfigureAwait(false);
 
             await Task.WhenAll(
-                sourceFiles.ChunkBy(1000).Select(
-                    async x => await _s3Client.DeleteObjectsAsync(
-                        new DeleteObjectsRequest
-                        {
-                            BucketName = _adapterConfiguration.BucketName,
-                            Objects = x.Select(y => new KeyVersion {Key = y.Key}).ToList(),
-                        },
-                        cancellationToken
-                    ).ConfigureAwait(false)
+                    sourceFiles
+                        .ChunkBy(1000)
+                        .Select(
+                            async x =>
+                                await _s3Client
+                                    .DeleteObjectsAsync(
+                                        new DeleteObjectsRequest
+                                        {
+                                            BucketName = _adapterConfiguration.BucketName,
+                                            Objects = x.Select(y => new KeyVersion { Key = y.Key })
+                                                .ToList(),
+                                        },
+                                        cancellationToken
+                                    )
+                                    .ConfigureAwait(false)
+                        )
                 )
-            ).ConfigureAwait(false);
+                .ConfigureAwait(false);
 
             return new MoveDirectoryResponse
             {
@@ -189,7 +245,7 @@ namespace Baseline.Filesystem
 
         /// <summary>
         /// Identifies whether a directory (which don't really exist in S3) exists by finding out if there are any
-        /// files under a directory styled prefix. 
+        /// files under a directory styled prefix.
         /// </summary>
         /// <param name="directoryPath">The directory path to check.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
@@ -199,7 +255,8 @@ namespace Baseline.Filesystem
             CancellationToken cancellationToken
         )
         {
-            var files = await ListFilesUnderPath(directoryPath, cancellationToken).ConfigureAwait(false);
+            var files = await ListFilesUnderPath(directoryPath, cancellationToken)
+                .ConfigureAwait(false);
             return files.S3Objects != null && files.S3Objects.Any();
         }
 
@@ -249,27 +306,30 @@ namespace Baseline.Filesystem
         )
         {
             return await ListAndReturnPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
-                sourcePath,
-                async objects =>
-                {
-                    foreach (var obj in objects.S3Objects)
+                    sourcePath,
+                    async objects =>
                     {
-                        var newFileLocation = obj.Key.ReplaceFirstOccurrence(
-                            sourcePath.S3SafeDirectoryPath(),
-                            destinationPath.S3SafeDirectoryPath()
-                        );
+                        foreach (var obj in objects.S3Objects)
+                        {
+                            var newFileLocation = obj.Key.ReplaceFirstOccurrence(
+                                sourcePath.S3SafeDirectoryPath(),
+                                destinationPath.S3SafeDirectoryPath()
+                            );
 
-                        await _s3Client.CopyObjectAsync(
-                            _adapterConfiguration.BucketName,
-                            obj.Key,
-                            _adapterConfiguration.BucketName,
-                            newFileLocation,
-                            cancellationToken
-                        ).ConfigureAwait(false);
-                    }
-                },
-                cancellationToken
-            ).ConfigureAwait(false);
+                            await _s3Client
+                                .CopyObjectAsync(
+                                    _adapterConfiguration.BucketName,
+                                    obj.Key,
+                                    _adapterConfiguration.BucketName,
+                                    newFileLocation,
+                                    cancellationToken
+                                )
+                                .ConfigureAwait(false);
+                        }
+                    },
+                    cancellationToken
+                )
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -282,8 +342,9 @@ namespace Baseline.Filesystem
             Dictionary<string, PathRepresentation> directoryPathTracker
         )
         {
-            var addedDirectoryPaths = directoryPathTracker ?? new Dictionary<string, PathRepresentation>();
-            
+            var addedDirectoryPaths =
+                directoryPathTracker ?? new Dictionary<string, PathRepresentation>();
+
             if (basePath.OriginalPath.Contains("/"))
             {
                 foreach (var p in basePath.GetPathTree())

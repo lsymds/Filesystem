@@ -12,8 +12,9 @@ namespace Baseline.Filesystem.Internal.Validators.Files
         /// </summary>
         /// <param name="fileRequest">The request to validate.</param>
         /// <exception cref="ArgumentNullException" />
-        public static void ValidateAndThrowIfUnsuccessful<T>(BaseSourceAndDestinationFileRequest<T> fileRequest) 
-            where T : BaseSourceAndDestinationFileRequest<T>, new()
+        public static void ValidateAndThrowIfUnsuccessful<T>(
+            BaseSourceAndDestinationFileRequest<T> fileRequest
+        ) where T : BaseSourceAndDestinationFileRequest<T>, new()
         {
             if (fileRequest == null)
             {

@@ -17,11 +17,12 @@ namespace Baseline.Filesystem
         /// </param>
         public static BaselineFilesystemBuilder AddStoreRegistration(
             this BaselineFilesystemBuilder builder,
-            Action<StoreRegistrationBuilder> storeRegistrationBuilder)
+            Action<StoreRegistrationBuilder> storeRegistrationBuilder
+        )
         {
             var registration = new StoreRegistrationBuilder();
             storeRegistrationBuilder(registration);
-            
+
             builder.StoreRegistrations.Add(registration);
 
             return builder;

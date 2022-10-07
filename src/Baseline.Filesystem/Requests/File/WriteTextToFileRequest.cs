@@ -11,7 +11,7 @@ namespace Baseline.Filesystem
         /// setting alternative MIME types - but they won't throw errors if you do.
         /// </summary>
         public string ContentType { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the text to write to the file defined by the FilePath property.
         ///

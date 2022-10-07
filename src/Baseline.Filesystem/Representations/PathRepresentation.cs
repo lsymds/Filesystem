@@ -45,7 +45,7 @@ namespace Baseline.Filesystem
         /// </example>
         /// </summary>
         public Func<IEnumerable<PathRepresentation>> GetPathTree { get; internal set; }
-        
+
         /// <summary>
         /// Gets the final part of the path. This could be a directory or it could be a file. It is up to the individual
         /// managers ({directory, file}) to decide how this final part of the path is used.
@@ -56,7 +56,7 @@ namespace Baseline.Filesystem
         /// Gets the normalised version of the path used throughout Baseline.Filesystem.
         /// </summary>
         public string NormalisedPath { get; internal set; }
-        
+
         /// <summary>
         /// Gets the original path that was specified by the consuming application.
         /// </summary>
@@ -77,9 +77,9 @@ namespace Baseline.Filesystem
             get
             {
                 if (
-                    FinalPathPartIsObviouslyADirectory || 
-                    string.IsNullOrWhiteSpace(FinalPathPart) || 
-                    !FinalPathPart.Contains(".")
+                    FinalPathPartIsObviouslyADirectory
+                    || string.IsNullOrWhiteSpace(FinalPathPart)
+                    || !FinalPathPart.Contains(".")
                 )
                 {
                     return string.Empty;
@@ -120,13 +120,16 @@ namespace Baseline.Filesystem
         /// <param name="obj">The object to compare to the current <see cref="PathRepresentation"/> instance.</param>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+
             if (obj is PathRepresentation pathRepresentation)
             {
-                return NormalisedPath == pathRepresentation.NormalisedPath &&
-                       FinalPathPartIsObviouslyADirectory == pathRepresentation.FinalPathPartIsObviouslyADirectory;
+                return NormalisedPath == pathRepresentation.NormalisedPath
+                    && FinalPathPartIsObviouslyADirectory
+                        == pathRepresentation.FinalPathPartIsObviouslyADirectory;
             }
 
             return false;
@@ -165,7 +168,8 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="left">The left hand side of the != comparison.</param>
         /// <param name="right">The right hand side of the != comparison.</param>
-        public static bool operator !=(PathRepresentation left, PathRepresentation right) => !(left == right);
+        public static bool operator !=(PathRepresentation left, PathRepresentation right) =>
+            !(left == right);
 
         /// <summary>
         /// Combines the current path representation with a base path representation, wherein the base path

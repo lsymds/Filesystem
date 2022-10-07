@@ -11,13 +11,14 @@ namespace Baseline.Filesystem.Adapters.S3.Internal.Extensions
         /// <summary>
         /// Array containing a collection of successful HTTP status codes.
         /// </summary>
-        private static readonly HttpStatusCode[] SuccessfulStatusCodes = {
+        private static readonly HttpStatusCode[] SuccessfulStatusCodes =
+        {
             HttpStatusCode.Accepted,
             HttpStatusCode.Created,
             HttpStatusCode.NoContent,
             HttpStatusCode.OK,
         };
-        
+
         /// <summary>
         /// Checks whether the status code is a successful response from Amazon's Simple Storage Service.
         /// </summary>

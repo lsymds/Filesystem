@@ -14,7 +14,7 @@ namespace Baseline.Filesystem.Internal.Validators.Files
         /// <param name="request">The base file request.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="PathIsADirectoryException"></exception>
-        public static void ValidateAndThrowIfUnsuccessful<T>(BaseSingleFileRequest<T> request) 
+        public static void ValidateAndThrowIfUnsuccessful<T>(BaseSingleFileRequest<T> request)
             where T : BaseSingleFileRequest<T>, new()
         {
             if (request == null)

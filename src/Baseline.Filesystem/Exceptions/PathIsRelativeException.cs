@@ -12,8 +12,9 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="path"></param>
         public PathIsRelativeException(string path)
-            : base(path, "Relative paths are not supported in Baseline.Filesystem. Read the documentation to learn more.")
-        {
-        }
+            : base(
+                path,
+                "Relative paths are not supported in Baseline.Filesystem. Read the documentation to learn more."
+            ) { }
     }
 }

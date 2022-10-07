@@ -13,15 +13,15 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             // Arrange.
             var directory = RandomDirectoryPathRepresentation();
             var pathWithDirectory = RandomFilePathRepresentationWithPrefix(directory.OriginalPath);
-            
+
             await CreateFileAndWriteTextAsync(pathWithDirectory);
 
             // Act.
-            Func<Task> func = async () => await DirectoryManager.CreateAsync(new CreateDirectoryRequest
-            {
-                DirectoryPath = directory
-            });
-            
+            Func<Task> func = async () =>
+                await DirectoryManager.CreateAsync(
+                    new CreateDirectoryRequest { DirectoryPath = directory }
+                );
+
             // Assert.
             await func.Should().ThrowAsync<DirectoryAlreadyExistsException>();
         }
@@ -33,8 +33,10 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             var directory = RandomDirectoryPathRepresentation();
 
             // Act.
-            var response = await DirectoryManager.CreateAsync(new CreateDirectoryRequest {DirectoryPath = directory});
-            
+            var response = await DirectoryManager.CreateAsync(
+                new CreateDirectoryRequest { DirectoryPath = directory }
+            );
+
             // Assert.
             await ExpectDirectoryToExistAsync(directory);
             response.Directory.Path.Should().BeEquivalentTo(directory);
@@ -45,17 +47,17 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
         {
             // Arrange.
             ReconfigureManagerInstances(true);
-            
+
             var directory = RandomDirectoryPathRepresentation();
-            
+
             // Act.
-            var response = await DirectoryManager.CreateAsync(new CreateDirectoryRequest {DirectoryPath = directory});
-            
+            var response = await DirectoryManager.CreateAsync(
+                new CreateDirectoryRequest { DirectoryPath = directory }
+            );
+
             // Assert.
             await ExpectDirectoryToExistAsync(directory);
-            response
-                .Directory
-                .Path
+            response.Directory.Path
                 .Should()
                 .BeEquivalentTo(directory, x => x.Excluding(y => y.GetPathTree));
         }

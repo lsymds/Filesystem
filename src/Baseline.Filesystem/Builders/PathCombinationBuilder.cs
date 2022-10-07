@@ -31,7 +31,7 @@ namespace Baseline.Filesystem
             {
                 combinedPath += "/";
             }
-            
+
             return new PathRepresentationBuilder(combinedPath).Build();
         }
     }

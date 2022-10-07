@@ -11,11 +11,13 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Unit
         protected BaseS3AdapterUnitTest()
         {
             S3Client = new Mock<IAmazonS3>();
-            S3Adapter = new S3Adapter(new S3AdapterConfiguration
-            {
-                BucketName = "unit-test-bucket",
-                S3Client = S3Client.Object
-            });
+            S3Adapter = new S3Adapter(
+                new S3AdapterConfiguration
+                {
+                    BucketName = "unit-test-bucket",
+                    S3Client = S3Client.Object
+                }
+            );
         }
     }
 }

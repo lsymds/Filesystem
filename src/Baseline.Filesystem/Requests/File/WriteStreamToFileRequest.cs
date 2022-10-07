@@ -13,7 +13,7 @@ namespace Baseline.Filesystem
         /// setting alternative MIME types - but they won't throw errors if you do.
         /// </summary>
         public string ContentType { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the stream that will be written to a file. It is your responsibility as a consumer of this
         /// library to correctly close the stream.

@@ -56,8 +56,8 @@ namespace Baseline.Filesystem
             CreateDirectoryRequest createDirectoryRequest,
             string store = "default",
             CancellationToken cancellationToken = default
-        ); 
-        
+        );
+
         /// <summary>
         /// Deletes a directory within the chosen store. Please note: some adapters require each file within the
         /// directory tree to be deleted in order to delete a directory and all of its contained files. This could have
@@ -78,7 +78,7 @@ namespace Baseline.Filesystem
         /// <exception cref="PathIsNotObviouslyADirectoryException" />
         /// <exception cref="DirectoryNotFoundException" />
         Task<DeleteDirectoryResponse> DeleteAsync(
-            DeleteDirectoryRequest deleteDirectoryRequest, 
+            DeleteDirectoryRequest deleteDirectoryRequest,
             string store = "default",
             CancellationToken cancellationToken = default
         );

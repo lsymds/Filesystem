@@ -11,11 +11,11 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         public async Task It_Throws_An_Exception_If_File_Does_Not_Exist()
         {
             // Act.
-            Func<Task> func = async () => await FileManager.ReadAsStringAsync(new ReadFileAsStringRequest
-            {
-                FilePath = RandomFilePathRepresentation()
-            });
-            
+            Func<Task> func = async () =>
+                await FileManager.ReadAsStringAsync(
+                    new ReadFileAsStringRequest { FilePath = RandomFilePathRepresentation() }
+                );
+
             // Assert.
             await func.Should().ThrowExactlyAsync<FileNotFoundException>();
         }
@@ -25,7 +25,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         {
             // Arrange.
             var path = RandomFilePathRepresentation();
-            
+
             await FileManager.WriteTextAsync(
                 new WriteTextToFileRequest
                 {
@@ -36,8 +36,10 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
             );
 
             // Act.
-            var fileContents = await FileManager.ReadAsStringAsync(new ReadFileAsStringRequest { FilePath = path });
-            
+            var fileContents = await FileManager.ReadAsStringAsync(
+                new ReadFileAsStringRequest { FilePath = path }
+            );
+
             // Assert.
             fileContents.FileContents.Should().Be("you should check these contents");
         }
@@ -47,14 +49,16 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
         {
             // Arrange.
             ReconfigureManagerInstances(true);
-            
+
             var path = RandomFilePathRepresentation();
 
             await CreateFileAndWriteTextAsync(path, "you should check these contents");
-            
+
             // Act.
-            var fileContents = await FileManager.ReadAsStringAsync(new ReadFileAsStringRequest { FilePath = path });
-            
+            var fileContents = await FileManager.ReadAsStringAsync(
+                new ReadFileAsStringRequest { FilePath = path }
+            );
+
             // Assert.
             fileContents.FileContents.Should().Be("you should check these contents");
         }

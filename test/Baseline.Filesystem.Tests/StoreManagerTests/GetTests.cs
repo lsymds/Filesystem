@@ -12,7 +12,7 @@ namespace Baseline.Filesystem.Tests.StoreManagerTests
         {
             // Act.
             Action func = () => StoreManager.Get("i-am-not-registered");
-            
+
             // Assert.
             func.Should().ThrowExactly<StoreNotFoundException>();
         }
@@ -21,15 +21,17 @@ namespace Baseline.Filesystem.Tests.StoreManagerTests
         public void It_Returns_The_Store_When_A_Store_With_The_Exact_Name_Has_Been_Registered()
         {
             // Arrange.
-            StoreManager.Register(new StoreRegistration 
-            {
-                Adapter = new SuccessfulOutcomeAdapter(), 
-                Name = "mySpecificNaming-CONVENTION"
-            });
-            
+            StoreManager.Register(
+                new StoreRegistration
+                {
+                    Adapter = new SuccessfulOutcomeAdapter(),
+                    Name = "mySpecificNaming-CONVENTION"
+                }
+            );
+
             // Act.
             var store = StoreManager.Get("mySpecificNaming-CONVENTION");
-            
+
             // Assert.
             store.Should().NotBeNull();
         }
@@ -38,15 +40,17 @@ namespace Baseline.Filesystem.Tests.StoreManagerTests
         public void It_Returns_The_Store_When_A_Store_With_A_Normalised_Version_Of_The_Name_Has_Been_Registered()
         {
             // Arrange.
-            StoreManager.Register(new StoreRegistration
-            {
-                Adapter = new SuccessfulOutcomeAdapter(),
-                Name = "my-specific-naming-convention"
-            });
-            
+            StoreManager.Register(
+                new StoreRegistration
+                {
+                    Adapter = new SuccessfulOutcomeAdapter(),
+                    Name = "my-specific-naming-convention"
+                }
+            );
+
             // Act.
             var store = StoreManager.Get("MY-SpeCifIc-NAMING-convention");
-            
+
             // Assert.
             store.Should().NotBeNull();
         }

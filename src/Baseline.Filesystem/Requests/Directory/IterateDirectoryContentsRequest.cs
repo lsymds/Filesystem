@@ -6,7 +6,8 @@ namespace Baseline.Filesystem
     /// <summary>
     /// Request used to iterate over the contents of a directory in a performant manner.
     /// </summary>
-    public class IterateDirectoryContentsRequest : BaseSingleDirectoryRequest<IterateDirectoryContentsRequest>
+    public class IterateDirectoryContentsRequest
+        : BaseSingleDirectoryRequest<IterateDirectoryContentsRequest>
     {
         /// <summary>
         /// Gets or sets a delegate to perform on each file or directory within the requested directory. Returning a

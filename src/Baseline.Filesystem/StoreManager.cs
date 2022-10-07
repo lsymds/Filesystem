@@ -9,7 +9,7 @@ namespace Baseline.Filesystem
     {
         private readonly ConcurrentDictionary<string, StoreRegistration> _stores =
             new ConcurrentDictionary<string, StoreRegistration>();
-            
+
         /// <inheritdoc />
         public StoreRegistration Get(string name)
         {
@@ -17,7 +17,7 @@ namespace Baseline.Filesystem
 
             if (!StoreAlreadyRegistered(normalisedName))
                 throw new StoreNotFoundException(name);
-            
+
             return _stores[normalisedName];
         }
 
@@ -31,7 +31,10 @@ namespace Baseline.Filesystem
                 throw new StoreAlreadyRegisteredException(normalisedName);
             }
 
-            if (registration.RootPath != null && !registration.RootPath.FinalPathPartIsObviouslyADirectory)
+            if (
+                registration.RootPath != null
+                && !registration.RootPath.FinalPathPartIsObviouslyADirectory
+            )
             {
                 throw new PathIsNotObviouslyADirectoryException(registration.RootPath.OriginalPath);
             }

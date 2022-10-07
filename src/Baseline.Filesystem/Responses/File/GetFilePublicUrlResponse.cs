@@ -12,7 +12,7 @@ namespace Baseline.Filesystem
         /// Gets or sets the public URL.
         /// </summary>
         public string Url { get; set; }
-        
+
         /// <summary>
         /// Gets or sets when the public URL expires, if applicable.
         /// </summary>

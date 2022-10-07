@@ -9,8 +9,6 @@
         /// Initialises a new instance of the <see cref="FileNotFoundException" /> class.
         /// </summary>
         /// <param name="path">The path to the file that was not found.</param>
-        public FileNotFoundException(string path) : base($"The file ({path}) was not found.")
-        {
-        }
+        public FileNotFoundException(string path) : base($"The file ({path}) was not found.") { }
     }
 }

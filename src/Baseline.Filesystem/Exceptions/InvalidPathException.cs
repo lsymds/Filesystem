@@ -16,8 +16,7 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="path">The original path that is invalid.</param>
         /// <param name="message">The message to set against the exception.</param>
-        protected InvalidPathException(string path, string message)
-            : base(message)
+        protected InvalidPathException(string path, string message) : base(message)
         {
             Path = path;
         }

@@ -14,16 +14,15 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             // Arrange.
             var firstFile = "simples/file.txt".AsBaselineFilesystemPath();
             var secondFile = "simples/nother-file.txt".AsBaselineFilesystemPath();
-            
+
             await CreateFileAndWriteTextAsync(firstFile);
             await CreateFileAndWriteTextAsync(secondFile);
 
             // Act.
-            await DirectoryManager.DeleteAsync(new DeleteDirectoryRequest
-            {
-                DirectoryPath = "simples/".AsBaselineFilesystemPath()
-            });
-            
+            await DirectoryManager.DeleteAsync(
+                new DeleteDirectoryRequest { DirectoryPath = "simples/".AsBaselineFilesystemPath() }
+            );
+
             // Assert.
             await ExpectDirectoryNotToExistAsync("simples".AsBaselineFilesystemPath());
         }
@@ -49,10 +48,12 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             }
 
             // Act.
-            await DirectoryManager.DeleteAsync(new DeleteDirectoryRequest
-            {
-                DirectoryPath = "prefixed/".AsBaselineFilesystemPath()
-            });
+            await DirectoryManager.DeleteAsync(
+                new DeleteDirectoryRequest
+                {
+                    DirectoryPath = "prefixed/".AsBaselineFilesystemPath()
+                }
+            );
 
             // Assert.
             await ExpectDirectoryNotToExistAsync("prefixed".AsBaselineFilesystemPath());
@@ -68,17 +69,17 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
             }
 
             // Act.
-            await DirectoryManager.DeleteAsync(new DeleteDirectoryRequest
-            {
-                DirectoryPath = "prefixed/".AsBaselineFilesystemPath()
-            });
-            
+            await DirectoryManager.DeleteAsync(
+                new DeleteDirectoryRequest
+                {
+                    DirectoryPath = "prefixed/".AsBaselineFilesystemPath()
+                }
+            );
+
             // Assert.
-            var objectsLeftWithPrefix = await S3Client.ListObjectsAsync(new ListObjectsRequest
-            {
-                BucketName = GeneratedBucketName,
-                Prefix = "prefixed/"
-            });
+            var objectsLeftWithPrefix = await S3Client.ListObjectsAsync(
+                new ListObjectsRequest { BucketName = GeneratedBucketName, Prefix = "prefixed/" }
+            );
             objectsLeftWithPrefix.S3Objects.Should().BeEmpty();
         }
 
@@ -86,11 +87,14 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
         public async Task It_Throws_An_Exception_If_The_Directory_To_Delete_Does_Not_Exist()
         {
             // Act.
-            Func<Task> func = async () => await DirectoryManager.DeleteAsync(new DeleteDirectoryRequest
-            {
-                DirectoryPath = RandomDirectoryPathRepresentation()
-            });
-            
+            Func<Task> func = async () =>
+                await DirectoryManager.DeleteAsync(
+                    new DeleteDirectoryRequest
+                    {
+                        DirectoryPath = RandomDirectoryPathRepresentation()
+                    }
+                );
+
             // Assert.
             await func.Should().ThrowExactlyAsync<DirectoryNotFoundException>();
         }
@@ -100,19 +104,21 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Directories
         {
             // Arrange.
             ReconfigureManagerInstances(true);
-            
+
             var firstFile = "simples-root/file.txt".AsBaselineFilesystemPath();
             var secondFile = "simples-root/nother-file.txt".AsBaselineFilesystemPath();
-            
+
             await CreateFileAndWriteTextAsync(firstFile);
             await CreateFileAndWriteTextAsync(secondFile);
 
             // Act.
-            await DirectoryManager.DeleteAsync(new DeleteDirectoryRequest
-            {
-                DirectoryPath = "simples-root/".AsBaselineFilesystemPath()
-            });
-            
+            await DirectoryManager.DeleteAsync(
+                new DeleteDirectoryRequest
+                {
+                    DirectoryPath = "simples-root/".AsBaselineFilesystemPath()
+                }
+            );
+
             // Assert.
             await ExpectFileNotToExistAsync(firstFile);
             await ExpectFileNotToExistAsync(secondFile);

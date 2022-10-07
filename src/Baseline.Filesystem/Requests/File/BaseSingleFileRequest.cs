@@ -10,7 +10,7 @@ namespace Baseline.Filesystem
         /// Gets or sets the file path to use to perform the action against.
         /// </summary>
         public PathRepresentation FilePath { get; set; }
-        
+
         /// <summary>
         /// Combines the paths belonging to this request with a root path, if the root path is not null.
         /// </summary>
@@ -29,17 +29,14 @@ namespace Baseline.Filesystem
             cloned.FilePath = cloned.FilePath.CombineWithBase(rootPath);
             return cloned;
         }
-        
+
         /// <summary>
         /// Clones the current instance for path updates. This only needs to be a shallow (i.e. top level) clone.
         /// </summary>
         /// <returns>A clone of the current instance.</returns>
         internal override T ShallowClone()
         {
-            return new T
-            {
-                FilePath = FilePath
-            };
+            return new T { FilePath = FilePath };
         }
     }
 }

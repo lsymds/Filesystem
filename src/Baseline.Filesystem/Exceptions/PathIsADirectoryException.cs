@@ -15,9 +15,10 @@ namespace Baseline.Filesystem
         /// </summary>
         /// <param name="path">The path that a file operation was attempted to be performed on.</param>
         public PathIsADirectoryException(string path)
-            : base(path, "An attempt was made to perform a file operation on a path that was obviously intended to " +
-                         "be a directory (i.e. it had a terminating slash at the end).")
-        {
-        }
+            : base(
+                path,
+                "An attempt was made to perform a file operation on a path that was obviously intended to "
+                    + "be a directory (i.e. it had a terminating slash at the end)."
+            ) { }
     }
 }
