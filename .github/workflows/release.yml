@@ -1,33 +1,33 @@
 name: release
 
 on:
-    push:
-        tags:
-            - "*"
+  push:
+    tags:
+      - "*"
 
 jobs:
-    release:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - name: Setup .NET
-              uses: actions/setup-dotnet@v1
-              with:
-                  dotnet-version: 5.0.x
-            - uses: olegtarasov/get-tag@v2.1
-              id: tagName
-              with:
-                  tagRegex: "v(.*)"
-                  tagRegexGroup: 1
-            - name: Restore dependencies
-              run: |
-                  dotnet restore
-            - name: Publish
-              run: |
-                  dotnet pack -c Release -o ./dist/ -p:PackageVersion=$VERSION
-              env:
-                  VERSION: ${{ steps.tagName.outputs.tag }}
-            - name: Release to Nuget
-              run: dotnet nuget push './dist/*.nupkg' --source https://api.nuget.org/v3/index.json -k ${NUGET_TOKEN} --skip-duplicate
-              env:
-                  NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      - uses: olegtarasov/get-tag@v2.1
+        id: tagName
+        with:
+          tagRegex: "v(.*)"
+          tagRegexGroup: 1
+      - name: Restore dependencies
+        run: |
+          dotnet restore
+      - name: Publish
+        run: |
+          dotnet pack -c Release -o ./dist/ -p:PackageVersion=$VERSION
+        env:
+          VERSION: ${{ steps.tagName.outputs.tag }}
+      - name: Release to Nuget
+        run: dotnet nuget push './dist/*.nupkg' --source https://api.nuget.org/v3/index.json -k ${NUGET_TOKEN} --skip-duplicate
+        env:
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
