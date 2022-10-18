@@ -1,38 +1,37 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Baseline.Filesystem
+namespace Baseline.Filesystem;
+
+/// <summary>
+/// Builds a single <see cref="PathRepresentation" /> from one or more paths.
+/// </summary>
+public class PathCombinationBuilder
 {
+    private readonly IEnumerable<PathRepresentation> _paths;
+
     /// <summary>
-    /// Builds a single <see cref="PathRepresentation" /> from one or more paths.
+    /// Initialises a new instance of the <see cref="PathCombinationBuilder" /> with reference to the paths to
+    /// combine.
     /// </summary>
-    public class PathCombinationBuilder
+    /// <param name="paths">The paths to combine.</param>
+    public PathCombinationBuilder(params PathRepresentation[] paths)
     {
-        private readonly IEnumerable<PathRepresentation> _paths;
+        _paths = paths;
+    }
 
-        /// <summary>
-        /// Initialises a new instance of the <see cref="PathCombinationBuilder" /> with reference to the paths to
-        /// combine.
-        /// </summary>
-        /// <param name="paths">The paths to combine.</param>
-        public PathCombinationBuilder(params PathRepresentation[] paths)
+    /// <summary>
+    /// Builds a unified <see cref="PathRepresentation" /> from one or more paths.
+    /// </summary>
+    /// <returns>The unified <see cref="PathRepresentation" />.</returns>
+    public PathRepresentation Build()
+    {
+        var combinedPath = string.Join("/", _paths.Select(x => x.NormalisedPath));
+        if (_paths.Last().FinalPathPartIsObviouslyADirectory)
         {
-            _paths = paths;
+            combinedPath += "/";
         }
 
-        /// <summary>
-        /// Builds a unified <see cref="PathRepresentation" /> from one or more paths.
-        /// </summary>
-        /// <returns>The unified <see cref="PathRepresentation" />.</returns>
-        public PathRepresentation Build()
-        {
-            var combinedPath = string.Join("/", _paths.Select(x => x.NormalisedPath));
-            if (_paths.Last().FinalPathPartIsObviouslyADirectory)
-            {
-                combinedPath += "/";
-            }
-
-            return new PathRepresentationBuilder(combinedPath).Build();
-        }
+        return new PathRepresentationBuilder(combinedPath).Build();
     }
 }

@@ -1,24 +1,23 @@
 using System;
 
-namespace Baseline.Filesystem.Internal.Validators.Directories
+namespace Baseline.Filesystem.Internal.Validators.Directories;
+
+/// <summary>
+/// Validation methods for the <see cref="IterateDirectoryContentsRequest"/> class.
+/// </summary>
+public class IterateDirectoryContentsRequestValidator
 {
     /// <summary>
-    /// Validation methods for the <see cref="IterateDirectoryContentsRequest"/> class.
+    /// Validates the request and throws any exceptions if that validation is unsuccessful.
     /// </summary>
-    public class IterateDirectoryContentsRequestValidator
+    /// <param name="request">The request to validate.</param>
+    public static void ValidateAndThrowIfUnsuccessful(IterateDirectoryContentsRequest request)
     {
-        /// <summary>
-        /// Validates the request and throws any exceptions if that validation is unsuccessful.
-        /// </summary>
-        /// <param name="request">The request to validate.</param>
-        public static void ValidateAndThrowIfUnsuccessful(IterateDirectoryContentsRequest request)
-        {
-            BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(request);
+        BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(request);
 
-            if (request.Action == null)
-            {
-                throw new ArgumentNullException(nameof(request.Action));
-            }
+        if (request.Action == null)
+        {
+            throw new ArgumentNullException(nameof(request.Action));
         }
     }
 }

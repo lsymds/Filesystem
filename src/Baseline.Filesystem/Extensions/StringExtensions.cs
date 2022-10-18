@@ -1,20 +1,19 @@
-namespace Baseline.Filesystem
+namespace Baseline.Filesystem;
+
+/// <summary>
+/// Extension methods related to the <see cref="string"/> type.
+/// </summary>
+public static class StringExtensions
 {
     /// <summary>
-    /// Extension methods related to the <see cref="string"/> type.
+    /// Converts a string representation of a path into one usable by Baseline.Filesystem.
     /// </summary>
-    public static class StringExtensions
+    /// <param name="path">The string representation of the path.</param>
+    /// <returns>
+    /// The Baseline.Filesystem usable <see cref="PathRepresentation" /> containing details extracted from the original path.
+    /// </returns>
+    public static PathRepresentation AsBaselineFilesystemPath(this string path)
     {
-        /// <summary>
-        /// Converts a string representation of a path into one usable by Baseline.Filesystem.
-        /// </summary>
-        /// <param name="path">The string representation of the path.</param>
-        /// <returns>
-        /// The Baseline.Filesystem usable <see cref="PathRepresentation" /> containing details extracted from the original path.
-        /// </returns>
-        public static PathRepresentation AsBaselineFilesystemPath(this string path)
-        {
-            return new PathRepresentationBuilder(path).Build();
-        }
+        return new PathRepresentationBuilder(path).Build();
     }
 }

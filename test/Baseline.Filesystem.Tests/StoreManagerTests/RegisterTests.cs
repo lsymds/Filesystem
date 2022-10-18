@@ -3,85 +3,84 @@ using Baseline.Filesystem.Tests.Fixtures;
 using FluentAssertions;
 using Xunit;
 
-namespace Baseline.Filesystem.Tests.StoreManagerTests
+namespace Baseline.Filesystem.Tests.StoreManagerTests;
+
+public class RegisterTests : BaseStoreManagerTest
 {
-    public class RegisterTests : BaseStoreManagerTest
+    [Fact]
+    public void It_Registers_A_Store_With_A_Normalised_Name()
     {
-        [Fact]
-        public void It_Registers_A_Store_With_A_Normalised_Name()
-        {
-            // Arrange.
+        // Arrange.
+        StoreManager.Register(
+            new StoreRegistration
+            {
+                Adapter = new SuccessfulOutcomeAdapter(),
+                Name = "my-NAMIng-ConVentION"
+            }
+        );
+
+        // Act.
+        var result = StoreManager.Get("my-naming-convention");
+
+        // Assert.
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void It_Throws_An_Exception_When_A_Store_Is_Already_Registered_With_That_Name()
+    {
+        // Arrange.
+        StoreManager.Register(
+            new StoreRegistration
+            {
+                Adapter = new SuccessfulOutcomeAdapter(),
+                Name = "my-NAMIng-ConVentION"
+            }
+        );
+
+        // Act.
+        Action func = () =>
             StoreManager.Register(
                 new StoreRegistration
                 {
                     Adapter = new SuccessfulOutcomeAdapter(),
-                    Name = "my-NAMIng-ConVentION"
+                    Name = "my-naming-convention"
                 }
             );
 
-            // Act.
-            var result = StoreManager.Get("my-naming-convention");
+        // Assert.
+        func.Should().ThrowExactly<StoreAlreadyRegisteredException>();
+    }
 
-            // Assert.
-            result.Should().NotBeNull();
-        }
+    [Fact]
+    public void It_Registers_With_A_Default_Store_Name_If_One_Is_Not_Specified()
+    {
+        // Arrange.
+        StoreManager.Register(
+            new StoreRegistration { Adapter = new SuccessfulOutcomeAdapter() }
+        );
 
-        [Fact]
-        public void It_Throws_An_Exception_When_A_Store_Is_Already_Registered_With_That_Name()
-        {
-            // Arrange.
+        // Act.
+        var result = StoreManager.Get("default");
+
+        // Assert.
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void It_Throws_An_Exception_When_The_Root_Path_For_A_Store_Is_Not_Obviously_A_Directory()
+    {
+        // Act.
+        Action sut = () =>
             StoreManager.Register(
                 new StoreRegistration
                 {
                     Adapter = new SuccessfulOutcomeAdapter(),
-                    Name = "my-NAMIng-ConVentION"
+                    RootPath = "not/an/obvious/directory".AsBaselineFilesystemPath()
                 }
             );
 
-            // Act.
-            Action func = () =>
-                StoreManager.Register(
-                    new StoreRegistration
-                    {
-                        Adapter = new SuccessfulOutcomeAdapter(),
-                        Name = "my-naming-convention"
-                    }
-                );
-
-            // Assert.
-            func.Should().ThrowExactly<StoreAlreadyRegisteredException>();
-        }
-
-        [Fact]
-        public void It_Registers_With_A_Default_Store_Name_If_One_Is_Not_Specified()
-        {
-            // Arrange.
-            StoreManager.Register(
-                new StoreRegistration { Adapter = new SuccessfulOutcomeAdapter() }
-            );
-
-            // Act.
-            var result = StoreManager.Get("default");
-
-            // Assert.
-            result.Should().NotBeNull();
-        }
-
-        [Fact]
-        public void It_Throws_An_Exception_When_The_Root_Path_For_A_Store_Is_Not_Obviously_A_Directory()
-        {
-            // Act.
-            Action sut = () =>
-                StoreManager.Register(
-                    new StoreRegistration
-                    {
-                        Adapter = new SuccessfulOutcomeAdapter(),
-                        RootPath = "not/an/obvious/directory".AsBaselineFilesystemPath()
-                    }
-                );
-
-            // Assert.
-            sut.Should().ThrowExactly<PathIsNotObviouslyADirectoryException>();
-        }
+        // Assert.
+        sut.Should().ThrowExactly<PathIsNotObviouslyADirectoryException>();
     }
 }

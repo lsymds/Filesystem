@@ -1,12 +1,11 @@
-namespace Baseline.Filesystem.Tests.StoreManagerTests
-{
-    public abstract class BaseStoreManagerTest
-    {
-        protected IStoreManager StoreManager { get; }
+namespace Baseline.Filesystem.Tests.StoreManagerTests;
 
-        protected BaseStoreManagerTest()
-        {
-            StoreManager = new StoreManager();
-        }
+public abstract class BaseStoreManagerTest
+{
+    protected IStoreManager StoreManager { get; }
+
+    protected BaseStoreManagerTest()
+    {
+        StoreManager = new StoreManager();
     }
 }

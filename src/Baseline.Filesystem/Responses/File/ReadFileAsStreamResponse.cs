@@ -1,15 +1,14 @@
 using System.IO;
 
-namespace Baseline.Filesystem
+namespace Baseline.Filesystem;
+
+/// <summary>
+/// Response returned from the FileManager.ReadAsStream method.
+/// </summary>
+public class ReadFileAsStreamResponse
 {
     /// <summary>
-    /// Response returned from the FileManager.ReadAsStream method.
+    /// Gets or sets the stream of the file contents.
     /// </summary>
-    public class ReadFileAsStreamResponse
-    {
-        /// <summary>
-        /// Gets or sets the stream of the file contents.
-        /// </summary>
-        public Stream FileContents { get; set; }
-    }
+    public Stream FileContents { get; set; }
 }

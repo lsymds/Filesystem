@@ -1,23 +1,22 @@
-namespace Baseline.Filesystem.Adapters.S3.Internal.Extensions
+namespace Baseline.Filesystem.Adapters.S3.Internal.Extensions;
+
+/// <summary>
+/// Extension methods for the <see cref="PathRepresentation"/> class.
+/// </summary>
+internal static class PathRepresentationExtensions
 {
     /// <summary>
-    /// Extension methods for the <see cref="PathRepresentation"/> class.
+    /// Gets a path that is safe to be used to represent a directory within S3. They don't really exist, but whatevs.
+    /// Throws an exception if the path is not obviously a directory as an additional safeguard.
     /// </summary>
-    internal static class PathRepresentationExtensions
+    /// <param name="pathRepresentation">The path representation to convert into an S3 safe directory path.</param>
+    public static string S3SafeDirectoryPath(this PathRepresentation pathRepresentation)
     {
-        /// <summary>
-        /// Gets a path that is safe to be used to represent a directory within S3. They don't really exist, but whatevs.
-        /// Throws an exception if the path is not obviously a directory as an additional safeguard.
-        /// </summary>
-        /// <param name="pathRepresentation">The path representation to convert into an S3 safe directory path.</param>
-        public static string S3SafeDirectoryPath(this PathRepresentation pathRepresentation)
+        if (!pathRepresentation.FinalPathPartIsObviouslyADirectory)
         {
-            if (!pathRepresentation.FinalPathPartIsObviouslyADirectory)
-            {
-                throw new PathIsNotObviouslyADirectoryException(pathRepresentation.OriginalPath);
-            }
-
-            return $"{pathRepresentation.NormalisedPath}/";
+            throw new PathIsNotObviouslyADirectoryException(pathRepresentation.OriginalPath);
         }
+
+        return $"{pathRepresentation.NormalisedPath}/";
     }
 }

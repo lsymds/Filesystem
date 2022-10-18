@@ -1,14 +1,13 @@
-﻿namespace Baseline.Filesystem
+﻿namespace Baseline.Filesystem;
+
+/// <summary>
+/// Thrown when an operation that requires a file to be present is performed on a file that isn't present.
+/// </summary>
+public class FileNotFoundException : BaselineFilesystemException
 {
     /// <summary>
-    /// Thrown when an operation that requires a file to be present is performed on a file that isn't present.
+    /// Initialises a new instance of the <see cref="FileNotFoundException" /> class.
     /// </summary>
-    public class FileNotFoundException : BaselineFilesystemException
-    {
-        /// <summary>
-        /// Initialises a new instance of the <see cref="FileNotFoundException" /> class.
-        /// </summary>
-        /// <param name="path">The path to the file that was not found.</param>
-        public FileNotFoundException(string path) : base($"The file ({path}) was not found.") { }
-    }
+    /// <param name="path">The path to the file that was not found.</param>
+    public FileNotFoundException(string path) : base($"The file ({path}) was not found.") { }
 }

@@ -4,83 +4,82 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
-namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files
+namespace Baseline.Filesystem.Tests.Adapters.S3.Integration.Files;
+
+public class WriteStreamToFileTests : BaseS3AdapterIntegrationTest
 {
-    public class WriteStreamToFileTests : BaseS3AdapterIntegrationTest
+    private readonly PathRepresentation _filePath = RandomFilePathRepresentation();
+    private readonly Stream _stream = new MemoryStream(
+        Encoding.UTF8.GetBytes("hello stream my old friend")
+    );
+
+    [Fact]
+    public async Task It_Successfully_Writes_A_Stream_To_A_File()
     {
-        private readonly PathRepresentation _filePath = RandomFilePathRepresentation();
-        private readonly Stream _stream = new MemoryStream(
-            Encoding.UTF8.GetBytes("hello stream my old friend")
+        // Arrange.
+        await ExpectFileNotToExistAsync(_filePath);
+
+        // Act.
+        await FileManager.WriteStreamAsync(
+            new WriteStreamToFileRequest
+            {
+                FilePath = _filePath,
+                ContentType = "application/json",
+                Stream = _stream
+            }
         );
 
-        [Fact]
-        public async Task It_Successfully_Writes_A_Stream_To_A_File()
-        {
-            // Arrange.
-            await ExpectFileNotToExistAsync(_filePath);
+        // Assert.
+        var fileContents = await ReadFileAsStringAsync(_filePath);
+        fileContents.Should().Be("hello stream my old friend");
+        _stream.CanRead.Should().BeTrue();
+    }
 
-            // Act.
-            await FileManager.WriteStreamAsync(
-                new WriteStreamToFileRequest
-                {
-                    FilePath = _filePath,
-                    ContentType = "application/json",
-                    Stream = _stream
-                }
-            );
+    [Fact]
+    public async Task It_Successfully_Restarts_The_Stream_If_It_Has_Already_Been_Read()
+    {
+        // Arrange.
+        _stream.Seek(5, SeekOrigin.Begin);
 
-            // Assert.
-            var fileContents = await ReadFileAsStringAsync(_filePath);
-            fileContents.Should().Be("hello stream my old friend");
-            _stream.CanRead.Should().BeTrue();
-        }
+        await ExpectFileNotToExistAsync(_filePath);
 
-        [Fact]
-        public async Task It_Successfully_Restarts_The_Stream_If_It_Has_Already_Been_Read()
-        {
-            // Arrange.
-            _stream.Seek(5, SeekOrigin.Begin);
+        // Act.
+        await FileManager.WriteStreamAsync(
+            new WriteStreamToFileRequest
+            {
+                FilePath = _filePath,
+                ContentType = "application/json",
+                Stream = _stream
+            }
+        );
 
-            await ExpectFileNotToExistAsync(_filePath);
+        // Assert.
+        var fileContents = await ReadFileAsStringAsync(_filePath);
+        fileContents.Should().Be("hello stream my old friend");
+        _stream.CanRead.Should().BeTrue();
+    }
 
-            // Act.
-            await FileManager.WriteStreamAsync(
-                new WriteStreamToFileRequest
-                {
-                    FilePath = _filePath,
-                    ContentType = "application/json",
-                    Stream = _stream
-                }
-            );
+    [Fact]
+    public async Task It_Successfully_Writes_A_Stream_Under_A_Root_Path_In_S3()
+    {
+        // Arrange.
+        ReconfigureManagerInstances(true);
 
-            // Assert.
-            var fileContents = await ReadFileAsStringAsync(_filePath);
-            fileContents.Should().Be("hello stream my old friend");
-            _stream.CanRead.Should().BeTrue();
-        }
+        await ExpectFileNotToExistAsync(_filePath);
 
-        [Fact]
-        public async Task It_Successfully_Writes_A_Stream_Under_A_Root_Path_In_S3()
-        {
-            // Arrange.
-            ReconfigureManagerInstances(true);
+        // Act.
+        await FileManager.WriteStreamAsync(
+            new WriteStreamToFileRequest
+            {
+                FilePath = _filePath,
+                ContentType = "application/json",
+                Stream = _stream
+            }
+        );
 
-            await ExpectFileNotToExistAsync(_filePath);
-
-            // Act.
-            await FileManager.WriteStreamAsync(
-                new WriteStreamToFileRequest
-                {
-                    FilePath = _filePath,
-                    ContentType = "application/json",
-                    Stream = _stream
-                }
-            );
-
-            // Assert.
-            var fileContents = await ReadFileAsStringAsync(_filePath);
-            fileContents.Should().Be("hello stream my old friend");
-            _stream.CanRead.Should().BeTrue();
-        }
+        // Assert.
+        var fileContents = await ReadFileAsStringAsync(_filePath);
+        fileContents.Should().Be("hello stream my old friend");
+        _stream.CanRead.Should().BeTrue();
     }
 }

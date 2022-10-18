@@ -1,13 +1,12 @@
-namespace Baseline.Filesystem
+namespace Baseline.Filesystem;
+
+/// <summary>
+/// Response returned from the FileManager.Move method.
+/// </summary>
+public class MoveFileResponse
 {
     /// <summary>
-    /// Response returned from the FileManager.Move method.
+    /// Gets or sets the representation of the file in its DESTINATION.
     /// </summary>
-    public class MoveFileResponse
-    {
-        /// <summary>
-        /// Gets or sets the representation of the file in its DESTINATION.
-        /// </summary>
-        public FileRepresentation DestinationFile { get; set; }
-    }
+    public FileRepresentation DestinationFile { get; set; }
 }
