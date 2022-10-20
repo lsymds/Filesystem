@@ -5,7 +5,7 @@ namespace Baseline.Filesystem.Internal.Validators.Directories;
 /// <summary>
 /// Validation methods for the <see cref="IterateDirectoryContentsRequest"/> class.
 /// </summary>
-public class IterateDirectoryContentsRequestValidator
+internal static class IterateDirectoryContentsRequestValidator
 {
     /// <summary>
     /// Validates the request and throws any exceptions if that validation is unsuccessful.

@@ -5,7 +5,7 @@ namespace Baseline.Filesystem.Internal.Validators.Directories;
 /// <summary>
 /// Validation methods for paths in directory requests.
 /// </summary>
-public static class DirectoryPathValidator
+internal static class DirectoryPathValidator
 {
     /// <summary>
     /// Validates a path that is supposedly a directory path and throws exceptions if it is not valid.

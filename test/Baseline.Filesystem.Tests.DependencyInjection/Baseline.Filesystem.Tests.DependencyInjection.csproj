@@ -22,10 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Baseline.Filesystem.Adapters.S3\Baseline.Filesystem.Adapters.S3.csproj" />
-      <ProjectReference Include="..\..\src\Baseline.Filesystem.DependencyInjection\Baseline.Filesystem.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\src\Baseline.Filesystem\Baseline.Filesystem.csproj" />
-      <ProjectReference Include="..\Baseline.Filesystem.Tests.Adapters.S3\Baseline.Filesystem.Tests.Adapters.S3.csproj" />
     </ItemGroup>
 
 </Project>

@@ -13,5 +13,10 @@
     <PackageDescription>A storage and filesystem abstraction layer for modern .NET projects. Save yourself the pain of writing an `IFileStore` over and over again and use this tried, tested, well documented and super extensible one instead.</PackageDescription>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.7.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+  </ItemGroup>
   
 </Project>

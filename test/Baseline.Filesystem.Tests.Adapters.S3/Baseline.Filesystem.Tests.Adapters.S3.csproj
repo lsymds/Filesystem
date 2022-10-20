@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Baseline.Filesystem.Adapters.S3\Baseline.Filesystem.Adapters.S3.csproj" />
     <ProjectReference Include="..\..\src\Baseline.Filesystem\Baseline.Filesystem.csproj" />
   </ItemGroup>
 
