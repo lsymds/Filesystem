@@ -5,7 +5,7 @@ namespace Baseline.Filesystem.Internal.Validators.Directories;
 /// <summary>
 /// Validation methods for the <see cref="BaseSourceAndDestinationDirectoryRequest{T}"/> class.
 /// </summary>
-public static class BaseSourceAndDestinationDirectoryRequestValidator
+internal static class BaseSourceAndDestinationDirectoryRequestValidator
 {
     /// <summary>
     /// Validates the request and throws exceptions for any failures.
@@ -20,9 +20,7 @@ public static class BaseSourceAndDestinationDirectoryRequestValidator
             throw new ArgumentNullException(nameof(directoryRequest));
         }
 
-        DirectoryPathValidator.ValidateAndThrowIfUnsuccessful(
-            directoryRequest.SourceDirectoryPath
-        );
+        DirectoryPathValidator.ValidateAndThrowIfUnsuccessful(directoryRequest.SourceDirectoryPath);
         DirectoryPathValidator.ValidateAndThrowIfUnsuccessful(
             directoryRequest.DestinationDirectoryPath
         );

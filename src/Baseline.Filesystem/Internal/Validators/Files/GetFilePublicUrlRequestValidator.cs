@@ -5,7 +5,7 @@ namespace Baseline.Filesystem.Internal.Validators.Files;
 /// <summary>
 /// Validators for the <see cref="GetFilePublicUrlRequest"/> class.
 /// </summary>
-internal class GetFilePublicUrlRequestValidator
+internal static class GetFilePublicUrlRequestValidator
 {
     /// <summary>
     /// Validates the <see cref="GetFilePublicUrlRequest"/> request class and throws any applicable exceptions.

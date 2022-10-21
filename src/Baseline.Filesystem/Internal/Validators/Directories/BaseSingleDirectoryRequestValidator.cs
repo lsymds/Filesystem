@@ -5,7 +5,7 @@ namespace Baseline.Filesystem.Internal.Validators.Directories;
 /// <summary>
 /// Validation methods for the <see cref="BaseSingleDirectoryRequest{T}"/> class.
 /// </summary>
-public static class BaseSingleDirectoryRequestValidator
+internal static class BaseSingleDirectoryRequestValidator
 {
     /// <summary>
     /// Validates the request and throws any exceptions if that validation is unsuccessful.
