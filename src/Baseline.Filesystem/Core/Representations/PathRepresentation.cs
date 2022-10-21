@@ -128,8 +128,8 @@ public class PathRepresentation
         if (obj is PathRepresentation pathRepresentation)
         {
             return NormalisedPath == pathRepresentation.NormalisedPath
-                && FinalPathPartIsObviouslyADirectory
-                    == pathRepresentation.FinalPathPartIsObviouslyADirectory;
+                   && FinalPathPartIsObviouslyADirectory
+                   == pathRepresentation.FinalPathPartIsObviouslyADirectory;
         }
 
         return false;
