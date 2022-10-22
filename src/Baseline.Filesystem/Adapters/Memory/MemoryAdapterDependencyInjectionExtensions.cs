@@ -1,6 +1,6 @@
 using System;
 
-namespace Baseline.Filesystem.Memory;
+namespace Baseline.Filesystem;
 
 /// <summary>
 /// Dependency injection extensions that allow the memory adapter to be registered against a store and added to the IoC

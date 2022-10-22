@@ -14,7 +14,7 @@ public class WriteStreamToFileTests : BaseIntegrationTest
     );
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Successfully_Writes_A_Stream_To_A_File(Adapter adapter)
     {
         // Arrange.
@@ -39,7 +39,7 @@ public class WriteStreamToFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Successfully_Restarts_The_Stream_If_It_Has_Already_Been_Read(
         Adapter adapter
     )
@@ -68,7 +68,7 @@ public class WriteStreamToFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Successfully_Writes_A_Stream_Under_A_Root_Path_In_S3(Adapter adapter)
     {
         // Arrange.

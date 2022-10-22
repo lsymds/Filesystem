@@ -8,7 +8,7 @@ namespace Baseline.Filesystem.Tests.Adapters.Files;
 public class ReadFileAsStringTests : BaseIntegrationTest
 {
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Throws_An_Exception_If_File_Does_Not_Exist(Adapter adapter)
     {
         // Arrange.
@@ -28,7 +28,7 @@ public class ReadFileAsStringTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Retrieves_File_Contents_If_File_Does_Exist(Adapter adapter)
     {
         // Arrange.
@@ -48,7 +48,7 @@ public class ReadFileAsStringTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Retrieves_File_Contents_Under_A_Root_Path(Adapter adapter)
     {
         // Arrange.

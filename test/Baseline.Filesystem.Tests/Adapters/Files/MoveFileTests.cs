@@ -13,7 +13,7 @@ public class MoveFileTests : BaseIntegrationTest
         TestUtilities.RandomFilePathRepresentation();
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Throws_An_Exception_When_The_Source_File_Does_Not_Exist(Adapter adapter)
     {
         // Arrange.
@@ -34,7 +34,7 @@ public class MoveFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Throws_An_Exception_When_The_Destination_File_Already_Exists(
         Adapter adapter
     )
@@ -60,7 +60,7 @@ public class MoveFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Successfully_Moves_A_File_From_One_Place_To_Another(Adapter adapter)
     {
         // Arrange.
@@ -86,7 +86,7 @@ public class MoveFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Successfully_Moves_A_File_Under_A_Root_Path(Adapter adapter)
     {
         // Arrange.

@@ -7,7 +7,7 @@ namespace Baseline.Filesystem.Tests.Adapters.Files;
 public class GetFileTests : BaseIntegrationTest
 {
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Returns_Null_If_File_Does_Not_Exist(Adapter adapter)
     {
         // Arrange.
@@ -23,7 +23,7 @@ public class GetFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Returns_The_File_If_It_Does_Exist(Adapter adapter)
     {
         // Arrange.
@@ -41,7 +41,7 @@ public class GetFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Retrieves_A_File_Under_A_Root_Path(Adapter adapter)
     {
         // Arrange.

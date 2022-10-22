@@ -7,7 +7,6 @@ namespace Baseline.Filesystem.Tests.Adapters;
 public abstract class BaseIntegrationTest
 {
     protected IIntegrationTestAdapter TestAdapter;
-    protected IAdapter ResolvedAdapter;
     protected IFileManager FileManager;
     protected IDirectoryManager DirectoryManager;
 
@@ -61,17 +60,16 @@ public abstract class BaseIntegrationTest
 
         TestAdapter = toUse switch
         {
-            Adapter.S3 => new S3IntegrationTestAdapter(rootPath),
+            Adapter.S3 => new S3IntegrationTestAdapter(),
+            Adapter.Memory => new MemoryIntegrationTestAdapter(),
             _ => throw new ArgumentOutOfRangeException(nameof(toUse), toUse, null)
         };
-
-        ResolvedAdapter = await TestAdapter.BootstrapAsync();
 
         var adapterManager = new StoreManager();
         adapterManager.Register(
             new StoreRegistration
             {
-                Adapter = ResolvedAdapter,
+                Adapter = await TestAdapter.BootstrapAsync(),
                 RootPath = rootPath?.AsBaselineFilesystemPath()
             }
         );

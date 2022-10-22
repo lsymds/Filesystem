@@ -13,7 +13,7 @@ public class CopyFileTests : BaseIntegrationTest
         TestUtilities.RandomFilePathRepresentation();
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Throws_An_Exception_If_Source_Path_Does_Not_Exist(Adapter adapter)
     {
         // Arrange.
@@ -34,7 +34,7 @@ public class CopyFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Throws_An_Exception_If_Destination_Path_Already_Exists(Adapter adapter)
     {
         // Arrange.
@@ -58,7 +58,7 @@ public class CopyFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Successfully_Copies_A_File(Adapter adapter)
     {
         // Arrange.
@@ -84,7 +84,7 @@ public class CopyFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Successfully_Copies_A_File_With_A_Root_Path(Adapter adapter)
     {
         // Arrange.

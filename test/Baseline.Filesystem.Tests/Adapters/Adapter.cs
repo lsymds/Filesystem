@@ -2,5 +2,6 @@ namespace Baseline.Filesystem.Tests.Adapters;
 
 public enum Adapter
 {
-    S3
+    S3,
+    Memory
 }

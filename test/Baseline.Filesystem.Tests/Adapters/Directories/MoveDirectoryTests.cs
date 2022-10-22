@@ -13,7 +13,7 @@ public class MoveDirectoryTests : BaseIntegrationTest
         TestUtilities.RandomDirectoryPathRepresentation();
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Throws_An_Exception_If_The_Source_Directory_Does_Not_Exist(Adapter adapter)
     {
         // Arrange.
@@ -34,7 +34,7 @@ public class MoveDirectoryTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Throws_An_Exception_If_The_Destination_Directory_Exists(Adapter adapter)
     {
         // Arrange.
@@ -62,7 +62,7 @@ public class MoveDirectoryTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Successfully_Moves_A_Simple_Directory_Structure_From_One_Location_To_Another(
         Adapter adapter
     )
@@ -93,7 +93,7 @@ public class MoveDirectoryTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Moves_A_More_Complex_Directory_Structure_From_One_Location_To_Another(
         Adapter adapter
     )
@@ -140,7 +140,7 @@ public class MoveDirectoryTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Moves_A_Large_Directory_Structure_From_One_Location_To_Another(
         Adapter adapter
     )
@@ -175,7 +175,7 @@ public class MoveDirectoryTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Moves_A_Directory_Structure_With_A_Root_Path_From_One_Location_To_Another(
         Adapter adapter
     )

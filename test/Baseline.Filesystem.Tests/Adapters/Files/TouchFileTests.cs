@@ -7,7 +7,7 @@ namespace Baseline.Filesystem.Tests.Adapters.Files;
 public class TouchFileTests : BaseIntegrationTest
 {
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Successfully_Touches_A_File_In_S3(Adapter adapter)
     {
         // Arrange.
@@ -24,7 +24,7 @@ public class TouchFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Successfully_Touches_A_File_In_S3_Under_A_Root_Path(Adapter adapter)
     {
         // Arrange.

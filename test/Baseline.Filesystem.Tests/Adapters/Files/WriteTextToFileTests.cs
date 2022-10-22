@@ -7,7 +7,7 @@ namespace Baseline.Filesystem.Tests.Adapters.Files;
 public class WriteTextToFileTests : BaseIntegrationTest
 {
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Successfully_Writes_A_Simple_File_To_S3(Adapter adapter)
     {
         // Arrange.
@@ -33,7 +33,7 @@ public class WriteTextToFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Successfully_Writes_A_Simple_File_Under_A_Root_Path_To_S3(Adapter adapter)
     {
         // Arrange.

@@ -8,7 +8,7 @@ namespace Baseline.Filesystem.Tests.Adapters.Files;
 public class DeleteFileTests : BaseIntegrationTest
 {
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Throws_An_Exception_If_File_Does_Not_Exist(Adapter adapter)
     {
         // Arrange.
@@ -25,7 +25,7 @@ public class DeleteFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Deletes_A_File(Adapter adapter)
     {
         // Arrange.
@@ -45,7 +45,7 @@ public class DeleteFileTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Deletes_A_File_With_A_Root_Path(Adapter adapter)
     {
         // Arrange.

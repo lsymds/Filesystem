@@ -8,7 +8,7 @@ namespace Baseline.Filesystem.Tests.Adapters.Directories;
 public class IterateDirectoryContentsTests : BaseIntegrationTest
 {
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Iterates_The_Contents_Of_A_Simple_Directory(Adapter adapter)
     {
         // Arrange.
@@ -48,7 +48,7 @@ public class IterateDirectoryContentsTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Lists_The_Contents_Of_A_More_Complex_Directory(Adapter adapter)
     {
         // Arrange.
@@ -123,7 +123,7 @@ public class IterateDirectoryContentsTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Lists_The_Contents_Of_A_Directory_With_A_Large_Number_Of_Files_In(
         Adapter adapter
     )
@@ -162,7 +162,7 @@ public class IterateDirectoryContentsTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Lists_The_Contents_Of_A_Simple_Directory_With_A_Root_Path(Adapter adapter)
     {
         // Arrange.
@@ -202,7 +202,7 @@ public class IterateDirectoryContentsTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Lists_The_Contents_Of_A_Complex_Directory_Within_A_Root_Path(
         Adapter adapter
     )
@@ -279,7 +279,7 @@ public class IterateDirectoryContentsTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Can_Exit_An_Iteration_Early(Adapter adapter)
     {
         // Arrange.

@@ -8,7 +8,7 @@ namespace Baseline.Filesystem.Tests.Adapters.Directories;
 public class CreateDirectoryTests : BaseIntegrationTest
 {
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Throws_An_Exception_If_The_Directory_Already_Exists(Adapter adapter)
     {
         // Arrange.
@@ -32,7 +32,7 @@ public class CreateDirectoryTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Creates_The_Directory(Adapter adapter)
     {
         // Arrange.
@@ -51,7 +51,7 @@ public class CreateDirectoryTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Creates_The_Directory_Under_A_Root_Path(Adapter adapter)
     {
         // Arrange.

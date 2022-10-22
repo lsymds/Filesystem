@@ -8,7 +8,7 @@ namespace Baseline.Filesystem.Tests.Adapters.Directories;
 public class DeleteDirectoryTests : BaseIntegrationTest
 {
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Deletes_A_Simple_Directory(Adapter adapter)
     {
         // Arrange.
@@ -30,7 +30,7 @@ public class DeleteDirectoryTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Deletes_A_Complex_Nested_Directory_Structure(Adapter adapter)
     {
         // Arrange.
@@ -64,7 +64,7 @@ public class DeleteDirectoryTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Deletes_A_Directory_Structure_With_A_Large_Number_Of_Paths_In(
         Adapter adapter
     )
@@ -92,7 +92,7 @@ public class DeleteDirectoryTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Throws_An_Exception_If_The_Directory_To_Delete_Does_Not_Exist(
         Adapter adapter
     )
@@ -114,7 +114,7 @@ public class DeleteDirectoryTests : BaseIntegrationTest
     }
 
     [Theory]
-    [InlineData(Adapter.S3)]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
     public async Task It_Deletes_A_Directory_Under_A_Root_Path(Adapter adapter)
     {
         // Arrange.

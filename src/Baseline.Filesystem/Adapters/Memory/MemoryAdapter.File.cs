@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Baseline.Filesystem.Memory;
+namespace Baseline.Filesystem;
 
 /// <summary>
 /// Provides the shared, directory/file agnostic functions of the <see cref="IAdapter"/> implementation within memory.
