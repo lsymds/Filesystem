@@ -13,7 +13,7 @@ public static class MemoryAdapterDependencyInjectionExtensions
     /// </summary>
     /// <param name="storeRegistrationBuilder">The current store registration builder instance.</param>
     /// <param name="configurationBuilder">A delegate used to configure the memory adapter.</param>
-    public static StoreRegistrationBuilder UsingS3Adapter(
+    public static StoreRegistrationBuilder UsingMemoryAdapter(
         this StoreRegistrationBuilder storeRegistrationBuilder,
         Action<MemoryAdapterConfiguration> configurationBuilder
     )
