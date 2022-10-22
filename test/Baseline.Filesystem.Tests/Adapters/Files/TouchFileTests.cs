@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Xunit;
 
-namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
+namespace Baseline.Filesystem.Tests.Adapters.Files;
 
 public class TouchFileTests : BaseIntegrationTest
 {

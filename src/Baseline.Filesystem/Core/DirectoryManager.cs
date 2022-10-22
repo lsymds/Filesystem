@@ -37,6 +37,7 @@ public class DirectoryManager : BaseManager, IDirectoryManager
             .RemoveRootPathsAsync(
                 x => x.DestinationDirectory.Path,
                 (o, p) =>
+                    // ReSharper disable once WithExpressionModifiesAllMembers
                     o with
                     {
                         DestinationDirectory = new DirectoryRepresentation { Path = p }
@@ -63,6 +64,7 @@ public class DirectoryManager : BaseManager, IDirectoryManager
             .WrapExternalExceptionsAsync(store)
             .RemoveRootPathsAsync(
                 r => r.Directory.Path,
+                // ReSharper disable once WithExpressionModifiesAllMembers
                 (r, p) => r with { Directory = new DirectoryRepresentation { Path = p } },
                 GetStoreRootPath(store)
             )
@@ -176,6 +178,7 @@ public class DirectoryManager : BaseManager, IDirectoryManager
             .RemoveRootPathsAsync(
                 r => r.DestinationDirectory.Path,
                 (r, p) =>
+                    // ReSharper disable once WithExpressionModifiesAllMembers
                     r with
                     {
                         DestinationDirectory = new DirectoryRepresentation { Path = p }

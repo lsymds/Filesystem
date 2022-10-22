@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 
-namespace Baseline.Filesystem.Tests.Adapters.S3;
+namespace Baseline.Filesystem.Tests.Adapters;
 
 public abstract class BaseIntegrationTest
 {
@@ -60,7 +61,8 @@ public abstract class BaseIntegrationTest
 
         TestAdapter = toUse switch
         {
-            Adapter.S3 => new S3IntegrationTestAdapter(rootPath)
+            Adapter.S3 => new S3IntegrationTestAdapter(rootPath),
+            _ => throw new ArgumentOutOfRangeException(nameof(toUse), toUse, null)
         };
 
         ResolvedAdapter = await TestAdapter.BootstrapAsync();

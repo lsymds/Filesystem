@@ -156,13 +156,13 @@ public partial class S3Adapter
             )
             .ConfigureAwait(false);
 
-        await using var responseStream = file.ResponseStream;
+        // await using var responseStream = file.ResponseStream;
 
-        var streamToReturn = new MemoryStream();
-        await responseStream.CopyToAsync(streamToReturn, cancellationToken);
-        streamToReturn.Seek(0, SeekOrigin.Begin);
+        // var streamToReturn = new MemoryStream();
+        // await responseStream.CopyToAsync(streamToReturn, cancellationToken);
+        // streamToReturn.Seek(0, SeekOrigin.Begin);
 
-        return new ReadFileAsStreamResponse { FileContents = streamToReturn };
+        return new ReadFileAsStreamResponse { FileContents = file.ResponseStream };
     }
 
     /// <inheritdoc />

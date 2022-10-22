@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
-namespace Baseline.Filesystem.Tests.Adapters.S3.Directories;
+namespace Baseline.Filesystem.Tests.Adapters.Directories;
 
 public class ListDirectoryContentsTests : BaseIntegrationTest
 {

@@ -36,6 +36,7 @@ public class FileManager : BaseManager, IFileManager
             .RemoveRootPathsAsync(
                 response => response.DestinationFile.Path,
                 (response, pathWithoutRootPath) =>
+                    // ReSharper disable once WithExpressionModifiesAllMembers
                     response with
                     {
                         DestinationFile = new FileRepresentation { Path = pathWithoutRootPath }
@@ -99,6 +100,7 @@ public class FileManager : BaseManager, IFileManager
             .RemoveRootPathsAsync(
                 response => response.File.Path,
                 (response, pathWithoutRootPath) =>
+                    // ReSharper disable once WithExpressionModifiesAllMembers
                     response with
                     {
                         File = new FileRepresentation { Path = pathWithoutRootPath }
@@ -146,6 +148,7 @@ public class FileManager : BaseManager, IFileManager
             .RemoveRootPathsAsync(
                 response => response.DestinationFile.Path,
                 (response, pathWithoutRootPath) =>
+                    // ReSharper disable once WithExpressionModifiesAllMembers
                     response with
                     {
                         DestinationFile = new FileRepresentation { Path = pathWithoutRootPath }
@@ -209,6 +212,7 @@ public class FileManager : BaseManager, IFileManager
             .RemoveRootPathsAsync(
                 response => response.File.Path,
                 (response, pathWithoutRootPath) =>
+                    // ReSharper disable once WithExpressionModifiesAllMembers
                     response with
                     {
                         File = new FileRepresentation { Path = pathWithoutRootPath }

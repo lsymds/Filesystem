@@ -7,8 +7,9 @@ namespace Baseline.Filesystem.Memory;
 /// Provides the shared, directory/file agnostic functions of the <see cref="IAdapter"/> implementation within memory.
 /// Perfect for tests or systems that need short-lived, ephemeral data stores.
 /// </summary>
-public partial class MemoryAdapter : IAdapter
+public partial class MemoryAdapter
 {
+    /// <inheritdoc />
     public Task<CopyDirectoryResponse> CopyDirectoryAsync(
         CopyDirectoryRequest copyDirectoryRequest,
         CancellationToken cancellationToken
@@ -17,6 +18,7 @@ public partial class MemoryAdapter : IAdapter
         throw new System.NotImplementedException();
     }
 
+    /// <inheritdoc />
     public Task<CreateDirectoryResponse> CreateDirectoryAsync(
         CreateDirectoryRequest createDirectoryRequest,
         CancellationToken cancellationToken
@@ -25,6 +27,7 @@ public partial class MemoryAdapter : IAdapter
         throw new System.NotImplementedException();
     }
 
+    /// <inheritdoc />
     public Task<DeleteDirectoryResponse> DeleteDirectoryAsync(
         DeleteDirectoryRequest deleteDirectoryRequest,
         CancellationToken cancellationToken
@@ -33,6 +36,7 @@ public partial class MemoryAdapter : IAdapter
         throw new System.NotImplementedException();
     }
 
+    /// <inheritdoc />
     public Task<IterateDirectoryContentsResponse> IterateDirectoryContentsAsync(
         IterateDirectoryContentsRequest iterateDirectoryContentsRequest,
         CancellationToken cancellationToken
@@ -41,6 +45,7 @@ public partial class MemoryAdapter : IAdapter
         throw new System.NotImplementedException();
     }
 
+    /// <inheritdoc />
     public Task<ListDirectoryContentsResponse> ListDirectoryContentsAsync(
         ListDirectoryContentsRequest listDirectoryContentsRequest,
         CancellationToken cancellationToken = default
@@ -49,6 +54,7 @@ public partial class MemoryAdapter : IAdapter
         throw new System.NotImplementedException();
     }
 
+    /// <inheritdoc />
     public Task<MoveDirectoryResponse> MoveDirectoryAsync(
         MoveDirectoryRequest moveDirectoryRequest,
         CancellationToken cancellationToken
