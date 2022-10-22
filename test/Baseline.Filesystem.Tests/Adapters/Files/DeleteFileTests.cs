@@ -7,26 +7,33 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
 
 public class DeleteFileTests : BaseIntegrationTest
 {
-    [Fact]
-    public async Task It_Throws_An_Exception_If_File_Does_Not_Exist()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Throws_An_Exception_If_File_Does_Not_Exist(Adapter adapter)
     {
+        // Arrange.
+        await ConfigureTestAsync(adapter);
+
         // Act.
         Func<Task> func = async () =>
             await FileManager.DeleteAsync(
-                new DeleteFileRequest { FilePath = RandomFilePathRepresentation() }
+                new DeleteFileRequest { FilePath = TestUtilities.RandomFilePathRepresentation() }
             );
 
         // Assert.
         await func.Should().ThrowExactlyAsync<FileNotFoundException>();
     }
 
-    [Fact]
-    public async Task It_Deletes_A_File()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Deletes_A_File(Adapter adapter)
     {
         // Arrange.
-        var filePath = RandomFilePathRepresentation();
+        await ConfigureTestAsync(adapter);
 
-        await CreateFileAndWriteTextAsync(filePath);
+        var filePath = TestUtilities.RandomFilePathRepresentation();
+
+        await TestAdapter.CreateFileAndWriteTextAsync(filePath);
 
         await ExpectFileToExistAsync(filePath);
 
@@ -37,15 +44,16 @@ public class DeleteFileTests : BaseIntegrationTest
         await ExpectFileNotToExistAsync(filePath);
     }
 
-    [Fact]
-    public async Task It_Deletes_A_File_With_A_Root_Path()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Deletes_A_File_With_A_Root_Path(Adapter adapter)
     {
         // Arrange.
-        ConfigureTestAsync(true);
+        await ConfigureTestAsync(adapter, true);
 
-        var filePath = RandomFilePathRepresentation();
+        var filePath = TestUtilities.RandomFilePathRepresentation();
 
-        await CreateFileAndWriteTextAsync(filePath);
+        await TestAdapter.CreateFileAndWriteTextAsync(filePath);
 
         await ExpectFileToExistAsync(filePath);
 

@@ -8,15 +8,18 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
 
 public class WriteStreamToFileTests : BaseIntegrationTest
 {
-    private readonly PathRepresentation _filePath = RandomFilePathRepresentation();
+    private readonly PathRepresentation _filePath = TestUtilities.RandomFilePathRepresentation();
     private readonly Stream _stream = new MemoryStream(
         Encoding.UTF8.GetBytes("hello stream my old friend")
     );
 
-    [Fact]
-    public async Task It_Successfully_Writes_A_Stream_To_A_File()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Successfully_Writes_A_Stream_To_A_File(Adapter adapter)
     {
         // Arrange.
+        await ConfigureTestAsync(adapter);
+
         await ExpectFileNotToExistAsync(_filePath);
 
         // Act.
@@ -30,15 +33,20 @@ public class WriteStreamToFileTests : BaseIntegrationTest
         );
 
         // Assert.
-        var fileContents = await ReadFileAsStringAsync(_filePath);
+        var fileContents = await TestAdapter.ReadFileAsStringAsync(_filePath);
         fileContents.Should().Be("hello stream my old friend");
         _stream.CanRead.Should().BeTrue();
     }
 
-    [Fact]
-    public async Task It_Successfully_Restarts_The_Stream_If_It_Has_Already_Been_Read()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Successfully_Restarts_The_Stream_If_It_Has_Already_Been_Read(
+        Adapter adapter
+    )
     {
         // Arrange.
+        await ConfigureTestAsync(adapter);
+
         _stream.Seek(5, SeekOrigin.Begin);
 
         await ExpectFileNotToExistAsync(_filePath);
@@ -54,16 +62,17 @@ public class WriteStreamToFileTests : BaseIntegrationTest
         );
 
         // Assert.
-        var fileContents = await ReadFileAsStringAsync(_filePath);
+        var fileContents = await TestAdapter.ReadFileAsStringAsync(_filePath);
         fileContents.Should().Be("hello stream my old friend");
         _stream.CanRead.Should().BeTrue();
     }
 
-    [Fact]
-    public async Task It_Successfully_Writes_A_Stream_Under_A_Root_Path_In_S3()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Successfully_Writes_A_Stream_Under_A_Root_Path_In_S3(Adapter adapter)
     {
         // Arrange.
-        ConfigureTestAsync(true);
+        await ConfigureTestAsync(adapter, true);
 
         await ExpectFileNotToExistAsync(_filePath);
 
@@ -78,7 +87,7 @@ public class WriteStreamToFileTests : BaseIntegrationTest
         );
 
         // Assert.
-        var fileContents = await ReadFileAsStringAsync(_filePath);
+        var fileContents = await TestAdapter.ReadFileAsStringAsync(_filePath);
         fileContents.Should().Be("hello stream my old friend");
         _stream.CanRead.Should().BeTrue();
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -92,6 +93,22 @@ public class S3IntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegration
         );
 
         return await new StreamReader(file.ResponseStream).ReadToEndAsync();
+    }
+
+    /// <inheritdoc />
+    public ValueTask<IReadOnlyCollection<string>> TextThatShouldBeInPublicUrlForPathAsync(
+        PathRepresentation path
+    )
+    {
+        return ValueTask.FromResult(
+            new List<string>
+            {
+                $"https://localhost:4566/{_generatedBucketName}/{CombinePathWithRootPath(path)}",
+                "X-Amz-Expires",
+                "X-Amz-Algorithm",
+                "X-Amz-SignedHeaders"
+            } as IReadOnlyCollection<string>
+        );
     }
 
     /// <inheritdoc />

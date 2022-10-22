@@ -6,11 +6,14 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
 
 public class WriteTextToFileTests : BaseIntegrationTest
 {
-    [Fact]
-    public async Task It_Successfully_Writes_A_Simple_File_To_S3()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Successfully_Writes_A_Simple_File_To_S3(Adapter adapter)
     {
         // Arrange.
-        var path = RandomFilePathRepresentation();
+        await ConfigureTestAsync(adapter);
+
+        var path = TestUtilities.RandomFilePathRepresentation();
 
         // Act.
         await FileManager.WriteTextAsync(
@@ -24,18 +27,19 @@ public class WriteTextToFileTests : BaseIntegrationTest
 
         // Assert.
         await ExpectFileToExistAsync(path);
-        (await ReadFileAsStringAsync(path))
+        (await TestAdapter.ReadFileAsStringAsync(path))
             .Should()
             .Be("it-successfully-writes-simple-file-to-s3");
     }
 
-    [Fact]
-    public async Task It_Successfully_Writes_A_Simple_File_Under_A_Root_Path_To_S3()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Successfully_Writes_A_Simple_File_Under_A_Root_Path_To_S3(Adapter adapter)
     {
         // Arrange.
-        ConfigureTestAsync(true);
+        await ConfigureTestAsync(adapter, true);
 
-        var path = RandomFilePathRepresentation();
+        var path = TestUtilities.RandomFilePathRepresentation();
 
         // Act.
         await FileManager.WriteTextAsync(
@@ -49,7 +53,7 @@ public class WriteTextToFileTests : BaseIntegrationTest
 
         // Assert.
         await ExpectFileToExistAsync(path);
-        (await ReadFileAsStringAsync(path))
+        (await TestAdapter.ReadFileAsStringAsync(path))
             .Should()
             .Be("it-successfully-writes-simple-file-to-s3");
     }

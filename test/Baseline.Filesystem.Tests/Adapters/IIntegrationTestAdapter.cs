@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Baseline.Filesystem.Tests.Adapters;
@@ -35,4 +36,11 @@ public interface IIntegrationTestAdapter : IAsyncDisposable
     /// Reads the contents of a file as a string.
     /// </summary>
     ValueTask<string> ReadFileAsStringAsync(PathRepresentation path);
+
+    /// <summary>
+    /// Gets the text that should be present in a public URL for a given path.
+    /// </summary>
+    ValueTask<IReadOnlyCollection<string>> TextThatShouldBeInPublicUrlForPathAsync(
+        PathRepresentation path
+    );
 }

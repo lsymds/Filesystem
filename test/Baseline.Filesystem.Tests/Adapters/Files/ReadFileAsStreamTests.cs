@@ -8,24 +8,34 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
 
 public class ReadFileAsStreamTests : BaseIntegrationTest
 {
-    [Fact]
-    public async Task It_Throws_An_Exception_If_File_Does_Not_Exist()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Throws_An_Exception_If_File_Does_Not_Exist(Adapter adapter)
     {
+        // Arrange.
+        await ConfigureTestAsync(adapter);
+
         // Act.
         Func<Task> func = async () =>
             await FileManager.ReadAsStreamAsync(
-                new ReadFileAsStreamRequest { FilePath = RandomFilePathRepresentation() }
+                new ReadFileAsStreamRequest
+                {
+                    FilePath = TestUtilities.RandomFilePathRepresentation()
+                }
             );
 
         // Assert.
         await func.Should().ThrowExactlyAsync<FileNotFoundException>();
     }
 
-    [Fact]
-    public async Task It_Retrieves_File_Contents_Stream_If_File_Does_Exist()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Retrieves_File_Contents_Stream_If_File_Does_Exist(Adapter adapter)
     {
         // Arrange.
-        var path = RandomFilePathRepresentation();
+        await ConfigureTestAsync(adapter);
+
+        var path = TestUtilities.RandomFilePathRepresentation();
 
         await FileManager.WriteTextAsync(
             new WriteTextToFileRequest
@@ -47,15 +57,16 @@ public class ReadFileAsStreamTests : BaseIntegrationTest
             .Be("you should check these contents");
     }
 
-    [Fact]
-    public async Task It_Retrieves_File_Stream_Contents_Under_A_Root_Path()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Retrieves_File_Stream_Contents_Under_A_Root_Path(Adapter adapter)
     {
         // Arrange.
-        ConfigureTestAsync(true);
+        await ConfigureTestAsync(adapter, true);
 
-        var path = RandomFilePathRepresentation();
+        var path = TestUtilities.RandomFilePathRepresentation();
 
-        await CreateFileAndWriteTextAsync(path, "you should check these contents");
+        await TestAdapter.CreateFileAndWriteTextAsync(path, "you should check these contents");
 
         // Act.
         var fileContents = await FileManager.ReadAsStreamAsync(

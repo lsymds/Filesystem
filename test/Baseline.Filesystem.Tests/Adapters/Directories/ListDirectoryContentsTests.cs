@@ -6,13 +6,18 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Directories;
 
 public class ListDirectoryContentsTests : BaseIntegrationTest
 {
-    [Fact]
-    public async Task It_Lists_The_Contents_Of_A_Simple_Directory()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Lists_The_Contents_Of_A_Simple_Directory(Adapter adapter)
     {
         // Arrange.
-        await CreateFileAndWriteTextAsync("simple/file.txt".AsBaselineFilesystemPath());
-        await CreateFileAndWriteTextAsync("simple/another-file.txt".AsBaselineFilesystemPath());
-        await CreateFileAndWriteTextAsync("simple/.config".AsBaselineFilesystemPath());
+        await ConfigureTestAsync(adapter);
+
+        await TestAdapter.CreateFileAndWriteTextAsync("simple/file.txt".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync(
+            "simple/another-file.txt".AsBaselineFilesystemPath()
+        );
+        await TestAdapter.CreateFileAndWriteTextAsync("simple/.config".AsBaselineFilesystemPath());
 
         // Act.
         var contents = await DirectoryManager.ListContentsAsync(
@@ -36,15 +41,22 @@ public class ListDirectoryContentsTests : BaseIntegrationTest
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/.config");
     }
 
-    [Fact]
-    public async Task It_Lists_The_Contents_Of_A_More_Complex_Directory()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Lists_The_Contents_Of_A_More_Complex_Directory(Adapter adapter)
     {
         // Arrange.
-        await CreateFileAndWriteTextAsync("a/file.txt".AsBaselineFilesystemPath());
-        await CreateFileAndWriteTextAsync("a/another-file.txt".AsBaselineFilesystemPath());
-        await CreateFileAndWriteTextAsync("a/b/.config".AsBaselineFilesystemPath());
-        await CreateFileAndWriteTextAsync("a/b/c/.keep".AsBaselineFilesystemPath());
-        await CreateFileAndWriteTextAsync("a/c/d/e/f/g/.keep".AsBaselineFilesystemPath());
+        await ConfigureTestAsync(adapter);
+
+        await TestAdapter.CreateFileAndWriteTextAsync("a/file.txt".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync(
+            "a/another-file.txt".AsBaselineFilesystemPath()
+        );
+        await TestAdapter.CreateFileAndWriteTextAsync("a/b/.config".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync("a/b/c/.keep".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync(
+            "a/c/d/e/f/g/.keep".AsBaselineFilesystemPath()
+        );
 
         // Act.
         var contents = await DirectoryManager.ListContentsAsync(
@@ -94,13 +106,20 @@ public class ListDirectoryContentsTests : BaseIntegrationTest
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g/.keep");
     }
 
-    [Fact]
-    public async Task It_Lists_The_Contents_Of_A_Directory_With_A_Large_Number_Of_Files_In()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Lists_The_Contents_Of_A_Directory_With_A_Large_Number_Of_Files_In(
+        Adapter adapter
+    )
     {
         // Arrange.
+        await ConfigureTestAsync(adapter);
+
         for (int i = 0; i < 1000; i++)
         {
-            await CreateFileAndWriteTextAsync($"a-dir/{i}.txt".AsBaselineFilesystemPath());
+            await TestAdapter.CreateFileAndWriteTextAsync(
+                $"a-dir/{i}.txt".AsBaselineFilesystemPath()
+            );
         }
 
         // Act.
@@ -116,14 +135,18 @@ public class ListDirectoryContentsTests : BaseIntegrationTest
         }
     }
 
-    [Fact]
-    public async Task It_Lists_The_Contents_Of_A_Simple_Directory_With_A_Root_Path()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Lists_The_Contents_Of_A_Simple_Directory_With_A_Root_Path(Adapter adapter)
     {
         // Arrange.
-        ConfigureTestAsync(true);
-        await CreateFileAndWriteTextAsync("simple/file.txt".AsBaselineFilesystemPath());
-        await CreateFileAndWriteTextAsync("simple/another-file.txt".AsBaselineFilesystemPath());
-        await CreateFileAndWriteTextAsync("simple/.config".AsBaselineFilesystemPath());
+        await ConfigureTestAsync(adapter, true);
+
+        await TestAdapter.CreateFileAndWriteTextAsync("simple/file.txt".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync(
+            "simple/another-file.txt".AsBaselineFilesystemPath()
+        );
+        await TestAdapter.CreateFileAndWriteTextAsync("simple/.config".AsBaselineFilesystemPath());
 
         // Act.
         var contents = await DirectoryManager.ListContentsAsync(
@@ -147,16 +170,24 @@ public class ListDirectoryContentsTests : BaseIntegrationTest
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/.config");
     }
 
-    [Fact]
-    public async Task It_Lists_The_Contents_Of_A_Complex_Directory_Within_A_Root_Path()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Lists_The_Contents_Of_A_Complex_Directory_Within_A_Root_Path(
+        Adapter adapter
+    )
     {
         // Arrange.
-        ConfigureTestAsync(true);
-        await CreateFileAndWriteTextAsync("a/file.txt".AsBaselineFilesystemPath());
-        await CreateFileAndWriteTextAsync("a/another-file.txt".AsBaselineFilesystemPath());
-        await CreateFileAndWriteTextAsync("a/b/.config".AsBaselineFilesystemPath());
-        await CreateFileAndWriteTextAsync("a/b/c/.keep".AsBaselineFilesystemPath());
-        await CreateFileAndWriteTextAsync("a/c/d/e/f/g/.keep".AsBaselineFilesystemPath());
+        await ConfigureTestAsync(adapter, true);
+
+        await TestAdapter.CreateFileAndWriteTextAsync("a/file.txt".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync(
+            "a/another-file.txt".AsBaselineFilesystemPath()
+        );
+        await TestAdapter.CreateFileAndWriteTextAsync("a/b/.config".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync("a/b/c/.keep".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync(
+            "a/c/d/e/f/g/.keep".AsBaselineFilesystemPath()
+        );
 
         // Act.
         var contents = await DirectoryManager.ListContentsAsync(

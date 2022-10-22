@@ -7,13 +7,18 @@ namespace Baseline.Filesystem.Tests.Adapters.S3.Directories;
 
 public class MoveDirectoryTests : BaseIntegrationTest
 {
-    private readonly PathRepresentation _sourceDirectory = RandomDirectoryPathRepresentation();
+    private readonly PathRepresentation _sourceDirectory =
+        TestUtilities.RandomDirectoryPathRepresentation();
     private readonly PathRepresentation _destinationDirectory =
-        RandomDirectoryPathRepresentation();
+        TestUtilities.RandomDirectoryPathRepresentation();
 
-    [Fact]
-    public async Task It_Throws_An_Exception_If_The_Source_Directory_Does_Not_Exist()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Throws_An_Exception_If_The_Source_Directory_Does_Not_Exist(Adapter adapter)
     {
+        // Arrange.
+        await ConfigureTestAsync(adapter);
+
         // Act.
         Func<Task> func = async () =>
             await DirectoryManager.MoveAsync(
@@ -28,14 +33,17 @@ public class MoveDirectoryTests : BaseIntegrationTest
         await func.Should().ThrowExactlyAsync<DirectoryNotFoundException>();
     }
 
-    [Fact]
-    public async Task It_Throws_An_Exception_If_The_Destination_Directory_Exists()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Throws_An_Exception_If_The_Destination_Directory_Exists(Adapter adapter)
     {
         // Arrange.
-        await CreateFileAndWriteTextAsync(
+        await ConfigureTestAsync(adapter);
+
+        await TestAdapter.CreateFileAndWriteTextAsync(
             $"{_sourceDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
         );
-        await CreateFileAndWriteTextAsync(
+        await TestAdapter.CreateFileAndWriteTextAsync(
             $"{_destinationDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
         );
 
@@ -53,17 +61,22 @@ public class MoveDirectoryTests : BaseIntegrationTest
         await func.Should().ThrowExactlyAsync<DirectoryAlreadyExistsException>();
     }
 
-    [Fact]
-    public async Task It_Successfully_Moves_A_Simple_Directory_Structure_From_One_Location_To_Another()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Successfully_Moves_A_Simple_Directory_Structure_From_One_Location_To_Another(
+        Adapter adapter
+    )
     {
         // Arrange.
+        await ConfigureTestAsync(adapter);
+
         var originalFirstFilePath =
             $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath();
         var originalSecondFilePath =
             $"{_sourceDirectory.NormalisedPath}/a/b/c.txt".AsBaselineFilesystemPath();
 
-        await CreateFileAndWriteTextAsync(originalFirstFilePath);
-        await CreateFileAndWriteTextAsync(originalSecondFilePath);
+        await TestAdapter.CreateFileAndWriteTextAsync(originalFirstFilePath);
+        await TestAdapter.CreateFileAndWriteTextAsync(originalSecondFilePath);
 
         // Act.
         await DirectoryManager.MoveAsync(
@@ -79,10 +92,15 @@ public class MoveDirectoryTests : BaseIntegrationTest
         await ExpectFileNotToExistAsync(originalSecondFilePath);
     }
 
-    [Fact]
-    public async Task It_Moves_A_More_Complex_Directory_Structure_From_One_Location_To_Another()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Moves_A_More_Complex_Directory_Structure_From_One_Location_To_Another(
+        Adapter adapter
+    )
     {
         // Arrange.
+        await ConfigureTestAsync(adapter);
+
         var files = new[]
         {
             "a/b/c/.keep",
@@ -97,7 +115,7 @@ public class MoveDirectoryTests : BaseIntegrationTest
 
         foreach (var file in files)
         {
-            await CreateFileAndWriteTextAsync(
+            await TestAdapter.CreateFileAndWriteTextAsync(
                 $"{_sourceDirectory.OriginalPath}/{file}".AsBaselineFilesystemPath()
             );
         }
@@ -121,13 +139,18 @@ public class MoveDirectoryTests : BaseIntegrationTest
         }
     }
 
-    [Fact]
-    public async Task It_Moves_A_Large_Directory_Structure_From_One_Location_To_Another()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Moves_A_Large_Directory_Structure_From_One_Location_To_Another(
+        Adapter adapter
+    )
     {
         // Arrange.
+        await ConfigureTestAsync(adapter);
+
         for (var i = 0; i < 1001; i++)
         {
-            await CreateFileAndWriteTextAsync(
+            await TestAdapter.CreateFileAndWriteTextAsync(
                 $"{_sourceDirectory.NormalisedPath}/{i}/.keep".AsBaselineFilesystemPath()
             );
         }
@@ -151,19 +174,22 @@ public class MoveDirectoryTests : BaseIntegrationTest
         }
     }
 
-    [Fact]
-    public async Task It_Moves_A_Directory_Structure_With_A_Root_Path_From_One_Location_To_Another()
+    [Theory]
+    [InlineData(Adapter.S3)]
+    public async Task It_Moves_A_Directory_Structure_With_A_Root_Path_From_One_Location_To_Another(
+        Adapter adapter
+    )
     {
         // Arrange.
-        ConfigureTestAsync(true);
+        await ConfigureTestAsync(adapter, true);
 
         var originalFirstFilePath =
             $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath();
         var originalSecondFilePath =
             $"{_sourceDirectory.NormalisedPath}/a/b/c.txt".AsBaselineFilesystemPath();
 
-        await CreateFileAndWriteTextAsync(originalFirstFilePath);
-        await CreateFileAndWriteTextAsync(originalSecondFilePath);
+        await TestAdapter.CreateFileAndWriteTextAsync(originalFirstFilePath);
+        await TestAdapter.CreateFileAndWriteTextAsync(originalSecondFilePath);
 
         // Act.
         await DirectoryManager.MoveAsync(

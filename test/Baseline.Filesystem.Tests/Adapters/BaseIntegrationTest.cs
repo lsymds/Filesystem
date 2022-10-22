@@ -6,6 +6,7 @@ namespace Baseline.Filesystem.Tests.Adapters.S3;
 public abstract class BaseIntegrationTest
 {
     protected IIntegrationTestAdapter TestAdapter;
+    protected IAdapter ResolvedAdapter;
     protected IFileManager FileManager;
     protected IDirectoryManager DirectoryManager;
 
@@ -41,8 +42,16 @@ public abstract class BaseIntegrationTest
         exists.Should().BeFalse();
     }
 
+    protected async Task ExpectPublicUrlContainsTextFromAdapter(string url, PathRepresentation path)
+    {
+        var requiredTexts = await TestAdapter.TextThatShouldBeInPublicUrlForPathAsync(path);
+        url.Should().ContainAll(requiredTexts);
+    }
+
     protected async Task ConfigureTestAsync(Adapter toUse, bool useRootPath = false)
     {
+        // It's possible this method could be called multiple times, so dispose the old resources before we create any
+        // new ones.
         await DisposeAsync();
 
         var rootPath = useRootPath
@@ -54,11 +63,13 @@ public abstract class BaseIntegrationTest
             Adapter.S3 => new S3IntegrationTestAdapter(rootPath)
         };
 
+        ResolvedAdapter = await TestAdapter.BootstrapAsync();
+
         var adapterManager = new StoreManager();
         adapterManager.Register(
             new StoreRegistration
             {
-                Adapter = await TestAdapter.BootstrapAsync(),
+                Adapter = ResolvedAdapter,
                 RootPath = rootPath?.AsBaselineFilesystemPath()
             }
         );
