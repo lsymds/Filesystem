@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.DependencyInjection;
 
-public class SimpleDependencyInjectionTests : BaseS3AdapterIntegrationTest
+public class SimpleDependencyInjectionTests : BaseIntegrationTest
 {
     [Fact]
     public async Task It_Can_Register_A_Single_Store()
@@ -134,7 +134,7 @@ public class SimpleDependencyInjectionTests : BaseS3AdapterIntegrationTest
     public async Task It_Functions_Correctly_When_A_Root_Path_Is_Registered()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
 
         var filePath = RandomFilePathRepresentation();
         await CreateFileAndWriteTextAsync(filePath, "hello, world");

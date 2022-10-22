@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
 
-public class DeleteFileTests : BaseS3AdapterIntegrationTest
+public class DeleteFileTests : BaseIntegrationTest
 {
     [Fact]
     public async Task It_Throws_An_Exception_If_File_Does_Not_Exist()
@@ -41,7 +41,7 @@ public class DeleteFileTests : BaseS3AdapterIntegrationTest
     public async Task It_Deletes_A_File_With_A_Root_Path()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
 
         var filePath = RandomFilePathRepresentation();
 

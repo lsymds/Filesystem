@@ -274,12 +274,9 @@ public partial class S3Adapter
 
             return true;
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            if (
-                e is AmazonS3Exception s3Exception
-                && s3Exception.StatusCode == HttpStatusCode.NotFound
-            )
+            if (exception is AmazonS3Exception { StatusCode: HttpStatusCode.NotFound })
             {
                 return false;
             }
@@ -437,16 +434,16 @@ public partial class S3Adapter
 
         await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 path,
-                async (r) =>
+                async listObjectsResponse =>
                 {
-                    objects.AddRange(r.S3Objects);
+                    objects.AddRange(listObjectsResponse.S3Objects);
 
                     if (action == null)
                     {
                         return true;
                     }
 
-                    await action.Invoke(r).ConfigureAwait(false);
+                    await action.Invoke(listObjectsResponse).ConfigureAwait(false);
                     return true;
                 },
                 cancellationToken

@@ -38,7 +38,7 @@ internal static class PathRepresentationExtensions
             // Remove any occurrences where the path is equivalent to a representation of a root path. For example,
             // if there was a root path of a/b and pathRepresentation was a/b, it would be filtered out and not
             // returned.
-            if (rootPath.GetPathTree().Any(x => x == pathRepresentation))
+            if (rootPath.GetPathTree().Any(path => path == pathRepresentation))
             {
                 continue;
             }

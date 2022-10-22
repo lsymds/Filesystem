@@ -5,7 +5,7 @@ namespace Baseline.Filesystem;
 /// <summary>
 /// Configuration options for the S3 adapter.
 /// </summary>
-public class S3AdapterConfiguration
+public record S3AdapterConfiguration
 {
     /// <summary>
     /// Gets or sets the S3 client to use in the adapter.

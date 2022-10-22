@@ -117,10 +117,10 @@ public partial class S3Adapter
 
         await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 iterateDirectoryContentsRequest.DirectoryPath,
-                async r =>
+                async listObjectsResponse =>
                 {
                     var pathTracker = new Dictionary<string, PathRepresentation>();
-                    foreach (var file in r.S3Objects)
+                    foreach (var file in listObjectsResponse.S3Objects)
                     {
                         var tree = BuildOrderedPathTree(
                             file.Key.AsBaselineFilesystemPath(),
@@ -162,12 +162,15 @@ public partial class S3Adapter
 
         await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 listDirectoryContentsRequest.DirectoryPath,
-                r =>
+                listObjectsResponse =>
                 {
-                    r.S3Objects.ForEach(
-                        o =>
+                    listObjectsResponse.S3Objects.ForEach(
+                        @object =>
                             directoryContents.AddRange(
-                                BuildOrderedPathTree(o.Key.AsBaselineFilesystemPath(), pathTracker)
+                                BuildOrderedPathTree(
+                                    @object.Key.AsBaselineFilesystemPath(),
+                                    pathTracker
+                                )
                             )
                     );
                     return Task.FromResult(true);
@@ -208,13 +211,14 @@ public partial class S3Adapter
                 sourceFiles
                     .ChunkBy(1000)
                     .Select(
-                        async x =>
+                        async chunkOfObjects =>
                             await _s3Client
                                 .DeleteObjectsAsync(
                                     new DeleteObjectsRequest
                                     {
                                         BucketName = _adapterConfiguration.BucketName,
-                                        Objects = x.Select(y => new KeyVersion { Key = y.Key })
+                                        Objects = chunkOfObjects
+                                            .Select(@object => new KeyVersion { Key = @object.Key })
                                             .ToList(),
                                     },
                                     cancellationToken
@@ -247,6 +251,7 @@ public partial class S3Adapter
     {
         var files = await ListFilesUnderPath(directoryPath, cancellationToken)
             .ConfigureAwait(false);
+
         return files.S3Objects != null && files.S3Objects.Any();
     }
 
@@ -337,15 +342,15 @@ public partial class S3Adapter
 
         if (basePath.OriginalPath.Contains("/"))
         {
-            foreach (var p in basePath.GetPathTree())
+            foreach (var path in basePath.GetPathTree())
             {
-                if (addedDirectoryPaths.ContainsKey(p.NormalisedPath))
+                if (addedDirectoryPaths.ContainsKey(path.NormalisedPath))
                 {
                     continue;
                 }
 
-                addedDirectoryPaths.Add(p.NormalisedPath, p);
-                yield return p;
+                addedDirectoryPaths.Add(path.NormalisedPath, path);
+                yield return path;
             }
         }
 

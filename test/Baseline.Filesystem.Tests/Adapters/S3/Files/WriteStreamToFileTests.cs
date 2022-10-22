@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
 
-public class WriteStreamToFileTests : BaseS3AdapterIntegrationTest
+public class WriteStreamToFileTests : BaseIntegrationTest
 {
     private readonly PathRepresentation _filePath = RandomFilePathRepresentation();
     private readonly Stream _stream = new MemoryStream(
@@ -63,7 +63,7 @@ public class WriteStreamToFileTests : BaseS3AdapterIntegrationTest
     public async Task It_Successfully_Writes_A_Stream_Under_A_Root_Path_In_S3()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
 
         await ExpectFileNotToExistAsync(_filePath);
 

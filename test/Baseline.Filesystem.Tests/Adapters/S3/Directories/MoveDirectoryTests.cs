@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Directories;
 
-public class MoveDirectoryTests : BaseS3AdapterIntegrationTest
+public class MoveDirectoryTests : BaseIntegrationTest
 {
     private readonly PathRepresentation _sourceDirectory = RandomDirectoryPathRepresentation();
     private readonly PathRepresentation _destinationDirectory =
@@ -155,7 +155,7 @@ public class MoveDirectoryTests : BaseS3AdapterIntegrationTest
     public async Task It_Moves_A_Directory_Structure_With_A_Root_Path_From_One_Location_To_Another()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
 
         var originalFirstFilePath =
             $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath();

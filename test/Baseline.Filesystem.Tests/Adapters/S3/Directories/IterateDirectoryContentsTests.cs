@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Directories;
 
-public class IterateDirectoryContentsTests : BaseS3AdapterIntegrationTest
+public class IterateDirectoryContentsTests : BaseIntegrationTest
 {
     [Fact]
     public async Task It_Iterates_The_Contents_Of_A_Simple_Directory()
@@ -146,7 +146,7 @@ public class IterateDirectoryContentsTests : BaseS3AdapterIntegrationTest
     public async Task It_Lists_The_Contents_Of_A_Simple_Directory_With_A_Root_Path()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
 
         var files = new List<PathRepresentation>();
 
@@ -183,7 +183,7 @@ public class IterateDirectoryContentsTests : BaseS3AdapterIntegrationTest
     public async Task It_Lists_The_Contents_Of_A_Complex_Directory_Within_A_Root_Path()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
 
         var files = new List<PathRepresentation>();
 
@@ -253,7 +253,7 @@ public class IterateDirectoryContentsTests : BaseS3AdapterIntegrationTest
     public async Task It_Can_Exit_An_Iteration_Early()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
 
         var count = 0;
 

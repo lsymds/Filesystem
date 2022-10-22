@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Directories;
 
-public class ListDirectoryContentsTests : BaseS3AdapterIntegrationTest
+public class ListDirectoryContentsTests : BaseIntegrationTest
 {
     [Fact]
     public async Task It_Lists_The_Contents_Of_A_Simple_Directory()
@@ -120,7 +120,7 @@ public class ListDirectoryContentsTests : BaseS3AdapterIntegrationTest
     public async Task It_Lists_The_Contents_Of_A_Simple_Directory_With_A_Root_Path()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
         await CreateFileAndWriteTextAsync("simple/file.txt".AsBaselineFilesystemPath());
         await CreateFileAndWriteTextAsync("simple/another-file.txt".AsBaselineFilesystemPath());
         await CreateFileAndWriteTextAsync("simple/.config".AsBaselineFilesystemPath());
@@ -151,7 +151,7 @@ public class ListDirectoryContentsTests : BaseS3AdapterIntegrationTest
     public async Task It_Lists_The_Contents_Of_A_Complex_Directory_Within_A_Root_Path()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
         await CreateFileAndWriteTextAsync("a/file.txt".AsBaselineFilesystemPath());
         await CreateFileAndWriteTextAsync("a/another-file.txt".AsBaselineFilesystemPath());
         await CreateFileAndWriteTextAsync("a/b/.config".AsBaselineFilesystemPath());

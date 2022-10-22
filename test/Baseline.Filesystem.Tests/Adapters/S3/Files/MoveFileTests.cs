@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
 
-public class MoveFileTests : BaseS3AdapterIntegrationTest
+public class MoveFileTests : BaseIntegrationTest
 {
     private readonly PathRepresentation _sourceFilePath = RandomFilePathRepresentation();
     private readonly PathRepresentation _destinationFilePath = RandomFilePathRepresentation();
@@ -75,7 +75,7 @@ public class MoveFileTests : BaseS3AdapterIntegrationTest
     public async Task It_Successfully_Moves_A_File_Under_A_Root_Path()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
 
         await CreateFileAndWriteTextAsync(_sourceFilePath, "abc");
 

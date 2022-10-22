@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
 
-public class WriteTextToFileTests : BaseS3AdapterIntegrationTest
+public class WriteTextToFileTests : BaseIntegrationTest
 {
     [Fact]
     public async Task It_Successfully_Writes_A_Simple_File_To_S3()
@@ -33,7 +33,7 @@ public class WriteTextToFileTests : BaseS3AdapterIntegrationTest
     public async Task It_Successfully_Writes_A_Simple_File_Under_A_Root_Path_To_S3()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
 
         var path = RandomFilePathRepresentation();
 

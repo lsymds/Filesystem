@@ -3,10 +3,10 @@ namespace Baseline.Filesystem;
 /// <summary>
 /// Response returned from the FileManager.Move method.
 /// </summary>
-public class MoveFileResponse
+public record MoveFileResponse
 {
     /// <summary>
     /// Gets or sets the representation of the file in its DESTINATION.
     /// </summary>
-    public FileRepresentation DestinationFile { get; set; }
+    public FileRepresentation DestinationFile { get; init; }
 }

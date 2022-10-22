@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
 
-public class GetFileTests : BaseS3AdapterIntegrationTest
+public class GetFileTests : BaseIntegrationTest
 {
     [Fact]
     public async Task It_Returns_Null_If_File_Does_Not_Exist()
@@ -36,7 +36,7 @@ public class GetFileTests : BaseS3AdapterIntegrationTest
     public async Task It_Retrieves_A_File_Under_A_Root_Path()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
 
         var path = RandomFilePathRepresentation();
 

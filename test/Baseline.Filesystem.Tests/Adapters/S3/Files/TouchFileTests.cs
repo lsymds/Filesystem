@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
 
-public class TouchFileTests : BaseS3AdapterIntegrationTest
+public class TouchFileTests : BaseIntegrationTest
 {
     [Fact]
     public async Task It_Successfully_Touches_A_File_In_S3()
@@ -24,7 +24,7 @@ public class TouchFileTests : BaseS3AdapterIntegrationTest
     public async Task It_Successfully_Touches_A_File_In_S3_Under_A_Root_Path()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
 
         var path = RandomFilePathRepresentation();
 

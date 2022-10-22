@@ -8,7 +8,7 @@ namespace Baseline.Filesystem;
 /// <summary>
 /// Representation of an adapter agnostic path.
 /// </summary>
-public class PathRepresentation
+public record PathRepresentation
 {
     /// <summary>
     /// Gets a function that returns the deeply nested path tree of the normalised path of the current path
@@ -112,65 +112,6 @@ public class PathRepresentation
             return FinalPathPart.ReplaceLastOccurrence(Extension, string.Empty);
         }
     }
-
-    /// <summary>
-    /// Identifies and returns whether an unidentified object is equal to the current <see cref="PathRepresentation"/>
-    /// instance.
-    /// </summary>
-    /// <param name="obj">The object to compare to the current <see cref="PathRepresentation"/> instance.</param>
-    public override bool Equals(object obj)
-    {
-        if (ReferenceEquals(null, obj))
-            return false;
-        if (ReferenceEquals(this, obj))
-            return true;
-
-        if (obj is PathRepresentation pathRepresentation)
-        {
-            return NormalisedPath == pathRepresentation.NormalisedPath
-                   && FinalPathPartIsObviouslyADirectory
-                   == pathRepresentation.FinalPathPartIsObviouslyADirectory;
-        }
-
-        return false;
-    }
-
-    /// <summary>
-    /// Retrieves the hash code for the current <see cref="PathRepresentation" /> instance.
-    /// </summary>
-    public override int GetHashCode()
-    {
-        // ReSharper disable once NonReadonlyMemberInGetHashCode
-        return NormalisedPath.GetHashCode() + FinalPathPartIsObviouslyADirectory.GetHashCode();
-    }
-
-    /// <summary>
-    /// Compares two paths and identifies if they're equal.
-    /// </summary>
-    /// <param name="left">The left hand side of the == comparison.</param>
-    /// <param name="right">The right hand side of the == comparison.</param>
-    public static bool operator ==(PathRepresentation left, PathRepresentation right)
-    {
-        if (left is null)
-        {
-            if (right is null)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        return left.Equals(right);
-    }
-
-    /// <summary>
-    /// Compares two paths and identifies if they're not equal.
-    /// </summary>
-    /// <param name="left">The left hand side of the != comparison.</param>
-    /// <param name="right">The right hand side of the != comparison.</param>
-    public static bool operator !=(PathRepresentation left, PathRepresentation right) =>
-        !(left == right);
 
     /// <summary>
     /// Combines the current path representation with a base path representation, wherein the base path

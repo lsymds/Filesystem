@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
 
-public class CopyFileTests : BaseS3AdapterIntegrationTest
+public class CopyFileTests : BaseIntegrationTest
 {
     private readonly PathRepresentation _sourceFilePath = RandomFilePathRepresentation();
     private readonly PathRepresentation _destinationFilePath = RandomFilePathRepresentation();
@@ -75,7 +75,7 @@ public class CopyFileTests : BaseS3AdapterIntegrationTest
     public async Task It_Successfully_Copies_A_File_With_A_Root_Path()
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        ConfigureTestAsync(true);
 
         await CreateFileAndWriteTextAsync(_sourceFilePath, "[ 1, 2, 3 ]");
 

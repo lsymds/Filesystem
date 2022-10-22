@@ -3,10 +3,10 @@ namespace Baseline.Filesystem;
 /// <summary>
 /// Representation of an adapter agnostic directory.
 /// </summary>
-public class DirectoryRepresentation
+public record DirectoryRepresentation
 {
     /// <summary>
     /// Gets or sets the the directory's path information.
     /// </summary>
-    public PathRepresentation Path { get; set; }
+    public PathRepresentation Path { get; init; }
 }

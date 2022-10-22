@@ -6,7 +6,7 @@ namespace Baseline.Filesystem;
 /// Dependency injection extensions that allow the S3 adapter to be registered against a store and added to the IoC
 /// container.
 /// </summary>
-public static class S3DependencyinjectionExtensions
+public static class S3AdapterDependencyInjectionExtensions
 {
     /// <summary>
     /// Configures the store registration builder to use the S3 adapter.

@@ -3,10 +3,10 @@ namespace Baseline.Filesystem;
 /// <summary>
 /// Representation of an adapter agnostic file.
 /// </summary>
-public class FileRepresentation
+public record FileRepresentation
 {
     /// <summary>
     /// Gets or sets the file's path information.
     /// </summary>
-    public PathRepresentation Path { get; set; }
+    public PathRepresentation Path { get; init; }
 }
