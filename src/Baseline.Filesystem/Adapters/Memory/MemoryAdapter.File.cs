@@ -18,7 +18,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfFileDoesNotExist(copyFileRequest.SourceFilePath);
         ThrowIfFileExists(copyFileRequest.DestinationFilePath);
@@ -47,7 +47,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfFileDoesNotExist(deleteFileRequest.FilePath);
 
@@ -66,7 +66,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         return new FileExistsResponse
         {
@@ -96,7 +96,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfFileDoesNotExist(getFilePublicUrlRequest.FilePath);
 
@@ -113,7 +113,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfFileDoesNotExist(moveFileRequest.SourceFilePath);
         ThrowIfFileExists(moveFileRequest.DestinationFilePath);
@@ -143,7 +143,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfFileDoesNotExist(readFileAsStreamRequest.FilePath);
 
@@ -167,7 +167,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfFileDoesNotExist(readFileAsStringRequest.FilePath);
 
@@ -187,7 +187,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         var parentDirectory = _configuration.MemoryFilesystem.GetOrCreateParentDirectoryOf(
             touchFileRequest.FilePath
@@ -210,7 +210,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfFileExists(writeStreamToFileRequest.FilePath);
 
@@ -242,7 +242,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfFileExists(writeTextToFileRequest.FilePath);
 

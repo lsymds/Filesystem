@@ -28,7 +28,7 @@ public partial class MemoryAdapter : IAdapter
     /// </summary>
     private async Task<IDisposable> LockFilesystemAsync()
     {
-        await _mutex.WaitAsync();
+        await _mutex.WaitAsync().ConfigureAwait(false);
         return new ComposableDisposable(() => _mutex.Release());
     }
 }

@@ -19,7 +19,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfDirectoryDoesNotExist(copyDirectoryRequest.SourceDirectoryPath);
         ThrowIfDirectoryExists(copyDirectoryRequest.DestinationDirectoryPath);
@@ -63,7 +63,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfDirectoryExists(createDirectoryRequest.DirectoryPath);
 
@@ -81,7 +81,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfDirectoryDoesNotExist(deleteDirectoryRequest.DirectoryPath);
 
@@ -106,14 +106,15 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfDirectoryDoesNotExist(iterateDirectoryContentsRequest.DirectoryPath);
 
         await ListContentsUnderPathAndPerformActionUntilCompleteAsync(
-            iterateDirectoryContentsRequest.DirectoryPath,
-            iterateDirectoryContentsRequest.Action
-        );
+                iterateDirectoryContentsRequest.DirectoryPath,
+                iterateDirectoryContentsRequest.Action
+            )
+            .ConfigureAwait(false);
 
         return new IterateDirectoryContentsResponse();
     }
@@ -124,20 +125,21 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken = default
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfDirectoryDoesNotExist(listDirectoryContentsRequest.DirectoryPath);
 
         var results = new List<PathRepresentation>();
 
         await ListContentsUnderPathAndPerformActionUntilCompleteAsync(
-            listDirectoryContentsRequest.DirectoryPath,
-            path =>
-            {
-                results.Add(path);
-                return Task.FromResult(true);
-            }
-        );
+                listDirectoryContentsRequest.DirectoryPath,
+                path =>
+                {
+                    results.Add(path);
+                    return Task.FromResult(true);
+                }
+            )
+            .ConfigureAwait(false);
 
         return new ListDirectoryContentsResponse { Contents = results };
     }
@@ -148,7 +150,7 @@ public partial class MemoryAdapter
         CancellationToken cancellationToken
     )
     {
-        using var _ = await LockFilesystemAsync();
+        using var _ = await LockFilesystemAsync().ConfigureAwait(false);
 
         ThrowIfDirectoryDoesNotExist(moveDirectoryRequest.SourceDirectoryPath);
         ThrowIfDirectoryExists(moveDirectoryRequest.DestinationDirectoryPath);
@@ -206,7 +208,7 @@ public partial class MemoryAdapter
             (PathRepresentation Path, MemoryDirectoryRepresentation Representation) directory
         )
         {
-            var @continue = await action(directory.Path);
+            var @continue = await action(directory.Path).ConfigureAwait(false);
             if (!@continue)
             {
                 return;
@@ -214,7 +216,7 @@ public partial class MemoryAdapter
 
             foreach (var file in directory.Representation.Files.Keys)
             {
-                @continue = await action(file);
+                @continue = await action(file).ConfigureAwait(false);
                 if (!@continue)
                 {
                     return;
@@ -254,7 +256,7 @@ public partial class MemoryAdapter
 
     /// <summary>
     /// Given a directory within a filesystem, recursively traverse it and replace any paths matching
-    /// <see cref="originalPath"/> with the <see cref="replacementPath"/>.
+    /// originalPath with the replacementPath.
     /// </summary>
     private void TraverseDirectoryAndRewritePaths(
         MemoryDirectoryRepresentation directoryRepresentation,
