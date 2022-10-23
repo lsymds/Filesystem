@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
@@ -8,7 +9,7 @@ public class WriteTextToFileTests : BaseIntegrationTest
 {
     [Theory]
     [ClassData(typeof(RunOnAllProvidersConfiguration))]
-    public async Task It_Successfully_Writes_A_Simple_File_To_S3(Adapter adapter)
+    public async Task It_Successfully_Writes_A_Simple_File(Adapter adapter)
     {
         // Arrange.
         await ConfigureTestAsync(adapter);
@@ -34,7 +35,7 @@ public class WriteTextToFileTests : BaseIntegrationTest
 
     [Theory]
     [ClassData(typeof(RunOnAllProvidersConfiguration))]
-    public async Task It_Successfully_Writes_A_Simple_File_Under_A_Root_Path_To_S3(Adapter adapter)
+    public async Task It_Successfully_Writes_A_Simple_File_Under_A_Root_Path(Adapter adapter)
     {
         // Arrange.
         await ConfigureTestAsync(adapter, true);

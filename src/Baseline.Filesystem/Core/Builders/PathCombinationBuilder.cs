@@ -27,7 +27,7 @@ public class PathCombinationBuilder
     public PathRepresentation Build()
     {
         var combinedPath = string.Join("/", _paths.Select(x => x.NormalisedPath));
-        if (_paths.Last().FinalPathPartIsObviouslyADirectory)
+        if (_paths.Last().FinalPathPartIsADirectory)
         {
             combinedPath += "/";
         }

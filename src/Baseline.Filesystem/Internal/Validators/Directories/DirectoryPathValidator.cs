@@ -18,7 +18,7 @@ internal static class DirectoryPathValidator
             throw new ArgumentNullException(nameof(directoryPath));
         }
 
-        if (!directoryPath.FinalPathPartIsObviouslyADirectory)
+        if (!directoryPath.FinalPathPartIsADirectory)
         {
             throw new PathIsNotObviouslyADirectoryException(directoryPath.OriginalPath);
         }

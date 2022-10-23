@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,7 +70,7 @@ public class WriteStreamToFileTests : BaseIntegrationTest
 
     [Theory]
     [ClassData(typeof(RunOnAllProvidersConfiguration))]
-    public async Task It_Successfully_Writes_A_Stream_Under_A_Root_Path_In_S3(Adapter adapter)
+    public async Task It_Successfully_Writes_A_Stream_Under_A_Root_Path(Adapter adapter)
     {
         // Arrange.
         await ConfigureTestAsync(adapter, true);

@@ -63,7 +63,7 @@ internal static class PathRepresentationExtensions
         PathRepresentation replacement
     )
     {
-        var replacementPathRepresentation = path.FinalPathPartIsObviouslyADirectory
+        var replacementPathRepresentation = path.FinalPathPartIsADirectory
             ? (path.NormalisedPath + "/").ReplaceFirstOccurrence(
                 original.NormalisedPath + "/",
                 replacement == null ? string.Empty : replacement?.NormalisedPath + "/"

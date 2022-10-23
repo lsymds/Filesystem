@@ -96,7 +96,7 @@ public partial class S3Adapter
         await EnsureFileExistsAsync(getFilePublicUrlRequest.FilePath, cancellationToken)
             .ConfigureAwait(false);
 
-        var expiry = getFilePublicUrlRequest.Expiry ?? DateTime.Today.AddDays(1);
+        var expiry = getFilePublicUrlRequest.Expiry ?? DateTime.Now.AddDays(1);
 
         return new GetFilePublicUrlResponse
         {

@@ -56,7 +56,6 @@ public class MemoryFilesystem
     public MemoryDirectoryRepresentation GetOrCreateParentDirectoryOf(PathRepresentation path)
     {
         var pathTree = path.GetPathTree().ToList();
-
         return pathTree.Count == 1 ? RootDirectory : GetOrCreateDirectory(pathTree[^2]);
     }
 
@@ -113,5 +112,35 @@ public class MemoryFilesystem
         }
 
         return workingDirectory;
+    }
+
+    /// <summary>
+    /// Identifies if a given file path exists or not within the memory filesystem.
+    /// </summary>
+    public bool FileExists(PathRepresentation path)
+    {
+        if (path.NormalisedPath == "")
+        {
+            return true;
+        }
+
+        var workingDirectory = RootDirectory;
+
+        foreach (var pathPart in path.GetPathTree())
+        {
+            if (!pathPart.FinalPathPartIsADirectory)
+            {
+                continue;
+            }
+
+            if (!workingDirectory.ChildDirectories.ContainsKey(pathPart))
+            {
+                return false;
+            }
+
+            workingDirectory = workingDirectory.ChildDirectories[pathPart];
+        }
+
+        return workingDirectory.Files.ContainsKey(path);
     }
 }

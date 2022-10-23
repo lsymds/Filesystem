@@ -20,7 +20,7 @@ internal static class FilePathValidator
             throw new ArgumentNullException(nameof(filePath));
         }
 
-        if (filePath.FinalPathPartIsObviouslyADirectory)
+        if (filePath.FinalPathPartIsADirectory)
         {
             throw new PathIsADirectoryException(filePath.OriginalPath);
         }

@@ -75,7 +75,7 @@ public class PathRepresentationBuilderTests
 
         // Assert.
         builtRepresentation.FinalPathPart.Should().Be("my-file.jpg");
-        builtRepresentation.FinalPathPartIsObviouslyADirectory.Should().BeFalse();
+        builtRepresentation.FinalPathPartIsADirectory.Should().BeFalse();
         builtRepresentation.OriginalPath.Should().Be(simplePath);
         builtRepresentation.NormalisedPath.Should().Be("my-file.jpg");
     }
@@ -92,7 +92,7 @@ public class PathRepresentationBuilderTests
 
         // Assert.
         builtRepresentation.FinalPathPart.Should().Be("MainTechnicalSpec.docx");
-        builtRepresentation.FinalPathPartIsObviouslyADirectory.Should().BeFalse();
+        builtRepresentation.FinalPathPartIsADirectory.Should().BeFalse();
         builtRepresentation.OriginalPath.Should().Be(moreComplexPath);
         builtRepresentation.NormalisedPath.Should().Be(moreComplexPath);
     }
@@ -105,7 +105,7 @@ public class PathRepresentationBuilderTests
 
         // Assert.
         builtRepresentation.FinalPathPart.Should().Be("users");
-        builtRepresentation.FinalPathPartIsObviouslyADirectory.Should().BeFalse();
+        builtRepresentation.FinalPathPartIsADirectory.Should().BeFalse();
         builtRepresentation.OriginalPath.Should().Be("/users");
         builtRepresentation.NormalisedPath.Should().Be("users");
     }
@@ -124,7 +124,7 @@ public class PathRepresentationBuilderTests
 
         // Assert.
         builtRepresentation.FinalPathPart.Should().Be("storage");
-        builtRepresentation.FinalPathPartIsObviouslyADirectory.Should().BeTrue();
+        builtRepresentation.FinalPathPartIsADirectory.Should().BeTrue();
         builtRepresentation.OriginalPath.Should().Be(moreComplexDirectoryStructure);
         builtRepresentation.NormalisedPath
             .Should()
@@ -142,7 +142,7 @@ public class PathRepresentationBuilderTests
 
         // Assert.
         builtRepresentation.FinalPathPart.Should().Be("id_rsa");
-        builtRepresentation.FinalPathPartIsObviouslyADirectory.Should().BeFalse();
+        builtRepresentation.FinalPathPartIsADirectory.Should().BeFalse();
         builtRepresentation.OriginalPath.Should().Be(hiddenFilePath);
         builtRepresentation.NormalisedPath.Should().Be("users/foo/.ssh/id_rsa");
     }
@@ -155,7 +155,7 @@ public class PathRepresentationBuilderTests
 
         // Assert.
         builtRepresentation.FinalPathPart.Should().Be(".npmrc");
-        builtRepresentation.FinalPathPartIsObviouslyADirectory.Should().BeFalse();
+        builtRepresentation.FinalPathPartIsADirectory.Should().BeFalse();
         builtRepresentation.OriginalPath.Should().Be(".npmrc");
         builtRepresentation.NormalisedPath.Should().Be(".npmrc");
     }
@@ -174,7 +174,7 @@ public class PathRepresentationBuilderTests
 
         // Assert.
         builtRepresentation.FinalPathPart.Should().Be(".tailwind.config");
-        builtRepresentation.FinalPathPartIsObviouslyADirectory.Should().BeFalse();
+        builtRepresentation.FinalPathPartIsADirectory.Should().BeFalse();
         builtRepresentation.OriginalPath.Should().Be(hiddenFileInDirectoryWithExtension);
         builtRepresentation.NormalisedPath
             .Should()

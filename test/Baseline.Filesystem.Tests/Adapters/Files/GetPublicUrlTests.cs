@@ -65,7 +65,7 @@ public class GetPublicUrlTests : BaseIntegrationTest
         );
 
         // Assert.
-        response.Expiry.Should().Be(DateTime.Today.AddDays(1));
+        response.Expiry.Should().BeCloseTo(DateTime.Now.AddDays(1), TimeSpan.FromSeconds(1));
     }
 
     [Theory]

@@ -32,7 +32,7 @@ public class StoreManager : IStoreManager
 
         if (
             registration.RootPath != null
-            && !registration.RootPath.FinalPathPartIsObviouslyADirectory
+            && !registration.RootPath.FinalPathPartIsADirectory
         )
         {
             throw new PathIsNotObviouslyADirectoryException(registration.RootPath.OriginalPath);

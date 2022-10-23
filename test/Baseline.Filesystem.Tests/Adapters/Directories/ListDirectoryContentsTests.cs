@@ -32,7 +32,7 @@ public class ListDirectoryContentsTests : BaseIntegrationTest
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "simple" && x.FinalPathPartIsObviouslyADirectory
+                x => x.NormalisedPath == "simple" && x.FinalPathPartIsADirectory
             );
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/file.txt");
         contents.Contents
@@ -67,41 +67,41 @@ public class ListDirectoryContentsTests : BaseIntegrationTest
         contents.Contents.Should().HaveCount(13);
         contents.Contents
             .Should()
-            .ContainSingle(x => x.NormalisedPath == "a" && x.FinalPathPartIsObviouslyADirectory);
+            .ContainSingle(x => x.NormalisedPath == "a" && x.FinalPathPartIsADirectory);
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/file.txt");
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/another-file.txt");
         contents.Contents
             .Should()
-            .ContainSingle(x => x.NormalisedPath == "a/b" && x.FinalPathPartIsObviouslyADirectory);
+            .ContainSingle(x => x.NormalisedPath == "a/b" && x.FinalPathPartIsADirectory);
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/.config");
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/b/c" && x.FinalPathPartIsObviouslyADirectory
+                x => x.NormalisedPath == "a/b/c" && x.FinalPathPartIsADirectory
             );
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/c/.keep");
         contents.Contents
             .Should()
-            .ContainSingle(x => x.NormalisedPath == "a/c" && x.FinalPathPartIsObviouslyADirectory);
+            .ContainSingle(x => x.NormalisedPath == "a/c" && x.FinalPathPartIsADirectory);
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/c/d" && x.FinalPathPartIsObviouslyADirectory
+                x => x.NormalisedPath == "a/c/d" && x.FinalPathPartIsADirectory
             );
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/c/d/e" && x.FinalPathPartIsObviouslyADirectory
+                x => x.NormalisedPath == "a/c/d/e" && x.FinalPathPartIsADirectory
             );
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/c/d/e/f" && x.FinalPathPartIsObviouslyADirectory
+                x => x.NormalisedPath == "a/c/d/e/f" && x.FinalPathPartIsADirectory
             );
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/c/d/e/f/g" && x.FinalPathPartIsObviouslyADirectory
+                x => x.NormalisedPath == "a/c/d/e/f/g" && x.FinalPathPartIsADirectory
             );
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g/.keep");
     }
@@ -161,7 +161,7 @@ public class ListDirectoryContentsTests : BaseIntegrationTest
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "simple" && x.FinalPathPartIsObviouslyADirectory
+                x => x.NormalisedPath == "simple" && x.FinalPathPartIsADirectory
             );
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/file.txt");
         contents.Contents
@@ -198,41 +198,41 @@ public class ListDirectoryContentsTests : BaseIntegrationTest
         contents.Contents.Should().HaveCount(13);
         contents.Contents
             .Should()
-            .ContainSingle(x => x.NormalisedPath == "a" && x.FinalPathPartIsObviouslyADirectory);
+            .ContainSingle(x => x.NormalisedPath == "a" && x.FinalPathPartIsADirectory);
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/file.txt");
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/another-file.txt");
         contents.Contents
             .Should()
-            .ContainSingle(x => x.NormalisedPath == "a/b" && x.FinalPathPartIsObviouslyADirectory);
+            .ContainSingle(x => x.NormalisedPath == "a/b" && x.FinalPathPartIsADirectory);
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/.config");
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/b/c" && x.FinalPathPartIsObviouslyADirectory
+                x => x.NormalisedPath == "a/b/c" && x.FinalPathPartIsADirectory
             );
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/c/.keep");
         contents.Contents
             .Should()
-            .ContainSingle(x => x.NormalisedPath == "a/c" && x.FinalPathPartIsObviouslyADirectory);
+            .ContainSingle(x => x.NormalisedPath == "a/c" && x.FinalPathPartIsADirectory);
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/c/d" && x.FinalPathPartIsObviouslyADirectory
+                x => x.NormalisedPath == "a/c/d" && x.FinalPathPartIsADirectory
             );
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/c/d/e" && x.FinalPathPartIsObviouslyADirectory
+                x => x.NormalisedPath == "a/c/d/e" && x.FinalPathPartIsADirectory
             );
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/c/d/e/f" && x.FinalPathPartIsObviouslyADirectory
+                x => x.NormalisedPath == "a/c/d/e/f" && x.FinalPathPartIsADirectory
             );
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/c/d/e/f/g" && x.FinalPathPartIsObviouslyADirectory
+                x => x.NormalisedPath == "a/c/d/e/f/g" && x.FinalPathPartIsADirectory
             );
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g/.keep");
     }

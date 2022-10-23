@@ -8,7 +8,7 @@ public class TouchFileTests : BaseIntegrationTest
 {
     [Theory]
     [ClassData(typeof(RunOnAllProvidersConfiguration))]
-    public async Task It_Successfully_Touches_A_File_In_S3(Adapter adapter)
+    public async Task It_Successfully_Touches_A_File(Adapter adapter)
     {
         // Arrange.
         await ConfigureTestAsync(adapter);
@@ -25,7 +25,7 @@ public class TouchFileTests : BaseIntegrationTest
 
     [Theory]
     [ClassData(typeof(RunOnAllProvidersConfiguration))]
-    public async Task It_Successfully_Touches_A_File_In_S3_Under_A_Root_Path(Adapter adapter)
+    public async Task It_Successfully_Touches_A_File_Under_A_Root_Path(Adapter adapter)
     {
         // Arrange.
         await ConfigureTestAsync(adapter, true);

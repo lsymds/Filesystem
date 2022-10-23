@@ -37,14 +37,7 @@ public class ReadFileAsStreamTests : BaseIntegrationTest
 
         var path = TestUtilities.RandomFilePathRepresentation();
 
-        await FileManager.WriteTextAsync(
-            new WriteTextToFileRequest
-            {
-                FilePath = path,
-                ContentType = "text/plain",
-                TextToWrite = "you should check these contents"
-            }
-        );
+        await TestAdapter.CreateFileAndWriteTextAsync(path, "you should check these contents");
 
         // Act.
         var fileContents = await FileManager.ReadAsStreamAsync(

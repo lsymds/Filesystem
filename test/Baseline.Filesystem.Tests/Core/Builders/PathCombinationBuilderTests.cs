@@ -33,7 +33,7 @@ public class PathCombinationBuilderTests
 
         // Assert.
         combinedPath.FinalPathPart.Should().Be("image.jpeg");
-        combinedPath.FinalPathPartIsObviouslyADirectory.Should().BeFalse();
+        combinedPath.FinalPathPartIsADirectory.Should().BeFalse();
         combinedPath.OriginalPath
             .Should()
             .Be("C:/users/foo/bar/another/simple/directory/structure/image.jpeg");
@@ -54,7 +54,7 @@ public class PathCombinationBuilderTests
 
         // Assert.
         combinedPath.FinalPathPart.Should().Be("g");
-        combinedPath.FinalPathPartIsObviouslyADirectory.Should().BeTrue();
+        combinedPath.FinalPathPartIsADirectory.Should().BeTrue();
         combinedPath.OriginalPath.Should().Be("a/b/c/d/e/f/g/");
         combinedPath.NormalisedPath.Should().Be("a/b/c/d/e/f/g");
     }

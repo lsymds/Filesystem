@@ -19,7 +19,11 @@ public class MemoryIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegra
     {
         return ValueTask.FromResult(
             new MemoryAdapter(
-                new MemoryAdapterConfiguration { MemoryFilesystem = _memoryFilesystem }
+                new MemoryAdapterConfiguration
+                {
+                    MemoryFilesystem = _memoryFilesystem,
+                    PublicUrlToReturn = "https://i.imgur.com/0HLw1x4.mp4"
+                }
             ) as IAdapter
         );
     }
@@ -65,13 +69,18 @@ public class MemoryIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegra
 
     public ValueTask<string> ReadFileAsStringAsync(PathRepresentation path)
     {
-        throw new System.NotImplementedException();
+        var workingPath = CombineRootPathWith(path);
+
+        var parentDirectory = _memoryFilesystem.GetOrCreateParentDirectoryOf(workingPath);
+        return ValueTask.FromResult(parentDirectory.Files[workingPath].Content);
     }
 
     public ValueTask<IReadOnlyCollection<string>> TextThatShouldBeInPublicUrlForPathAsync(
         PathRepresentation path
     )
     {
-        throw new System.NotImplementedException();
+        return ValueTask.FromResult(
+            new[] { "https://i.imgur.com/0HLw1x4.mp4" } as IReadOnlyCollection<string>
+        );
     }
 }
