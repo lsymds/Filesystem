@@ -1,10 +1,8 @@
-using System.IO;
-
 namespace Baseline.Filesystem.Tests.Adapters;
 
 public abstract class BaseIntegrationTestAdapter
 {
-    protected PathRepresentation? RootPath;
+    protected PathRepresentation RootPath;
 
     protected BaseIntegrationTestAdapter(PathRepresentation rootPath)
     {

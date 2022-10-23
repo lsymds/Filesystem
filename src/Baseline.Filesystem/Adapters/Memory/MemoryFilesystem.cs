@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Baseline.Filesystem;
@@ -12,14 +11,14 @@ public class MemoryFilesystem
     /// <summary>
     /// Gets the root directory which is the base of the memory filesystem.
     /// </summary>
-    public MemoryDirectoryRepresentation RootDirectory { get; }
+    private MemoryDirectoryRepresentation _rootDirectory;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MemoryFilesystem"/> class.
     /// </summary>
     public MemoryFilesystem()
     {
-        RootDirectory = new(
+        _rootDirectory = new(
             ChildDirectories: new Dictionary<PathRepresentation, MemoryDirectoryRepresentation>(),
             Files: new Dictionary<PathRepresentation, MemoryFileRepresentation>()
         );
@@ -35,7 +34,7 @@ public class MemoryFilesystem
             return true;
         }
 
-        var workingDirectory = RootDirectory;
+        var workingDirectory = _rootDirectory;
 
         foreach (var pathPart in path.GetPathTree())
         {
@@ -56,7 +55,7 @@ public class MemoryFilesystem
     public MemoryDirectoryRepresentation GetOrCreateParentDirectoryOf(PathRepresentation path)
     {
         var pathTree = path.GetPathTree().ToList();
-        return pathTree.Count == 1 ? RootDirectory : GetOrCreateDirectory(pathTree[^2]);
+        return pathTree.Count == 1 ? _rootDirectory : GetOrCreateDirectory(pathTree[^2]);
     }
 
     /// <summary>
@@ -64,8 +63,8 @@ public class MemoryFilesystem
     /// </summary>
     public MemoryDirectoryRepresentation GetOrCreateDirectory(PathRepresentation path)
     {
-        var workingDirectory = RootDirectory;
-        var directoryToReturn = RootDirectory;
+        var workingDirectory = _rootDirectory;
+        var directoryToReturn = _rootDirectory;
         var pathTree = path.GetPathTree().ToList();
 
         foreach (var pathPart in pathTree)
@@ -103,7 +102,7 @@ public class MemoryFilesystem
         int level
     )
     {
-        var workingDirectory = RootDirectory;
+        var workingDirectory = _rootDirectory;
 
         for (var i = 0; i <= level; i++)
         {
@@ -124,7 +123,7 @@ public class MemoryFilesystem
             return true;
         }
 
-        var workingDirectory = RootDirectory;
+        var workingDirectory = _rootDirectory;
 
         foreach (var pathPart in path.GetPathTree())
         {
