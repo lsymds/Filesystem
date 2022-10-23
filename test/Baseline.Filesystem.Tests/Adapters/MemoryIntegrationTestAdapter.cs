@@ -1,11 +1,14 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Baseline.Filesystem.Tests.Adapters;
 
-public class MemoryIntegrationTestAdapter : IIntegrationTestAdapter
+public class MemoryIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegrationTestAdapter
 {
     private readonly MemoryFilesystem _memoryFilesystem = new();
+
+    public MemoryIntegrationTestAdapter(PathRepresentation rootPath = null) : base(rootPath) { }
 
     public ValueTask DisposeAsync()
     {
@@ -23,22 +26,41 @@ public class MemoryIntegrationTestAdapter : IIntegrationTestAdapter
 
     public ValueTask CreateFileAndWriteTextAsync(PathRepresentation path, string contents = "")
     {
-        throw new System.NotImplementedException();
+        var workingPath = CombineRootPathWith(path);
+
+        _memoryFilesystem
+            .GetOrCreateParentDirectoryOf(workingPath)
+            .Files.Add(
+                workingPath,
+                new MemoryFileRepresentation(Content: contents, ContentType: "text/plain")
+            );
+
+        return ValueTask.CompletedTask;
     }
 
     public ValueTask<bool> HasFilesOrDirectoriesUnderPathAsync(PathRepresentation path)
     {
-        throw new System.NotImplementedException();
+        var workingPath = CombineRootPathWith(path);
+
+        var directory = _memoryFilesystem.GetOrCreateDirectory(workingPath);
+        return ValueTask.FromResult(directory.Files.Any() || directory.ChildDirectories.Any());
     }
 
     public ValueTask<bool> FileExistsAsync(PathRepresentation path)
     {
-        throw new System.NotImplementedException();
+        var workingPath = CombineRootPathWith(path);
+        return ValueTask.FromResult(
+            _memoryFilesystem
+                .GetOrCreateParentDirectoryOf(workingPath)
+                .Files.ContainsKey(workingPath)
+        );
     }
 
     public ValueTask<bool> DirectoryExistsAsync(PathRepresentation path)
     {
-        return ValueTask.FromResult(_memoryFilesystem.DirectoryExists(path));
+        var workingPath = CombineRootPathWith(path);
+
+        return ValueTask.FromResult(_memoryFilesystem.DirectoryExists(workingPath));
     }
 
     public ValueTask<string> ReadFileAsStringAsync(PathRepresentation path)

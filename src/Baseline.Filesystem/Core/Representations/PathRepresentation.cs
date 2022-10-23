@@ -144,6 +144,12 @@ public class PathRepresentation
         return NormalisedPath.GetHashCode() + FinalPathPartIsObviouslyADirectory.GetHashCode();
     }
 
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return $"NormalisedPath={NormalisedPath} FinalPathPartIsObviouslyADirectory={FinalPathPartIsObviouslyADirectory}";
+    }
+
     /// <summary>
     /// Compares two paths and identifies if they're equal.
     /// </summary>

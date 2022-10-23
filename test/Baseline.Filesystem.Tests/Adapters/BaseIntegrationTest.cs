@@ -48,6 +48,13 @@ public abstract class BaseIntegrationTest
         url.Should().ContainAll(requiredTexts);
     }
 
+    /// <summary>
+    /// Configures the test for a given adapter and root path.
+    ///
+    /// Whilst adapters are technically root path agnostic (as in, they do not know that a root path exists), the paths
+    /// they interact with could be based off of a root path. Thus, when creating or validating test data, we
+    /// need to know about that root path so we can interact with the same underlying path.
+    /// </summary>
     protected async Task ConfigureTestAsync(Adapter toUse, bool useRootPath = false)
     {
         // It's possible this method could be called multiple times, so dispose the old resources before we create any
@@ -55,13 +62,13 @@ public abstract class BaseIntegrationTest
         await DisposeAsync();
 
         var rootPath = useRootPath
-            ? $"{TestUtilities.RandomString(6)}/{TestUtilities.RandomString(2)}/"
+            ? $"{TestUtilities.RandomString(6)}/{TestUtilities.RandomString(2)}/".AsBaselineFilesystemPath()
             : null;
 
         TestAdapter = toUse switch
         {
-            Adapter.S3 => new S3IntegrationTestAdapter(),
-            Adapter.Memory => new MemoryIntegrationTestAdapter(),
+            Adapter.S3 => new S3IntegrationTestAdapter(rootPath),
+            Adapter.Memory => new MemoryIntegrationTestAdapter(rootPath),
             _ => throw new ArgumentOutOfRangeException(nameof(toUse), toUse, null)
         };
 
@@ -70,7 +77,7 @@ public abstract class BaseIntegrationTest
             new StoreRegistration
             {
                 Adapter = await TestAdapter.BootstrapAsync(),
-                RootPath = rootPath?.AsBaselineFilesystemPath()
+                RootPath = rootPath
             }
         );
 

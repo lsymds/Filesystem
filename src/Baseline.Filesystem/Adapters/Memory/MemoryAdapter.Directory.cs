@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Baseline.Filesystem.Internal.Adapters.Memory;
+using Baseline.Filesystem.Internal.Extensions;
 
 namespace Baseline.Filesystem;
 
@@ -13,12 +15,47 @@ namespace Baseline.Filesystem;
 public partial class MemoryAdapter
 {
     /// <inheritdoc />
-    public Task<CopyDirectoryResponse> CopyDirectoryAsync(
+    public async Task<CopyDirectoryResponse> CopyDirectoryAsync(
         CopyDirectoryRequest copyDirectoryRequest,
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        using var _ = await LockFilesystemAsync();
+
+        ThrowIfDirectoryDoesNotExist(copyDirectoryRequest.SourceDirectoryPath);
+        ThrowIfDirectoryExists(copyDirectoryRequest.DestinationDirectoryPath);
+
+        var parentOfSourceDirectory = _configuration.MemoryFilesystem.GetOrCreateParentDirectoryOf(
+            copyDirectoryRequest.SourceDirectoryPath
+        );
+        var parentOfDestinationDirectory =
+            _configuration.MemoryFilesystem.GetOrCreateParentDirectoryOf(
+                copyDirectoryRequest.DestinationDirectoryPath
+            );
+
+        // Take the original directory but deep clone any mutable types.
+        var directoryToCopy = parentOfSourceDirectory.ChildDirectories[
+            copyDirectoryRequest.SourceDirectoryPath
+        ].DeepCloneMutableTypes();
+
+        parentOfDestinationDirectory.ChildDirectories.Add(
+            copyDirectoryRequest.DestinationDirectoryPath,
+            directoryToCopy
+        );
+
+        TraverseDirectoryAndRewritePaths(
+            directoryToCopy,
+            copyDirectoryRequest.SourceDirectoryPath,
+            copyDirectoryRequest.DestinationDirectoryPath
+        );
+
+        return new CopyDirectoryResponse
+        {
+            DestinationDirectory = new DirectoryRepresentation
+            {
+                Path = copyDirectoryRequest.DestinationDirectoryPath
+            }
+        };
     }
 
     /// <inheritdoc />
@@ -31,28 +68,7 @@ public partial class MemoryAdapter
 
         ThrowIfDirectoryExists(createDirectoryRequest.DirectoryPath);
 
-        var workingDirectory = _configuration.MemoryFilesystem.RootDirectory;
-
-        foreach (var pathPart in createDirectoryRequest.DirectoryPath.GetPathTree())
-        {
-            if (workingDirectory.ChildDirectories.ContainsKey(pathPart))
-            {
-                workingDirectory = workingDirectory.ChildDirectories[pathPart];
-                continue;
-            }
-
-            workingDirectory.ChildDirectories.Add(
-                pathPart,
-                new MemoryDirectoryRepresentation(
-                    Path: pathPart,
-                    ChildDirectories: new Dictionary<
-                        PathRepresentation,
-                        MemoryDirectoryRepresentation
-                    >(),
-                    Files: new List<MemoryFileRepresentation>()
-                )
-            );
-        }
+        _configuration.MemoryFilesystem.GetOrCreateDirectory(createDirectoryRequest.DirectoryPath);
 
         return new CreateDirectoryResponse
         {
@@ -70,48 +86,144 @@ public partial class MemoryAdapter
 
         ThrowIfDirectoryDoesNotExist(deleteDirectoryRequest.DirectoryPath);
 
-        var workingDirectory = _configuration.MemoryFilesystem.RootDirectory;
-
         var pathTree = deleteDirectoryRequest.DirectoryPath.GetPathTree().ToList();
-        for (var i = 0; i < pathTree.Count; i++)
-        {
-            workingDirectory = workingDirectory.ChildDirectories[pathTree[i]];
 
-            // If on the N-1 iteration, remove the key of the Nth element (the full path).
-            if (i == pathTree.Count - 2)
-            {
-                workingDirectory.ChildDirectories.Remove(pathTree[i + 1]);
-            }
-        }
+        var parentDirectoryOfDirectoryToDelete =
+            _configuration.MemoryFilesystem.GetDirectoryFromNthLevelOfPathTree(
+                pathTree,
+                pathTree.Count - 2
+            );
+
+        var pathToRemove = pathTree.Last();
+
+        parentDirectoryOfDirectoryToDelete.ChildDirectories.Remove(pathToRemove);
 
         return new DeleteDirectoryResponse();
     }
 
     /// <inheritdoc />
-    public Task<IterateDirectoryContentsResponse> IterateDirectoryContentsAsync(
+    public async Task<IterateDirectoryContentsResponse> IterateDirectoryContentsAsync(
         IterateDirectoryContentsRequest iterateDirectoryContentsRequest,
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        using var _ = await LockFilesystemAsync();
+
+        ThrowIfDirectoryDoesNotExist(iterateDirectoryContentsRequest.DirectoryPath);
+
+        await ListContentsUnderPathAndPerformActionUntilCompleteAsync(
+            iterateDirectoryContentsRequest.DirectoryPath,
+            iterateDirectoryContentsRequest.Action
+        );
+
+        return new IterateDirectoryContentsResponse();
     }
 
     /// <inheritdoc />
-    public Task<ListDirectoryContentsResponse> ListDirectoryContentsAsync(
+    public async Task<ListDirectoryContentsResponse> ListDirectoryContentsAsync(
         ListDirectoryContentsRequest listDirectoryContentsRequest,
         CancellationToken cancellationToken = default
     )
     {
-        throw new System.NotImplementedException();
+        using var _ = await LockFilesystemAsync();
+
+        ThrowIfDirectoryDoesNotExist(listDirectoryContentsRequest.DirectoryPath);
+
+        var results = new List<PathRepresentation>();
+
+        await ListContentsUnderPathAndPerformActionUntilCompleteAsync(
+            listDirectoryContentsRequest.DirectoryPath,
+            path =>
+            {
+                results.Add(path);
+                return Task.FromResult(true);
+            }
+        );
+
+        return new ListDirectoryContentsResponse { Contents = results };
     }
 
     /// <inheritdoc />
-    public Task<MoveDirectoryResponse> MoveDirectoryAsync(
+    public async Task<MoveDirectoryResponse> MoveDirectoryAsync(
         MoveDirectoryRequest moveDirectoryRequest,
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        using var _ = await LockFilesystemAsync();
+
+        ThrowIfDirectoryDoesNotExist(moveDirectoryRequest.SourceDirectoryPath);
+        ThrowIfDirectoryExists(moveDirectoryRequest.DestinationDirectoryPath);
+
+        var parentOfSourceDirectory = _configuration.MemoryFilesystem.GetOrCreateParentDirectoryOf(
+            moveDirectoryRequest.SourceDirectoryPath
+        );
+        var parentOfDestinationDirectory =
+            _configuration.MemoryFilesystem.GetOrCreateParentDirectoryOf(
+                moveDirectoryRequest.DestinationDirectoryPath
+            );
+
+        var directoryToMove = parentOfSourceDirectory.ChildDirectories[
+            moveDirectoryRequest.SourceDirectoryPath
+        ];
+
+        parentOfDestinationDirectory.ChildDirectories.Add(
+            moveDirectoryRequest.DestinationDirectoryPath,
+            directoryToMove
+        );
+        parentOfSourceDirectory.ChildDirectories.Remove(moveDirectoryRequest.SourceDirectoryPath);
+
+        // Recursively traverse the destination directory and replaces any source paths for child directories or files
+        // with that of the new destination directory.
+        TraverseDirectoryAndRewritePaths(
+            parentOfDestinationDirectory,
+            moveDirectoryRequest.SourceDirectoryPath,
+            moveDirectoryRequest.DestinationDirectoryPath
+        );
+
+        return new MoveDirectoryResponse
+        {
+            DestinationDirectory = new DirectoryRepresentation
+            {
+                Path = moveDirectoryRequest.DestinationDirectoryPath
+            }
+        };
+    }
+
+    private async Task ListContentsUnderPathAndPerformActionUntilCompleteAsync(
+        PathRepresentation path,
+        Func<PathRepresentation, Task<bool>> action
+    )
+    {
+        var directoryToListContentsOf = _configuration.MemoryFilesystem.GetOrCreateDirectory(path);
+
+        // Recursive function to traverse a directory and add its path, all of its file paths and the results of all of
+        // its descendants to the result list.
+        async Task TraverseDirectory(
+            (PathRepresentation Path, MemoryDirectoryRepresentation Representation) directory
+        )
+        {
+            var @continue = await action(directory.Path);
+            if (!@continue)
+            {
+                return;
+            }
+
+            foreach (var file in directory.Representation.Files.Keys)
+            {
+                @continue = await action(file);
+                if (!@continue)
+                {
+                    return;
+                }
+            }
+
+            foreach (var childDirectory in directory.Representation.ChildDirectories)
+            {
+                await TraverseDirectory((childDirectory.Key, childDirectory.Value));
+            }
+        }
+
+        await TraverseDirectory((path, directoryToListContentsOf));
     }
 
     private void ThrowIfDirectoryExists(PathRepresentation path)
@@ -127,6 +239,34 @@ public partial class MemoryAdapter
         if (!_configuration.MemoryFilesystem.DirectoryExists(path))
         {
             throw new DirectoryNotFoundException(path.NormalisedPath);
+        }
+    }
+
+    private void TraverseDirectoryAndRewritePaths(
+        MemoryDirectoryRepresentation directoryRepresentation,
+        PathRepresentation originalPath,
+        PathRepresentation replacementPath
+    )
+    {
+        foreach (var file in directoryRepresentation.Files.ToList())
+        {
+            var newPath = file.Key.ReplaceDirectoryWithinPath(originalPath, replacementPath);
+
+            directoryRepresentation.Files.Remove(file.Key);
+            directoryRepresentation.Files.Add(newPath, file.Value);
+        }
+
+        foreach (var childDirectory in directoryRepresentation.ChildDirectories.ToList())
+        {
+            var newPath = childDirectory.Key.ReplaceDirectoryWithinPath(
+                originalPath,
+                replacementPath
+            );
+
+            directoryRepresentation.ChildDirectories.Remove(childDirectory.Key);
+            directoryRepresentation.ChildDirectories.Add(newPath, childDirectory.Value);
+
+            TraverseDirectoryAndRewritePaths(childDirectory.Value, originalPath, replacementPath);
         }
     }
 }

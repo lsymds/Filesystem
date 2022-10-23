@@ -49,9 +49,7 @@ public class DeleteDirectoryTests : BaseIntegrationTest
 
         foreach (var file in files)
         {
-            await TestAdapter.CreateFileAndWriteTextAsync(
-                file.AsBaselineFilesystemPath()
-            );
+            await TestAdapter.CreateFileAndWriteTextAsync(file.AsBaselineFilesystemPath());
         }
 
         // Act.

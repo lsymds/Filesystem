@@ -43,23 +43,38 @@ internal static class PathRepresentationExtensions
                 continue;
             }
 
-            var replacementPathRepresentation =
-                pathRepresentation.FinalPathPartIsObviouslyADirectory
-                    ? (pathRepresentation.NormalisedPath + "/").ReplaceFirstOccurrence(
-                        rootPath.NormalisedPath + "/",
-                        string.Empty
-                    )
-                    : pathRepresentation.NormalisedPath.ReplaceFirstOccurrence(
-                        rootPath.NormalisedPath + "/",
-                        string.Empty
-                    );
+            var replacementPathRepresentation = pathRepresentation.ReplaceDirectoryWithinPath(
+                rootPath,
+                null
+            );
 
-            if (string.IsNullOrWhiteSpace(replacementPathRepresentation))
+            if (replacementPathRepresentation == null)
             {
                 continue;
             }
 
-            yield return replacementPathRepresentation.AsBaselineFilesystemPath();
+            yield return replacementPathRepresentation;
         }
+    }
+
+    public static PathRepresentation ReplaceDirectoryWithinPath(
+        this PathRepresentation path,
+        PathRepresentation original,
+        PathRepresentation replacement
+    )
+    {
+        var replacementPathRepresentation = path.FinalPathPartIsObviouslyADirectory
+            ? (path.NormalisedPath + "/").ReplaceFirstOccurrence(
+                original.NormalisedPath + "/",
+                replacement == null ? string.Empty : replacement?.NormalisedPath + "/"
+            )
+            : path.NormalisedPath.ReplaceFirstOccurrence(
+                original.NormalisedPath + "/",
+                replacement == null ? string.Empty : replacement?.NormalisedPath + "/"
+            );
+
+        return string.IsNullOrWhiteSpace(replacementPathRepresentation)
+            ? null
+            : replacementPathRepresentation.AsBaselineFilesystemPath();
     }
 }

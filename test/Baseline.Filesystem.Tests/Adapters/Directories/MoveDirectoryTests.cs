@@ -116,7 +116,7 @@ public class MoveDirectoryTests : BaseIntegrationTest
         foreach (var file in files)
         {
             await TestAdapter.CreateFileAndWriteTextAsync(
-                $"{_sourceDirectory.OriginalPath}/{file}".AsBaselineFilesystemPath()
+                $"{_sourceDirectory.NormalisedPath}/{file}".AsBaselineFilesystemPath()
             );
         }
 
@@ -134,7 +134,7 @@ public class MoveDirectoryTests : BaseIntegrationTest
         foreach (var file in files)
         {
             await ExpectFileToExistAsync(
-                $"{_destinationDirectory.OriginalPath}/{file}".AsBaselineFilesystemPath()
+                $"{_destinationDirectory.NormalisedPath}/{file}".AsBaselineFilesystemPath()
             );
         }
     }

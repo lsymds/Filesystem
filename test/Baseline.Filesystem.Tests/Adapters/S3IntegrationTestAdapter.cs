@@ -15,7 +15,7 @@ public class S3IntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegration
     private readonly string _generatedBucketName = Guid.NewGuid().ToString();
     private readonly IAmazonS3 _s3Client;
 
-    public S3IntegrationTestAdapter()
+    public S3IntegrationTestAdapter(PathRepresentation rootPath = null) : base(rootPath)
     {
         _s3Client = new AmazonS3Client(
             new BasicAWSCredentials("abc", "def"),
@@ -63,7 +63,7 @@ public class S3IntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegration
             new PutObjectRequest
             {
                 BucketName = _generatedBucketName,
-                Key = path.NormalisedPath,
+                Key = CombineRootPathWith(path).NormalisedPath,
                 ContentBody = contents
             }
         );
@@ -73,7 +73,11 @@ public class S3IntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegration
     public async ValueTask<bool> HasFilesOrDirectoriesUnderPathAsync(PathRepresentation path)
     {
         var objects = await _s3Client.ListObjectsAsync(
-            new ListObjectsRequest { BucketName = _generatedBucketName, Prefix = "prefixed/" }
+            new ListObjectsRequest
+            {
+                BucketName = _generatedBucketName,
+                Prefix = CombineRootPathWith(path).NormalisedPath
+            }
         );
 
         return objects.S3Objects.Any();
@@ -97,7 +101,7 @@ public class S3IntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegration
         return ValueTask.FromResult(
             new List<string>
             {
-                $"https://localhost:4566/{_generatedBucketName}/{path.NormalisedPath}",
+                $"https://localhost:4566/{_generatedBucketName}/{CombineRootPathWith(path).NormalisedPath}",
                 "X-Amz-Expires",
                 "X-Amz-Algorithm",
                 "X-Amz-SignedHeaders"
@@ -114,7 +118,7 @@ public class S3IntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegration
                 new GetObjectRequest
                 {
                     BucketName = _generatedBucketName,
-                    Key = path.NormalisedPath
+                    Key = CombineRootPathWith(path).NormalisedPath
                 }
             );
             return file.HttpStatusCode == HttpStatusCode.OK;
@@ -137,7 +141,7 @@ public class S3IntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegration
             new ListObjectsRequest
             {
                 BucketName = _generatedBucketName,
-                Prefix = path.NormalisedPath
+                Prefix = CombineRootPathWith(path).NormalisedPath
             }
         );
         return objects != null && objects.S3Objects.Any();

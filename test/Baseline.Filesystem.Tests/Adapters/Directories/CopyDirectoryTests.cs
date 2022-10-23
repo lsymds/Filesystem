@@ -72,21 +72,11 @@ public class CopyDirectoryTests : BaseIntegrationTest
 
         var files = new[]
         {
-            TestUtilities.RandomFilePathRepresentationWithPrefix(
-                _sourceDirectory.NormalisedPath
-            ),
-            TestUtilities.RandomFilePathRepresentationWithPrefix(
-                _sourceDirectory.NormalisedPath
-            ),
-            TestUtilities.RandomFilePathRepresentationWithPrefix(
-                _sourceDirectory.NormalisedPath
-            ),
-            TestUtilities.RandomFilePathRepresentationWithPrefix(
-                _sourceDirectory.NormalisedPath
-            ),
-            TestUtilities.RandomFilePathRepresentationWithPrefix(
-                _sourceDirectory.NormalisedPath
-            ),
+            TestUtilities.RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
+            TestUtilities.RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
+            TestUtilities.RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
+            TestUtilities.RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
+            TestUtilities.RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
         };
 
         foreach (var file in files)
@@ -220,6 +210,52 @@ public class CopyDirectoryTests : BaseIntegrationTest
                 $"{_destinationDirectory.NormalisedPath}/{i}/.keep".AsBaselineFilesystemPath()
             );
         }
+    }
+
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task AfterDirectoryIsCopied_ItDoesNotResultInActionsOnTheSourceBeingPerformedOnTheDestination(
+        Adapter adapter
+    )
+    {
+        // Arrange.
+        await ConfigureTestAsync(adapter, true);
+
+        var originalFirstFilePath =
+            $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath();
+        var originalSecondFilePath =
+            $"{_sourceDirectory.NormalisedPath}/a/b/c.txt".AsBaselineFilesystemPath();
+
+        await TestAdapter.CreateFileAndWriteTextAsync(originalFirstFilePath);
+        await TestAdapter.CreateFileAndWriteTextAsync(originalSecondFilePath);
+
+        await DirectoryManager.CopyAsync(
+            new CopyDirectoryRequest
+            {
+                SourceDirectoryPath = _sourceDirectory,
+                DestinationDirectoryPath = _destinationDirectory
+            }
+        );
+
+        var afterTheFactThirdFilePath =
+            $"{_sourceDirectory.NormalisedPath}/a/b/d.txt".AsBaselineFilesystemPath();
+
+        // Act.
+        await TestAdapter.CreateFileAndWriteTextAsync(afterTheFactThirdFilePath);
+
+        // Assert.
+        await ExpectFileToExistAsync(originalFirstFilePath);
+        await ExpectFileToExistAsync(originalSecondFilePath);
+        await ExpectFileToExistAsync(afterTheFactThirdFilePath);
+        await ExpectFileToExistAsync(
+            $"{_destinationDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath()
+        );
+        await ExpectFileToExistAsync(
+            $"{_destinationDirectory.NormalisedPath}/a/b/c.txt".AsBaselineFilesystemPath()
+        );
+        await ExpectFileNotToExistAsync(
+            $"{_destinationDirectory.NormalisedPath}/a/b/d.txt".AsBaselineFilesystemPath()
+        );
     }
 
     [Theory]

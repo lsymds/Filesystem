@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Baseline.Filesystem.Internal;
-using Baseline.Filesystem.Internal.Adapters.Memory;
 
 namespace Baseline.Filesystem;
 
