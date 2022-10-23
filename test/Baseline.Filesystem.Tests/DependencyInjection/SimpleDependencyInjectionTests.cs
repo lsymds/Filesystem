@@ -110,7 +110,10 @@ public class SimpleDependencyInjectionTests
 
             baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
             {
-                storeRegistrationBuilder.WithName("second").UsingMemoryAdapter();
+                storeRegistrationBuilder
+                    .WithName("second")
+                    .WithRootPath("abc/".AsBaselineFilesystemPath())
+                    .UsingMemoryAdapter();
             });
         });
         var serviceProvider = serviceCollection.BuildServiceProvider();
