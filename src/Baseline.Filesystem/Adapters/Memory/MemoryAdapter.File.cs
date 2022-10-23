@@ -261,6 +261,9 @@ public partial class MemoryAdapter
         return new WriteTextToFileResponse();
     }
 
+    /// <summary>
+    /// Throws a <see cref="FileNotFoundException"/> if a given path does not exist in the filesystem.
+    /// </summary>
     private void ThrowIfFileDoesNotExist(PathRepresentation filePath)
     {
         var exists = _configuration.MemoryFilesystem.FileExists(filePath);
@@ -270,6 +273,9 @@ public partial class MemoryAdapter
         }
     }
 
+    /// <summary>
+    /// Throws a <see cref="FileAlreadyExistsException"/> if a given path already exists in the filesystem.
+    /// </summary>
     private void ThrowIfFileExists(PathRepresentation filePath)
     {
         var exists = _configuration.MemoryFilesystem.FileExists(filePath);

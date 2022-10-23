@@ -20,8 +20,8 @@ public record MemoryDirectoryRepresentation(
     }
 
     /// <summary>
-    /// Deep clones any mutable types within the current <see cref="MemoryDirectoryRepresentation"/>, copies the
-    /// others.
+    /// Deep clones any mutable types within the current <see cref="MemoryDirectoryRepresentation"/> but copies the
+    /// references of any immutable types.
     /// </summary>
     public MemoryDirectoryRepresentation DeepCloneMutableTypes()
     {

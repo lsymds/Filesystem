@@ -189,6 +189,11 @@ public partial class MemoryAdapter
         };
     }
 
+    /// <summary>
+    /// Lists all of the contents under a path (including the provided path itself) and performs a provided action
+    /// until either a) all contents have been actioned or b) an action returns false indicating the listing should
+    /// stop.
+    /// </summary>
     private async Task ListContentsUnderPathAndPerformActionUntilCompleteAsync(
         PathRepresentation path,
         Func<PathRepresentation, Task<bool>> action
@@ -226,6 +231,9 @@ public partial class MemoryAdapter
         await TraverseDirectory((path, directoryToListContentsOf));
     }
 
+    /// <summary>
+    /// Throws a <see cref="DirectoryAlreadyExistsException"/> if a given directory path already exists.
+    /// </summary>
     private void ThrowIfDirectoryExists(PathRepresentation path)
     {
         if (_configuration.MemoryFilesystem.DirectoryExists(path))
@@ -234,6 +242,9 @@ public partial class MemoryAdapter
         }
     }
 
+    /// <summary>
+    /// Throws a <see cref="DirectoryNotFoundException"/> if a given directory path does not already.
+    /// </summary>
     private void ThrowIfDirectoryDoesNotExist(PathRepresentation path)
     {
         if (!_configuration.MemoryFilesystem.DirectoryExists(path))
@@ -242,6 +253,10 @@ public partial class MemoryAdapter
         }
     }
 
+    /// <summary>
+    /// Given a directory within a filesystem, recursively traverse it and replace any paths matching
+    /// <see cref="originalPath"/> with the <see cref="replacementPath"/>.
+    /// </summary>
     private void TraverseDirectoryAndRewritePaths(
         MemoryDirectoryRepresentation directoryRepresentation,
         PathRepresentation originalPath,
