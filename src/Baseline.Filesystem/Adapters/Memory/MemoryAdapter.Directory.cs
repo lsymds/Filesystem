@@ -32,7 +32,7 @@ public partial class MemoryAdapter
                 copyDirectoryRequest.DestinationDirectoryPath
             );
 
-        // Take the original directory but deep clone any mutable types.
+        // Take the original directory but deep clone any mutable types (i.e. dictionaries).
         var directoryToCopy = parentOfSourceDirectory.ChildDirectories[
             copyDirectoryRequest.SourceDirectoryPath
         ].DeepCloneMutableTypes();
@@ -85,17 +85,14 @@ public partial class MemoryAdapter
 
         ThrowIfDirectoryDoesNotExist(deleteDirectoryRequest.DirectoryPath);
 
-        var pathTree = deleteDirectoryRequest.DirectoryPath.GetPathTree().ToList();
-
         var parentDirectoryOfDirectoryToDelete =
-            _configuration.MemoryFilesystem.GetDirectoryFromNthLevelOfPathTree(
-                pathTree,
-                pathTree.Count - 2
+            _configuration.MemoryFilesystem.GetOrCreateParentDirectoryOf(
+                deleteDirectoryRequest.DirectoryPath
             );
 
-        var pathToRemove = pathTree.Last();
-
-        parentDirectoryOfDirectoryToDelete.ChildDirectories.Remove(pathToRemove);
+        parentDirectoryOfDirectoryToDelete.ChildDirectories.Remove(
+            deleteDirectoryRequest.DirectoryPath
+        );
 
         return new DeleteDirectoryResponse();
     }

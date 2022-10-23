@@ -8,10 +8,7 @@ namespace Baseline.Filesystem;
 /// </summary>
 public class MemoryFilesystem
 {
-    /// <summary>
-    /// Gets the root directory which is the base of the memory filesystem.
-    /// </summary>
-    private MemoryDirectoryRepresentation _rootDirectory;
+    private readonly MemoryDirectoryRepresentation _rootDirectory;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MemoryFilesystem"/> class.
@@ -94,35 +91,10 @@ public class MemoryFilesystem
     }
 
     /// <summary>
-    /// Given a path tree (i.e. a/, a/b/, a/b/c/) retrieve the Nth level <see cref="MemoryDirectoryRepresentation"/>
-    /// of that path from the in memory filesystem. The Nth level should be 0 based.
-    /// </summary>
-    public MemoryDirectoryRepresentation GetDirectoryFromNthLevelOfPathTree(
-        IReadOnlyList<PathRepresentation> pathTree,
-        int level
-    )
-    {
-        var workingDirectory = _rootDirectory;
-
-        for (var i = 0; i <= level; i++)
-        {
-            var pathPart = pathTree[i];
-            workingDirectory = workingDirectory.ChildDirectories[pathPart];
-        }
-
-        return workingDirectory;
-    }
-
-    /// <summary>
     /// Identifies if a given file path exists or not within the memory filesystem.
     /// </summary>
     public bool FileExists(PathRepresentation path)
     {
-        if (path.NormalisedPath == "")
-        {
-            return true;
-        }
-
         var workingDirectory = _rootDirectory;
 
         foreach (var pathPart in path.GetPathTree())

@@ -7,7 +7,7 @@ public class RunOnAllProvidersConfiguration : IEnumerable<object[]>
 {
     public IEnumerator<object[]> GetEnumerator()
     {
-        return new List<object[]> { new object[] { Adapter.Memory } }.GetEnumerator();
+        return new List<object[]> { new object[] { Adapter.Memory, Adapter.S3 } }.GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()

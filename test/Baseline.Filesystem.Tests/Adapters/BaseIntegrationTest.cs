@@ -4,7 +4,7 @@ using FluentAssertions;
 
 namespace Baseline.Filesystem.Tests.Adapters;
 
-public abstract class BaseIntegrationTest
+public abstract class BaseIntegrationTest : IAsyncDisposable
 {
     protected IIntegrationTestAdapter TestAdapter;
     protected IFileManager FileManager;

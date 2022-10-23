@@ -110,13 +110,7 @@ public class SimpleDependencyInjectionTests
 
             baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
             {
-                storeRegistrationBuilder
-                    .WithName("second")
-                    .UsingS3Adapter(adapterConfiguration =>
-                    {
-                        adapterConfiguration.BucketName = "2345234234";
-                        adapterConfiguration.S3Client = client;
-                    });
+                storeRegistrationBuilder.WithName("second").UsingMemoryAdapter();
             });
         });
         var serviceProvider = serviceCollection.BuildServiceProvider();
@@ -124,6 +118,6 @@ public class SimpleDependencyInjectionTests
         // Assert.
         var storeManager = serviceProvider.GetService<IStoreManager>();
         storeManager!.Get("default").Adapter.Should().BeOfType<S3Adapter>();
-        storeManager!.Get("second").Adapter.Should().BeOfType<S3Adapter>();
+        storeManager!.Get("second").Adapter.Should().BeOfType<MemoryAdapter>();
     }
 }

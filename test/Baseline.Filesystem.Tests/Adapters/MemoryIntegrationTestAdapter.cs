@@ -12,7 +12,7 @@ public class MemoryIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegra
 
     public ValueTask DisposeAsync()
     {
-        throw new System.NotImplementedException();
+        return ValueTask.CompletedTask;
     }
 
     public ValueTask<IAdapter> BootstrapAsync()
