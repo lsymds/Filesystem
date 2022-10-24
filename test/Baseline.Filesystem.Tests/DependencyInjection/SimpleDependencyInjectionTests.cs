@@ -113,7 +113,10 @@ public class SimpleDependencyInjectionTests
                 storeRegistrationBuilder
                     .WithName("second")
                     .WithRootPath("abc/".AsBaselineFilesystemPath())
-                    .UsingMemoryAdapter();
+                    .UsingMemoryAdapter(c =>
+                    {
+                        c.PublicUrlToReturn = "https://www.google.com";
+                    });
             });
         });
         var serviceProvider = serviceCollection.BuildServiceProvider();
