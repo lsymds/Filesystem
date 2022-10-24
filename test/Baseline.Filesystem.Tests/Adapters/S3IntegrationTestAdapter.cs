@@ -87,7 +87,11 @@ public class S3IntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegration
     public async ValueTask<string> ReadFileAsStringAsync(PathRepresentation path)
     {
         var file = await _s3Client.GetObjectAsync(
-            new GetObjectRequest { BucketName = _generatedBucketName, Key = path.NormalisedPath }
+            new GetObjectRequest
+            {
+                BucketName = _generatedBucketName,
+                Key = CombineRootPathWith(path).NormalisedPath
+            }
         );
 
         return await new StreamReader(file.ResponseStream).ReadToEndAsync();

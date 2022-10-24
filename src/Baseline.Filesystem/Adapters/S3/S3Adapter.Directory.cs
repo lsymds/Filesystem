@@ -115,19 +115,23 @@ public partial class S3Adapter
             )
             .ConfigureAwait(false);
 
+        var pathTracker = new HashSet<PathRepresentation>();
+
         await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 iterateDirectoryContentsRequest.DirectoryPath,
                 async listObjectsResponse =>
                 {
-                    var pathTracker = new Dictionary<string, PathRepresentation>();
                     foreach (var file in listObjectsResponse.S3Objects)
                     {
-                        var tree = BuildOrderedPathTree(
-                            file.Key.AsBaselineFilesystemPath(),
-                            pathTracker
-                        );
-                        foreach (var treeItem in tree)
+                        foreach (var treeItem in file.Key.AsBaselineFilesystemPath().GetPathTree())
                         {
+                            if (pathTracker.Contains(treeItem))
+                            {
+                                continue;
+                            }
+
+                            pathTracker.Add(treeItem);
+
                             var @continue = await iterateDirectoryContentsRequest.Action(treeItem);
                             if (!@continue)
                             {
@@ -157,8 +161,7 @@ public partial class S3Adapter
             )
             .ConfigureAwait(false);
 
-        var directoryContents = new List<PathRepresentation>();
-        var pathTracker = new Dictionary<string, PathRepresentation>();
+        var directoryContents = new HashSet<PathRepresentation>();
 
         await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 listDirectoryContentsRequest.DirectoryPath,
@@ -166,12 +169,11 @@ public partial class S3Adapter
                 {
                     listObjectsResponse.S3Objects.ForEach(
                         @object =>
-                            directoryContents.AddRange(
-                                BuildOrderedPathTree(
-                                    @object.Key.AsBaselineFilesystemPath(),
-                                    pathTracker
-                                )
-                            )
+                            @object.Key
+                                .AsBaselineFilesystemPath()
+                                .GetPathTree()
+                                .ToList()
+                                .ForEach(p => directoryContents.Add(p))
                     );
                     return Task.FromResult(true);
                 },
@@ -179,7 +181,7 @@ public partial class S3Adapter
             )
             .ConfigureAwait(false);
 
-        return new ListDirectoryContentsResponse { Contents = directoryContents };
+        return new ListDirectoryContentsResponse { Contents = directoryContents.ToList() };
     }
 
     /// <inheritdoc />
@@ -325,35 +327,5 @@ public partial class S3Adapter
                 cancellationToken
             )
             .ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Builds and returns an ordered path tree from a path returned from the S3 API.
-    /// </summary>
-    /// <param name="basePath">The path to create a tree from.</param>
-    /// <param name="directoryPathTracker">A collection of paths that have already been executed.</param>
-    private IEnumerable<PathRepresentation> BuildOrderedPathTree(
-        PathRepresentation basePath,
-        Dictionary<string, PathRepresentation> directoryPathTracker
-    )
-    {
-        var addedDirectoryPaths =
-            directoryPathTracker ?? new Dictionary<string, PathRepresentation>();
-
-        if (basePath.OriginalPath.Contains("/"))
-        {
-            foreach (var path in basePath.GetPathTree())
-            {
-                if (addedDirectoryPaths.ContainsKey(path.NormalisedPath))
-                {
-                    continue;
-                }
-
-                addedDirectoryPaths.Add(path.NormalisedPath, path);
-                yield return path;
-            }
-        }
-
-        yield return basePath;
     }
 }
