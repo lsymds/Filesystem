@@ -63,10 +63,17 @@ public class PathRepresentation
     public string OriginalPath { get; internal set; }
 
     /// <summary>
+    /// OBSOLETE - Gets whether or not the final path part was obviously intended to be a directory (i.e. it ended with
+    /// a terminating slash).
+    /// </summary>
+    [Obsolete("Prefer FinalPathPartIsADirectory. This will be removed in version 4.0.0.")]
+    public bool FinalPathPartIsObviouslyADirectory => FinalPathPartIsADirectory;
+
+    /// <summary>
     /// Gets whether or not the final path part was obviously intended to be a directory (i.e. it ended with a
     /// terminating slash).
     /// </summary>
-    public bool FinalPathPartIsObviouslyADirectory => OriginalPath.EndsWith("/");
+    public bool FinalPathPartIsADirectory => OriginalPath.EndsWith("/");
 
     /// <summary>
     /// Retrieves the extension of the path (if it has one) prefixed with a '.' (i.e. .xml). Will return an empty
@@ -77,7 +84,7 @@ public class PathRepresentation
         get
         {
             if (
-                FinalPathPartIsObviouslyADirectory
+                FinalPathPartIsADirectory
                 || string.IsNullOrWhiteSpace(FinalPathPart)
                 || !FinalPathPart.Contains(".")
             )
@@ -104,7 +111,7 @@ public class PathRepresentation
     {
         get
         {
-            if (FinalPathPartIsObviouslyADirectory)
+            if (FinalPathPartIsADirectory)
             {
                 return string.Empty;
             }
@@ -128,8 +135,7 @@ public class PathRepresentation
         if (obj is PathRepresentation pathRepresentation)
         {
             return NormalisedPath == pathRepresentation.NormalisedPath
-                   && FinalPathPartIsObviouslyADirectory
-                   == pathRepresentation.FinalPathPartIsObviouslyADirectory;
+                && FinalPathPartIsADirectory == pathRepresentation.FinalPathPartIsADirectory;
         }
 
         return false;
@@ -141,7 +147,13 @@ public class PathRepresentation
     public override int GetHashCode()
     {
         // ReSharper disable once NonReadonlyMemberInGetHashCode
-        return NormalisedPath.GetHashCode() + FinalPathPartIsObviouslyADirectory.GetHashCode();
+        return NormalisedPath.GetHashCode() + FinalPathPartIsADirectory.GetHashCode();
+    }
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return $"NormalisedPath={NormalisedPath} FinalPathPartIsObviouslyADirectory={FinalPathPartIsADirectory}";
     }
 
     /// <summary>

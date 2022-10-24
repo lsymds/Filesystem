@@ -6,10 +6,10 @@ namespace Baseline.Filesystem;
 /// Response for the ListDirectoryContentsAsync method. Contains a flat list of all available directories and files
 /// for the requested directory.
 /// </summary>
-public class ListDirectoryContentsResponse
+public record ListDirectoryContentsResponse
 {
     /// <summary>
     /// Gets or sets the contents of the directory defined in the request.
     /// </summary>
-    public List<PathRepresentation> Contents { get; set; }
+    public List<PathRepresentation> Contents { get; init; }
 }

@@ -34,8 +34,13 @@ public class FileManager : BaseManager, IFileManager
             )
             .WrapExternalExceptionsAsync(store)
             .RemoveRootPathsAsync(
-                r => r.DestinationFile.Path,
-                (r, p) => r.DestinationFile.Path = p,
+                response => response.DestinationFile.Path,
+                (response, pathWithoutRootPath) =>
+                    // ReSharper disable once WithExpressionModifiesAllMembers
+                    response with
+                    {
+                        DestinationFile = new FileRepresentation { Path = pathWithoutRootPath }
+                    },
                 GetStoreRootPath(store)
             )
             .ConfigureAwait(false);
@@ -93,8 +98,13 @@ public class FileManager : BaseManager, IFileManager
             )
             .WrapExternalExceptionsAsync(store)
             .RemoveRootPathsAsync(
-                r => r.File.Path,
-                (r, p) => r.File.Path = p,
+                response => response.File.Path,
+                (response, pathWithoutRootPath) =>
+                    // ReSharper disable once WithExpressionModifiesAllMembers
+                    response with
+                    {
+                        File = new FileRepresentation { Path = pathWithoutRootPath }
+                    },
                 GetStoreRootPath(store)
             )
             .ConfigureAwait(false);
@@ -107,15 +117,11 @@ public class FileManager : BaseManager, IFileManager
         CancellationToken cancellationToken = default
     )
     {
-        GetFilePublicUrlRequestValidator.ValidateAndThrowIfUnsuccessful(
-            getFilePublicUrlRequest
-        );
+        GetFilePublicUrlRequestValidator.ValidateAndThrowIfUnsuccessful(getFilePublicUrlRequest);
 
         return await GetAdapter(store)
             .GetFilePublicUrlAsync(
-                getFilePublicUrlRequest.CloneAndCombinePathsWithRootPath(
-                    GetStoreRootPath(store)
-                ),
+                getFilePublicUrlRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
                 cancellationToken
             )
             .WrapExternalExceptionsAsync(store)
@@ -140,8 +146,13 @@ public class FileManager : BaseManager, IFileManager
             )
             .WrapExternalExceptionsAsync(store)
             .RemoveRootPathsAsync(
-                r => r.DestinationFile.Path,
-                (r, p) => r.DestinationFile.Path = p,
+                response => response.DestinationFile.Path,
+                (response, pathWithoutRootPath) =>
+                    // ReSharper disable once WithExpressionModifiesAllMembers
+                    response with
+                    {
+                        DestinationFile = new FileRepresentation { Path = pathWithoutRootPath }
+                    },
                 GetStoreRootPath(store)
             )
             .ConfigureAwait(false);
@@ -158,9 +169,7 @@ public class FileManager : BaseManager, IFileManager
 
         return await GetAdapter(store)
             .ReadFileAsStreamAsync(
-                readFileAsStreamRequest.CloneAndCombinePathsWithRootPath(
-                    GetStoreRootPath(store)
-                ),
+                readFileAsStreamRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
                 cancellationToken
             )
             .WrapExternalExceptionsAsync(store)
@@ -178,9 +187,7 @@ public class FileManager : BaseManager, IFileManager
 
         return await GetAdapter(store)
             .ReadFileAsStringAsync(
-                readFileAsStringRequest.CloneAndCombinePathsWithRootPath(
-                    GetStoreRootPath(store)
-                ),
+                readFileAsStringRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
                 cancellationToken
             )
             .WrapExternalExceptionsAsync(store)
@@ -203,8 +210,13 @@ public class FileManager : BaseManager, IFileManager
             )
             .WrapExternalExceptionsAsync(store)
             .RemoveRootPathsAsync(
-                r => r.File.Path,
-                (r, p) => r.File.Path = p,
+                response => response.File.Path,
+                (response, pathWithoutRootPath) =>
+                    // ReSharper disable once WithExpressionModifiesAllMembers
+                    response with
+                    {
+                        File = new FileRepresentation { Path = pathWithoutRootPath }
+                    },
                 GetStoreRootPath(store)
             )
             .ConfigureAwait(false);
@@ -217,15 +229,11 @@ public class FileManager : BaseManager, IFileManager
         CancellationToken cancellationToken = default
     )
     {
-        WriteStreamToFileRequestValidator.ValidateAndThrowIfUnsuccessful(
-            writeStreamToFileRequest
-        );
+        WriteStreamToFileRequestValidator.ValidateAndThrowIfUnsuccessful(writeStreamToFileRequest);
 
         return await GetAdapter(store)
             .WriteStreamToFileAsync(
-                writeStreamToFileRequest.CloneAndCombinePathsWithRootPath(
-                    GetStoreRootPath(store)
-                ),
+                writeStreamToFileRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
                 cancellationToken
             )
             .WrapExternalExceptionsAsync(store)
@@ -243,9 +251,7 @@ public class FileManager : BaseManager, IFileManager
 
         return await GetAdapter(store)
             .WriteTextToFileAsync(
-                writeTextToFileRequest.CloneAndCombinePathsWithRootPath(
-                    GetStoreRootPath(store)
-                ),
+                writeTextToFileRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
                 cancellationToken
             )
             .WrapExternalExceptionsAsync(store)

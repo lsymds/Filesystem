@@ -3,17 +3,22 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
-namespace Baseline.Filesystem.Tests.Adapters.S3.Directories;
+namespace Baseline.Filesystem.Tests.Adapters.Directories;
 
-public class CopyDirectoryTests : BaseS3AdapterIntegrationTest
+public class CopyDirectoryTests : BaseIntegrationTest
 {
-    private readonly PathRepresentation _sourceDirectory = RandomDirectoryPathRepresentation();
+    private readonly PathRepresentation _sourceDirectory =
+        TestUtilities.RandomDirectoryPathRepresentation();
     private readonly PathRepresentation _destinationDirectory =
-        RandomDirectoryPathRepresentation();
+        TestUtilities.RandomDirectoryPathRepresentation();
 
-    [Fact]
-    public async Task It_Throws_An_Exception_If_The_Source_Directory_Does_Not_Exist()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Throws_An_Exception_If_The_Source_Directory_Does_Not_Exist(Adapter adapter)
     {
+        // Arrange.
+        await ConfigureTestAsync(adapter);
+
         // Act.
         Func<Task> func = async () =>
             await DirectoryManager.CopyAsync(
@@ -28,14 +33,17 @@ public class CopyDirectoryTests : BaseS3AdapterIntegrationTest
         await func.Should().ThrowExactlyAsync<DirectoryNotFoundException>();
     }
 
-    [Fact]
-    public async Task It_Throws_An_Exception_If_The_Destination_Directory_Exists()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Throws_An_Exception_If_The_Destination_Directory_Exists(Adapter adapter)
     {
         // Arrange.
-        await CreateFileAndWriteTextAsync(
+        await ConfigureTestAsync(adapter);
+
+        await TestAdapter.CreateFileAndWriteTextAsync(
             $"{_sourceDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
         );
-        await CreateFileAndWriteTextAsync(
+        await TestAdapter.CreateFileAndWriteTextAsync(
             $"{_destinationDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
         );
 
@@ -53,21 +61,27 @@ public class CopyDirectoryTests : BaseS3AdapterIntegrationTest
         await func.Should().ThrowExactlyAsync<DirectoryAlreadyExistsException>();
     }
 
-    [Fact]
-    public async Task It_Copies_A_Simple_Directory_Structure_From_One_Location_To_Another()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Copies_A_Simple_Directory_Structure_From_One_Location_To_Another(
+        Adapter adapter
+    )
     {
         // Arrange.
+        await ConfigureTestAsync(adapter);
+
         var files = new[]
         {
-            RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
-            RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
-            RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
-            RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
-            RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
+            TestUtilities.RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
+            TestUtilities.RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
+            TestUtilities.RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
+            TestUtilities.RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
+            TestUtilities.RandomFilePathRepresentationWithPrefix(_sourceDirectory.NormalisedPath),
         };
+
         foreach (var file in files)
         {
-            await CreateFileAndWriteTextAsync(file);
+            await TestAdapter.CreateFileAndWriteTextAsync(file);
         }
 
         // Act.
@@ -91,15 +105,20 @@ public class CopyDirectoryTests : BaseS3AdapterIntegrationTest
         }
     }
 
-    [Fact]
-    public async Task It_Copies_A_Directory_Structure_With_A_Repeated_Directory_Name_Correctly()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Copies_A_Directory_Structure_With_A_Repeated_Directory_Name_Correctly(
+        Adapter adapter
+    )
     {
         // Arrange.
+        await ConfigureTestAsync(adapter);
+
         var originalDirectory = "cheese/".AsBaselineFilesystemPath();
         var originalFile =
             "cheese/cheese/more-cheese/my-favourite-cheesestring.jpeg".AsBaselineFilesystemPath();
 
-        await CreateFileAndWriteTextAsync(originalFile);
+        await TestAdapter.CreateFileAndWriteTextAsync(originalFile);
 
         // Act.
         await DirectoryManager.CopyAsync(
@@ -116,20 +135,25 @@ public class CopyDirectoryTests : BaseS3AdapterIntegrationTest
         );
     }
 
-    [Fact]
-    public async Task It_Copies_A_More_Complex_Directory_Structure_From_One_Location_To_Another()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Copies_A_More_Complex_Directory_Structure_From_One_Location_To_Another(
+        Adapter adapter
+    )
     {
         // Arrange.
-        await CreateFileAndWriteTextAsync(
+        await ConfigureTestAsync(adapter);
+
+        await TestAdapter.CreateFileAndWriteTextAsync(
             "a/more/complex/directory/structure/.keep".AsBaselineFilesystemPath()
         );
-        await CreateFileAndWriteTextAsync(
+        await TestAdapter.CreateFileAndWriteTextAsync(
             "a/more/complex/directory/structure/with/a/nested/file.jpeg".AsBaselineFilesystemPath()
         );
-        await CreateFileAndWriteTextAsync(
+        await TestAdapter.CreateFileAndWriteTextAsync(
             "a/more/complex/directory/structure/with/an/even/more/complex/file/structure.txt".AsBaselineFilesystemPath()
         );
-        await CreateFileAndWriteTextAsync(
+        await TestAdapter.CreateFileAndWriteTextAsync(
             "a/more/complex/directory/structure/with/an/even/more/complex/file/structure.config".AsBaselineFilesystemPath()
         );
 
@@ -154,13 +178,18 @@ public class CopyDirectoryTests : BaseS3AdapterIntegrationTest
         );
     }
 
-    [Fact]
-    public async Task It_Copies_A_Large_Directory_Structure_From_One_Location_To_Another()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Copies_A_Large_Directory_Structure_From_One_Location_To_Another(
+        Adapter adapter
+    )
     {
         // Arrange.
+        await ConfigureTestAsync(adapter);
+
         for (var i = 0; i < 1001; i++)
         {
-            await CreateFileAndWriteTextAsync(
+            await TestAdapter.CreateFileAndWriteTextAsync(
                 $"{_sourceDirectory.NormalisedPath}/{i}/.keep".AsBaselineFilesystemPath()
             );
         }
@@ -183,13 +212,60 @@ public class CopyDirectoryTests : BaseS3AdapterIntegrationTest
         }
     }
 
-    [Fact]
-    public async Task It_Successfully_Copies_A_Directory_With_A_Root_Path()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task AfterDirectoryIsCopied_ItDoesNotResultInActionsOnTheSourceBeingPerformedOnTheDestination(
+        Adapter adapter
+    )
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        await ConfigureTestAsync(adapter, true);
 
-        await CreateFileAndWriteTextAsync(
+        var originalFirstFilePath =
+            $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath();
+        var originalSecondFilePath =
+            $"{_sourceDirectory.NormalisedPath}/a/b/c.txt".AsBaselineFilesystemPath();
+
+        await TestAdapter.CreateFileAndWriteTextAsync(originalFirstFilePath);
+        await TestAdapter.CreateFileAndWriteTextAsync(originalSecondFilePath);
+
+        await DirectoryManager.CopyAsync(
+            new CopyDirectoryRequest
+            {
+                SourceDirectoryPath = _sourceDirectory,
+                DestinationDirectoryPath = _destinationDirectory
+            }
+        );
+
+        var afterTheFactThirdFilePath =
+            $"{_sourceDirectory.NormalisedPath}/a/b/d.txt".AsBaselineFilesystemPath();
+
+        // Act.
+        await TestAdapter.CreateFileAndWriteTextAsync(afterTheFactThirdFilePath);
+
+        // Assert.
+        await ExpectFileToExistAsync(originalFirstFilePath);
+        await ExpectFileToExistAsync(originalSecondFilePath);
+        await ExpectFileToExistAsync(afterTheFactThirdFilePath);
+        await ExpectFileToExistAsync(
+            $"{_destinationDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath()
+        );
+        await ExpectFileToExistAsync(
+            $"{_destinationDirectory.NormalisedPath}/a/b/c.txt".AsBaselineFilesystemPath()
+        );
+        await ExpectFileNotToExistAsync(
+            $"{_destinationDirectory.NormalisedPath}/a/b/d.txt".AsBaselineFilesystemPath()
+        );
+    }
+
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Successfully_Copies_A_Directory_With_A_Root_Path(Adapter adapter)
+    {
+        // Arrange.
+        await ConfigureTestAsync(adapter, true);
+
+        await TestAdapter.CreateFileAndWriteTextAsync(
             $"{_sourceDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
         );
 

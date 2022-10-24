@@ -20,14 +20,14 @@ internal static class ExternalExceptionExtensions
         {
             await task.ConfigureAwait(false);
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            if (e is BaselineFilesystemException)
+            if (exception is BaselineFilesystemException)
             {
                 throw;
             }
 
-            throw e.CreateStoreAdapterException(storeName);
+            throw exception.CreateStoreAdapterException(storeName);
         }
     }
 
@@ -46,14 +46,14 @@ internal static class ExternalExceptionExtensions
         {
             return await task.ConfigureAwait(false);
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            if (e is BaselineFilesystemException)
+            if (exception is BaselineFilesystemException)
             {
                 throw;
             }
 
-            throw e.CreateStoreAdapterException(storeName);
+            throw exception.CreateStoreAdapterException(storeName);
         }
     }
 
@@ -70,7 +70,7 @@ internal static class ExternalExceptionExtensions
     {
         return new StoreAdapterOperationException(
             $"Unhandled exception thrown from the adapter for store '{storeName}', potentially whilst communicating "
-            + $"with its API. See the inner exception for details.",
+                + "with its API. See the inner exception for details.",
             e
         );
     }

@@ -36,7 +36,12 @@ public class DirectoryManager : BaseManager, IDirectoryManager
             .WrapExternalExceptionsAsync(store)
             .RemoveRootPathsAsync(
                 x => x.DestinationDirectory.Path,
-                (o, p) => o.DestinationDirectory.Path = p,
+                (o, p) =>
+                    // ReSharper disable once WithExpressionModifiesAllMembers
+                    o with
+                    {
+                        DestinationDirectory = new DirectoryRepresentation { Path = p }
+                    },
                 GetStoreRootPath(store)
             )
             .ConfigureAwait(false);
@@ -49,21 +54,18 @@ public class DirectoryManager : BaseManager, IDirectoryManager
         CancellationToken cancellationToken = default
     )
     {
-        BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(
-            createDirectoryRequest
-        );
+        BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(createDirectoryRequest);
 
         return await GetAdapter(store)
             .CreateDirectoryAsync(
-                createDirectoryRequest.CloneAndCombinePathsWithRootPath(
-                    GetStoreRootPath(store)
-                ),
+                createDirectoryRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
                 cancellationToken
             )
             .WrapExternalExceptionsAsync(store)
             .RemoveRootPathsAsync(
                 r => r.Directory.Path,
-                (r, p) => r.Directory.Path = p,
+                // ReSharper disable once WithExpressionModifiesAllMembers
+                (r, p) => r with { Directory = new DirectoryRepresentation { Path = p } },
                 GetStoreRootPath(store)
             )
             .ConfigureAwait(false);
@@ -76,15 +78,11 @@ public class DirectoryManager : BaseManager, IDirectoryManager
         CancellationToken cancellationToken = default
     )
     {
-        BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(
-            deleteDirectoryRequest
-        );
+        BaseSingleDirectoryRequestValidator.ValidateAndThrowIfUnsuccessful(deleteDirectoryRequest);
 
         return await GetAdapter(store)
             .DeleteDirectoryAsync(
-                deleteDirectoryRequest.CloneAndCombinePathsWithRootPath(
-                    GetStoreRootPath(store)
-                ),
+                deleteDirectoryRequest.CloneAndCombinePathsWithRootPath(GetStoreRootPath(store)),
                 cancellationToken
             )
             .WrapExternalExceptionsAsync(store)
@@ -117,9 +115,7 @@ public class DirectoryManager : BaseManager, IDirectoryManager
                     .ToList();
                 if (pathWithoutRoot.Any())
                 {
-                    return await iterateDirectoryContentsRequest.Action(
-                        pathWithoutRoot.First()
-                    );
+                    return await iterateDirectoryContentsRequest.Action(pathWithoutRoot.First());
                 }
 
                 return true;
@@ -156,7 +152,7 @@ public class DirectoryManager : BaseManager, IDirectoryManager
             .WrapExternalExceptionsAsync(store)
             .RemoveRootPathsAsync(
                 r => r.Contents,
-                (ri, p) => ri.Contents = p.ToList(),
+                (_, p) => new ListDirectoryContentsResponse { Contents = p.ToList() },
                 GetStoreRootPath(store)
             )
             .ConfigureAwait(false);
@@ -181,7 +177,12 @@ public class DirectoryManager : BaseManager, IDirectoryManager
             .WrapExternalExceptionsAsync(store)
             .RemoveRootPathsAsync(
                 r => r.DestinationDirectory.Path,
-                (r, p) => r.DestinationDirectory.Path = p,
+                (r, p) =>
+                    // ReSharper disable once WithExpressionModifiesAllMembers
+                    r with
+                    {
+                        DestinationDirectory = new DirectoryRepresentation { Path = p }
+                    },
                 GetStoreRootPath(store)
             )
             .ConfigureAwait(false);

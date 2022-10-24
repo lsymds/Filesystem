@@ -32,10 +32,7 @@ public class PathRepresentationTests
     [InlineData("a/b/file.xml", "file")]
     [InlineData("a/b/file.config.json", "file.config")]
     [InlineData("a/b/.xml/config.xml", "config")]
-    public void It_Correctly_Retrieves_The_File_Name_If_There_Is_One(
-        string path,
-        string outcome
-    )
+    public void It_Correctly_Retrieves_The_File_Name_If_There_Is_One(string path, string outcome)
     {
         // Arrange.
         var pathRepresentation = path.AsBaselineFilesystemPath();

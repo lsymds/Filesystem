@@ -115,19 +115,23 @@ public partial class S3Adapter
             )
             .ConfigureAwait(false);
 
+        var pathTracker = new HashSet<PathRepresentation>();
+
         await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 iterateDirectoryContentsRequest.DirectoryPath,
-                async r =>
+                async listObjectsResponse =>
                 {
-                    var pathTracker = new Dictionary<string, PathRepresentation>();
-                    foreach (var file in r.S3Objects)
+                    foreach (var file in listObjectsResponse.S3Objects)
                     {
-                        var tree = BuildOrderedPathTree(
-                            file.Key.AsBaselineFilesystemPath(),
-                            pathTracker
-                        );
-                        foreach (var treeItem in tree)
+                        foreach (var treeItem in file.Key.AsBaselineFilesystemPath().GetPathTree())
                         {
+                            if (pathTracker.Contains(treeItem))
+                            {
+                                continue;
+                            }
+
+                            pathTracker.Add(treeItem);
+
                             var @continue = await iterateDirectoryContentsRequest.Action(treeItem);
                             if (!@continue)
                             {
@@ -157,18 +161,19 @@ public partial class S3Adapter
             )
             .ConfigureAwait(false);
 
-        var directoryContents = new List<PathRepresentation>();
-        var pathTracker = new Dictionary<string, PathRepresentation>();
+        var directoryContents = new HashSet<PathRepresentation>();
 
         await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 listDirectoryContentsRequest.DirectoryPath,
-                r =>
+                listObjectsResponse =>
                 {
-                    r.S3Objects.ForEach(
-                        o =>
-                            directoryContents.AddRange(
-                                BuildOrderedPathTree(o.Key.AsBaselineFilesystemPath(), pathTracker)
-                            )
+                    listObjectsResponse.S3Objects.ForEach(
+                        @object =>
+                            @object.Key
+                                .AsBaselineFilesystemPath()
+                                .GetPathTree()
+                                .ToList()
+                                .ForEach(p => directoryContents.Add(p))
                     );
                     return Task.FromResult(true);
                 },
@@ -176,7 +181,7 @@ public partial class S3Adapter
             )
             .ConfigureAwait(false);
 
-        return new ListDirectoryContentsResponse { Contents = directoryContents };
+        return new ListDirectoryContentsResponse { Contents = directoryContents.ToList() };
     }
 
     /// <inheritdoc />
@@ -208,13 +213,14 @@ public partial class S3Adapter
                 sourceFiles
                     .ChunkBy(1000)
                     .Select(
-                        async x =>
+                        async chunkOfObjects =>
                             await _s3Client
                                 .DeleteObjectsAsync(
                                     new DeleteObjectsRequest
                                     {
                                         BucketName = _adapterConfiguration.BucketName,
-                                        Objects = x.Select(y => new KeyVersion { Key = y.Key })
+                                        Objects = chunkOfObjects
+                                            .Select(@object => new KeyVersion { Key = @object.Key })
                                             .ToList(),
                                     },
                                     cancellationToken
@@ -247,6 +253,7 @@ public partial class S3Adapter
     {
         var files = await ListFilesUnderPath(directoryPath, cancellationToken)
             .ConfigureAwait(false);
+
         return files.S3Objects != null && files.S3Objects.Any();
     }
 
@@ -320,35 +327,5 @@ public partial class S3Adapter
                 cancellationToken
             )
             .ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Builds and returns an ordered path tree from a path returned from the S3 API.
-    /// </summary>
-    /// <param name="basePath">The path to create a tree from.</param>
-    /// <param name="directoryPathTracker">A collection of paths that have already been executed.</param>
-    private IEnumerable<PathRepresentation> BuildOrderedPathTree(
-        PathRepresentation basePath,
-        Dictionary<string, PathRepresentation> directoryPathTracker
-    )
-    {
-        var addedDirectoryPaths =
-            directoryPathTracker ?? new Dictionary<string, PathRepresentation>();
-
-        if (basePath.OriginalPath.Contains("/"))
-        {
-            foreach (var p in basePath.GetPathTree())
-            {
-                if (addedDirectoryPaths.ContainsKey(p.NormalisedPath))
-                {
-                    continue;
-                }
-
-                addedDirectoryPaths.Add(p.NormalisedPath, p);
-                yield return p;
-            }
-        }
-
-        yield return basePath;
     }
 }

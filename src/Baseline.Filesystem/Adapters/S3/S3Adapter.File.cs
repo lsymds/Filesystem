@@ -96,7 +96,7 @@ public partial class S3Adapter
         await EnsureFileExistsAsync(getFilePublicUrlRequest.FilePath, cancellationToken)
             .ConfigureAwait(false);
 
-        var expiry = getFilePublicUrlRequest.Expiry ?? DateTime.Today.AddDays(1);
+        var expiry = getFilePublicUrlRequest.Expiry ?? DateTime.Now.AddDays(1);
 
         return new GetFilePublicUrlResponse
         {
@@ -156,13 +156,13 @@ public partial class S3Adapter
             )
             .ConfigureAwait(false);
 
-        await using var responseStream = file.ResponseStream;
+        // await using var responseStream = file.ResponseStream;
 
-        var streamToReturn = new MemoryStream();
-        await responseStream.CopyToAsync(streamToReturn, cancellationToken);
-        streamToReturn.Seek(0, SeekOrigin.Begin);
+        // var streamToReturn = new MemoryStream();
+        // await responseStream.CopyToAsync(streamToReturn, cancellationToken);
+        // streamToReturn.Seek(0, SeekOrigin.Begin);
 
-        return new ReadFileAsStreamResponse { FileContents = streamToReturn };
+        return new ReadFileAsStreamResponse { FileContents = file.ResponseStream };
     }
 
     /// <inheritdoc />
@@ -274,12 +274,9 @@ public partial class S3Adapter
 
             return true;
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            if (
-                e is AmazonS3Exception s3Exception
-                && s3Exception.StatusCode == HttpStatusCode.NotFound
-            )
+            if (exception is AmazonS3Exception { StatusCode: HttpStatusCode.NotFound })
             {
                 return false;
             }
@@ -437,16 +434,16 @@ public partial class S3Adapter
 
         await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 path,
-                async (r) =>
+                async listObjectsResponse =>
                 {
-                    objects.AddRange(r.S3Objects);
+                    objects.AddRange(listObjectsResponse.S3Objects);
 
                     if (action == null)
                     {
                         return true;
                     }
 
-                    await action.Invoke(r).ConfigureAwait(false);
+                    await action.Invoke(listObjectsResponse).ConfigureAwait(false);
                     return true;
                 },
                 cancellationToken

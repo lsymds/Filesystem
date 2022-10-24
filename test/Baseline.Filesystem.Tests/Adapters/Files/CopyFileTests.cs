@@ -3,16 +3,22 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
-namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
+namespace Baseline.Filesystem.Tests.Adapters.Files;
 
-public class CopyFileTests : BaseS3AdapterIntegrationTest
+public class CopyFileTests : BaseIntegrationTest
 {
-    private readonly PathRepresentation _sourceFilePath = RandomFilePathRepresentation();
-    private readonly PathRepresentation _destinationFilePath = RandomFilePathRepresentation();
+    private readonly PathRepresentation _sourceFilePath =
+        TestUtilities.RandomFilePathRepresentation();
+    private readonly PathRepresentation _destinationFilePath =
+        TestUtilities.RandomFilePathRepresentation();
 
-    [Fact]
-    public async Task It_Throws_An_Exception_If_Source_Path_Does_Not_Exist()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Throws_An_Exception_If_Source_Path_Does_Not_Exist(Adapter adapter)
     {
+        // Arrange.
+        await ConfigureTestAsync(adapter);
+
         // Act.
         Func<Task> func = async () =>
             await FileManager.CopyAsync(
@@ -27,12 +33,15 @@ public class CopyFileTests : BaseS3AdapterIntegrationTest
         await func.Should().ThrowExactlyAsync<FileNotFoundException>();
     }
 
-    [Fact]
-    public async Task It_Throws_An_Exception_If_Destination_Path_Already_Exists()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Throws_An_Exception_If_Destination_Path_Already_Exists(Adapter adapter)
     {
         // Arrange.
-        await CreateFileAndWriteTextAsync(_sourceFilePath);
-        await CreateFileAndWriteTextAsync(_destinationFilePath);
+        await ConfigureTestAsync(adapter);
+
+        await TestAdapter.CreateFileAndWriteTextAsync(_sourceFilePath);
+        await TestAdapter.CreateFileAndWriteTextAsync(_destinationFilePath);
 
         // Act.
         Func<Task> func = async () =>
@@ -48,11 +57,14 @@ public class CopyFileTests : BaseS3AdapterIntegrationTest
         await func.Should().ThrowExactlyAsync<FileAlreadyExistsException>();
     }
 
-    [Fact]
-    public async Task It_Successfully_Copies_A_File()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Successfully_Copies_A_File(Adapter adapter)
     {
         // Arrange.
-        await CreateFileAndWriteTextAsync(_sourceFilePath, "[ 1, 2, 3 ]");
+        await ConfigureTestAsync(adapter);
+
+        await TestAdapter.CreateFileAndWriteTextAsync(_sourceFilePath, "[ 1, 2, 3 ]");
 
         // Act.
         await FileManager.CopyAsync(
@@ -67,17 +79,18 @@ public class CopyFileTests : BaseS3AdapterIntegrationTest
         await ExpectFileToExistAsync(_sourceFilePath);
         await ExpectFileToExistAsync(_destinationFilePath);
 
-        var destinationContents = await ReadFileAsStringAsync(_destinationFilePath);
+        var destinationContents = await TestAdapter.ReadFileAsStringAsync(_destinationFilePath);
         destinationContents.Should().Be("[ 1, 2, 3 ]");
     }
 
-    [Fact]
-    public async Task It_Successfully_Copies_A_File_With_A_Root_Path()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Successfully_Copies_A_File_With_A_Root_Path(Adapter adapter)
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        await ConfigureTestAsync(adapter, true);
 
-        await CreateFileAndWriteTextAsync(_sourceFilePath, "[ 1, 2, 3 ]");
+        await TestAdapter.CreateFileAndWriteTextAsync(_sourceFilePath, "[ 1, 2, 3 ]");
 
         // Act.
         await FileManager.CopyAsync(
@@ -92,7 +105,7 @@ public class CopyFileTests : BaseS3AdapterIntegrationTest
         await ExpectFileToExistAsync(_sourceFilePath);
         await ExpectFileToExistAsync(_destinationFilePath);
 
-        var destinationContents = await ReadFileAsStringAsync(_destinationFilePath);
+        var destinationContents = await TestAdapter.ReadFileAsStringAsync(_destinationFilePath);
         destinationContents.Should().Be("[ 1, 2, 3 ]");
     }
 }

@@ -14,13 +14,13 @@ internal static class RootPathRemovalExtensions
     /// path is present for the adapter, the original object is returned.
     /// </summary>
     /// <param name="obj">The object that has a path that might contain the root path.</param>
-    /// <param name="getter">A lambda used to retrieve the value to modify.</param>
-    /// <param name="setter">A lambda used to set the value that was modified.</param>
+    /// <param name="pathGetter">A lambda used to retrieve the value to modify.</param>
+    /// <param name="pathToNewResponseMapper">A lambda used to set the value that was modified.</param>
     /// <param name="rootPath">The root path of the adapter (if present).</param>
     internal static async Task<TResponse> RemoveRootPathsAsync<TResponse>(
         this Task<TResponse> obj,
-        Func<TResponse, PathRepresentation> getter,
-        Action<TResponse, PathRepresentation> setter,
+        Func<TResponse, PathRepresentation> pathGetter,
+        Func<TResponse, PathRepresentation, TResponse> pathToNewResponseMapper,
         PathRepresentation rootPath
     )
     {
@@ -31,10 +31,9 @@ internal static class RootPathRemovalExtensions
             return objResult;
         }
 
-        var withPathRemoved = getter(objResult).RemoveRootPath(rootPath);
-        setter(objResult, withPathRemoved);
+        var withPathRemoved = pathGetter(objResult).RemoveRootPath(rootPath);
 
-        return objResult;
+        return pathToNewResponseMapper(objResult, withPathRemoved);
     }
 
     /// <summary>
@@ -42,12 +41,12 @@ internal static class RootPathRemovalExtensions
     /// </summary>
     /// <param name="obj">The entity that contains root paths that need removing.</param>
     /// <param name="getter">A selector to use to retrieve the path that needs modifying.</param>
-    /// <param name="setter">A function used to modify the path of an entity.</param>
+    /// <param name="mapper">A function used to modify the path of an entity.</param>
     /// <param name="rootPath">The root path of the adapter (if present).</param>
     internal static async Task<TResponse> RemoveRootPathsAsync<TResponse>(
         this Task<TResponse> obj,
         Func<TResponse, IEnumerable<PathRepresentation>> getter,
-        Action<TResponse, IEnumerable<PathRepresentation>> setter,
+        Func<TResponse, IEnumerable<PathRepresentation>, TResponse> mapper,
         PathRepresentation rootPath
     )
     {
@@ -59,8 +58,7 @@ internal static class RootPathRemovalExtensions
         }
 
         var withPathRemoved = getter(objResult).RemoveRootPath(rootPath);
-        setter(objResult, withPathRemoved);
 
-        return objResult;
+        return mapper(objResult, withPathRemoved);
     }
 }

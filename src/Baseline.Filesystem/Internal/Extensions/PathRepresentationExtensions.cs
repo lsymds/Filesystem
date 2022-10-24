@@ -38,28 +38,46 @@ internal static class PathRepresentationExtensions
             // Remove any occurrences where the path is equivalent to a representation of a root path. For example,
             // if there was a root path of a/b and pathRepresentation was a/b, it would be filtered out and not
             // returned.
-            if (rootPath.GetPathTree().Any(x => x == pathRepresentation))
+            if (rootPath.GetPathTree().Any(path => path == pathRepresentation))
             {
                 continue;
             }
 
-            var replacementPathRepresentation =
-                pathRepresentation.FinalPathPartIsObviouslyADirectory
-                    ? (pathRepresentation.NormalisedPath + "/").ReplaceFirstOccurrence(
-                        rootPath.NormalisedPath + "/",
-                        string.Empty
-                    )
-                    : pathRepresentation.NormalisedPath.ReplaceFirstOccurrence(
-                        rootPath.NormalisedPath + "/",
-                        string.Empty
-                    );
+            var replacementPathRepresentation = pathRepresentation.ReplaceDirectoryWithinPath(
+                rootPath,
+                null
+            );
 
-            if (string.IsNullOrWhiteSpace(replacementPathRepresentation))
+            if (replacementPathRepresentation == null)
             {
                 continue;
             }
 
-            yield return replacementPathRepresentation.AsBaselineFilesystemPath();
+            yield return replacementPathRepresentation;
         }
+    }
+
+    /// <summary>
+    /// Given a path, replaces the first occurrence of the original directory with the replacement.
+    /// </summary>
+    public static PathRepresentation ReplaceDirectoryWithinPath(
+        this PathRepresentation path,
+        PathRepresentation original,
+        PathRepresentation replacement
+    )
+    {
+        var replacementPathRepresentation = path.FinalPathPartIsADirectory
+            ? (path.NormalisedPath + "/").ReplaceFirstOccurrence(
+                original.NormalisedPath + "/",
+                replacement == null ? string.Empty : replacement.NormalisedPath + "/"
+            )
+            : path.NormalisedPath.ReplaceFirstOccurrence(
+                original.NormalisedPath + "/",
+                replacement == null ? string.Empty : replacement.NormalisedPath + "/"
+            );
+
+        return string.IsNullOrWhiteSpace(replacementPathRepresentation)
+            ? null
+            : replacementPathRepresentation.AsBaselineFilesystemPath();
     }
 }

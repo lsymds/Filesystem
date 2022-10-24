@@ -3,18 +3,23 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
-namespace Baseline.Filesystem.Tests.Adapters.S3.Directories;
+namespace Baseline.Filesystem.Tests.Adapters.Directories;
 
-public class CreateDirectoryTests : BaseS3AdapterIntegrationTest
+public class CreateDirectoryTests : BaseIntegrationTest
 {
-    [Fact]
-    public async Task It_Throws_An_Exception_If_The_Directory_Already_Exists()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Throws_An_Exception_If_The_Directory_Already_Exists(Adapter adapter)
     {
         // Arrange.
-        var directory = RandomDirectoryPathRepresentation();
-        var pathWithDirectory = RandomFilePathRepresentationWithPrefix(directory.OriginalPath);
+        await ConfigureTestAsync(adapter);
 
-        await CreateFileAndWriteTextAsync(pathWithDirectory);
+        var directory = TestUtilities.RandomDirectoryPathRepresentation();
+        var pathWithDirectory = TestUtilities.RandomFilePathRepresentationWithPrefix(
+            directory.OriginalPath
+        );
+
+        await TestAdapter.CreateFileAndWriteTextAsync(pathWithDirectory);
 
         // Act.
         Func<Task> func = async () =>
@@ -26,11 +31,14 @@ public class CreateDirectoryTests : BaseS3AdapterIntegrationTest
         await func.Should().ThrowAsync<DirectoryAlreadyExistsException>();
     }
 
-    [Fact]
-    public async Task It_Creates_The_Directory()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Creates_The_Directory(Adapter adapter)
     {
         // Arrange.
-        var directory = RandomDirectoryPathRepresentation();
+        await ConfigureTestAsync(adapter);
+
+        var directory = TestUtilities.RandomDirectoryPathRepresentation();
 
         // Act.
         var response = await DirectoryManager.CreateAsync(
@@ -42,13 +50,14 @@ public class CreateDirectoryTests : BaseS3AdapterIntegrationTest
         response.Directory.Path.Should().BeEquivalentTo(directory);
     }
 
-    [Fact]
-    public async Task It_Creates_The_Directory_Under_A_Root_Path()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Creates_The_Directory_Under_A_Root_Path(Adapter adapter)
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        await ConfigureTestAsync(adapter, true);
 
-        var directory = RandomDirectoryPathRepresentation();
+        var directory = TestUtilities.RandomDirectoryPathRepresentation();
 
         // Act.
         var response = await DirectoryManager.CreateAsync(

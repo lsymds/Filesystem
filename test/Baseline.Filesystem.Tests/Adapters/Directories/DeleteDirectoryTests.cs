@@ -1,22 +1,24 @@
 using System;
 using System.Threading.Tasks;
-using Amazon.S3.Model;
 using FluentAssertions;
 using Xunit;
 
-namespace Baseline.Filesystem.Tests.Adapters.S3.Directories;
+namespace Baseline.Filesystem.Tests.Adapters.Directories;
 
-public class DeleteDirectoryTests : BaseS3AdapterIntegrationTest
+public class DeleteDirectoryTests : BaseIntegrationTest
 {
-    [Fact]
-    public async Task It_Deletes_A_Simple_Directory()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Deletes_A_Simple_Directory(Adapter adapter)
     {
         // Arrange.
+        await ConfigureTestAsync(adapter);
+
         var firstFile = "simples/file.txt".AsBaselineFilesystemPath();
         var secondFile = "simples/nother-file.txt".AsBaselineFilesystemPath();
 
-        await CreateFileAndWriteTextAsync(firstFile);
-        await CreateFileAndWriteTextAsync(secondFile);
+        await TestAdapter.CreateFileAndWriteTextAsync(firstFile);
+        await TestAdapter.CreateFileAndWriteTextAsync(secondFile);
 
         // Act.
         await DirectoryManager.DeleteAsync(
@@ -27,10 +29,13 @@ public class DeleteDirectoryTests : BaseS3AdapterIntegrationTest
         await ExpectDirectoryNotToExistAsync("simples".AsBaselineFilesystemPath());
     }
 
-    [Fact]
-    public async Task It_Deletes_A_Complex_Nested_Directory_Structure()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Deletes_A_Complex_Nested_Directory_Structure(Adapter adapter)
     {
         // Arrange.
+        await ConfigureTestAsync(adapter);
+
         var files = new[]
         {
             "prefixed/file.txt",
@@ -44,54 +49,61 @@ public class DeleteDirectoryTests : BaseS3AdapterIntegrationTest
 
         foreach (var file in files)
         {
-            await CreateFileAndWriteTextAsync(file.AsBaselineFilesystemPath());
+            await TestAdapter.CreateFileAndWriteTextAsync(file.AsBaselineFilesystemPath());
         }
 
         // Act.
         await DirectoryManager.DeleteAsync(
-            new DeleteDirectoryRequest
-            {
-                DirectoryPath = "prefixed/".AsBaselineFilesystemPath()
-            }
+            new DeleteDirectoryRequest { DirectoryPath = "prefixed/".AsBaselineFilesystemPath() }
         );
 
         // Assert.
         await ExpectDirectoryNotToExistAsync("prefixed".AsBaselineFilesystemPath());
     }
 
-    [Fact]
-    public async Task It_Deletes_A_Directory_Structure_With_A_Large_Number_Of_Paths_In()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Deletes_A_Directory_Structure_With_A_Large_Number_Of_Paths_In(
+        Adapter adapter
+    )
     {
         // Arrange.
+        await ConfigureTestAsync(adapter);
+
         for (int i = 0; i < 1001; i++)
         {
-            await CreateFileAndWriteTextAsync($"prefixed/{i}.txt".AsBaselineFilesystemPath());
+            await TestAdapter.CreateFileAndWriteTextAsync(
+                $"prefixed/{i}.txt".AsBaselineFilesystemPath()
+            );
         }
 
         // Act.
         await DirectoryManager.DeleteAsync(
-            new DeleteDirectoryRequest
-            {
-                DirectoryPath = "prefixed/".AsBaselineFilesystemPath()
-            }
+            new DeleteDirectoryRequest { DirectoryPath = "prefixed/".AsBaselineFilesystemPath() }
         );
 
         // Assert.
-        var objectsLeftWithPrefix = await S3Client.ListObjectsAsync(
-            new ListObjectsRequest { BucketName = GeneratedBucketName, Prefix = "prefixed/" }
+        var has = await TestAdapter.HasFilesOrDirectoriesUnderPathAsync(
+            "prefixed/".AsBaselineFilesystemPath()
         );
-        objectsLeftWithPrefix.S3Objects.Should().BeEmpty();
+        has.Should().BeFalse();
     }
 
-    [Fact]
-    public async Task It_Throws_An_Exception_If_The_Directory_To_Delete_Does_Not_Exist()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Throws_An_Exception_If_The_Directory_To_Delete_Does_Not_Exist(
+        Adapter adapter
+    )
     {
+        // Arrange.
+        await ConfigureTestAsync(adapter);
+
         // Act.
         Func<Task> func = async () =>
             await DirectoryManager.DeleteAsync(
                 new DeleteDirectoryRequest
                 {
-                    DirectoryPath = RandomDirectoryPathRepresentation()
+                    DirectoryPath = TestUtilities.RandomDirectoryPathRepresentation()
                 }
             );
 
@@ -99,17 +111,18 @@ public class DeleteDirectoryTests : BaseS3AdapterIntegrationTest
         await func.Should().ThrowExactlyAsync<DirectoryNotFoundException>();
     }
 
-    [Fact]
-    public async Task It_Deletes_A_Directory_Under_A_Root_Path()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Deletes_A_Directory_Under_A_Root_Path(Adapter adapter)
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        await ConfigureTestAsync(adapter, true);
 
         var firstFile = "simples-root/file.txt".AsBaselineFilesystemPath();
         var secondFile = "simples-root/nother-file.txt".AsBaselineFilesystemPath();
 
-        await CreateFileAndWriteTextAsync(firstFile);
-        await CreateFileAndWriteTextAsync(secondFile);
+        await TestAdapter.CreateFileAndWriteTextAsync(firstFile);
+        await TestAdapter.CreateFileAndWriteTextAsync(secondFile);
 
         // Act.
         await DirectoryManager.DeleteAsync(

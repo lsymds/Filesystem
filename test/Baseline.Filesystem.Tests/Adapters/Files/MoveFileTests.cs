@@ -3,16 +3,22 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
-namespace Baseline.Filesystem.Tests.Adapters.S3.Files;
+namespace Baseline.Filesystem.Tests.Adapters.Files;
 
-public class MoveFileTests : BaseS3AdapterIntegrationTest
+public class MoveFileTests : BaseIntegrationTest
 {
-    private readonly PathRepresentation _sourceFilePath = RandomFilePathRepresentation();
-    private readonly PathRepresentation _destinationFilePath = RandomFilePathRepresentation();
+    private readonly PathRepresentation _sourceFilePath =
+        TestUtilities.RandomFilePathRepresentation();
+    private readonly PathRepresentation _destinationFilePath =
+        TestUtilities.RandomFilePathRepresentation();
 
-    [Fact]
-    public async Task It_Throws_An_Exception_When_The_Source_File_Does_Not_Exist()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Throws_An_Exception_When_The_Source_File_Does_Not_Exist(Adapter adapter)
     {
+        // Arrange.
+        await ConfigureTestAsync(adapter);
+
         // Act.
         Func<Task> func = async () =>
             await FileManager.MoveAsync(
@@ -27,12 +33,17 @@ public class MoveFileTests : BaseS3AdapterIntegrationTest
         await func.Should().ThrowExactlyAsync<FileNotFoundException>();
     }
 
-    [Fact]
-    public async Task It_Throws_An_Exception_When_The_Destination_File_Already_Exists()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Throws_An_Exception_When_The_Destination_File_Already_Exists(
+        Adapter adapter
+    )
     {
         // Arrange.
-        await CreateFileAndWriteTextAsync(_sourceFilePath);
-        await CreateFileAndWriteTextAsync(_destinationFilePath);
+        await ConfigureTestAsync(adapter);
+
+        await TestAdapter.CreateFileAndWriteTextAsync(_sourceFilePath);
+        await TestAdapter.CreateFileAndWriteTextAsync(_destinationFilePath);
 
         // Act.
         Func<Task> func = async () =>
@@ -48,11 +59,14 @@ public class MoveFileTests : BaseS3AdapterIntegrationTest
         await func.Should().ThrowExactlyAsync<FileAlreadyExistsException>();
     }
 
-    [Fact]
-    public async Task It_Successfully_Moves_A_File_From_One_Place_To_Another()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Successfully_Moves_A_File_From_One_Place_To_Another(Adapter adapter)
     {
         // Arrange.
-        await CreateFileAndWriteTextAsync(_sourceFilePath, "abc");
+        await ConfigureTestAsync(adapter);
+
+        await TestAdapter.CreateFileAndWriteTextAsync(_sourceFilePath, "abc");
 
         await FileManager.MoveAsync(
             new MoveFileRequest
@@ -71,13 +85,14 @@ public class MoveFileTests : BaseS3AdapterIntegrationTest
         fileContents.FileContents.Should().Be("abc");
     }
 
-    [Fact]
-    public async Task It_Successfully_Moves_A_File_Under_A_Root_Path()
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Successfully_Moves_A_File_Under_A_Root_Path(Adapter adapter)
     {
         // Arrange.
-        ReconfigureManagerInstances(true);
+        await ConfigureTestAsync(adapter, true);
 
-        await CreateFileAndWriteTextAsync(_sourceFilePath, "abc");
+        await TestAdapter.CreateFileAndWriteTextAsync(_sourceFilePath, "abc");
 
         // Act.
         await FileManager.MoveAsync(
@@ -89,7 +104,7 @@ public class MoveFileTests : BaseS3AdapterIntegrationTest
         );
 
         // Assert.
-        var fileContents = await ReadFileAsStringAsync(_destinationFilePath);
+        var fileContents = await TestAdapter.ReadFileAsStringAsync(_destinationFilePath);
         fileContents.Should().Be("abc");
     }
 }

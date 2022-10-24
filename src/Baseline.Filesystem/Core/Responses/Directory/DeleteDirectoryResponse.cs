@@ -4,4 +4,4 @@ namespace Baseline.Filesystem;
 /// Response returned from the DirectoryManager.Delete method. Empty for now for future proofing and to prevent
 /// any unnecessary breaking changes.
 /// </summary>
-public class DeleteDirectoryResponse { }
+public record DeleteDirectoryResponse;

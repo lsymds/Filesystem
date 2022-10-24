@@ -12,7 +12,7 @@ internal static class PathRepresentationExtensions
     /// <param name="pathRepresentation">The path representation to convert into an S3 safe directory path.</param>
     public static string S3SafeDirectoryPath(this PathRepresentation pathRepresentation)
     {
-        if (!pathRepresentation.FinalPathPartIsObviouslyADirectory)
+        if (!pathRepresentation.FinalPathPartIsADirectory)
         {
             throw new PathIsNotObviouslyADirectoryException(pathRepresentation.OriginalPath);
         }

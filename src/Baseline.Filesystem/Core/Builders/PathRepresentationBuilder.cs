@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Baseline.Filesystem.Internal.Validators;
@@ -63,16 +62,25 @@ public class PathRepresentationBuilder
             yield break;
         }
 
-        var pathSplitByDirectory = path.Substring(
-                0,
-                path.LastIndexOf("/", StringComparison.Ordinal) + 1
-            )
-            .Split("/");
+        var pathSplitByDirectory = path.Split("/")
+            .Where(pathSplit => !string.IsNullOrEmpty(pathSplit))
+            .ToList();
         var currentPath = string.Empty;
 
-        foreach (var p in pathSplitByDirectory.Where(pathSplit => !string.IsNullOrEmpty(pathSplit)))
+        for (var i = 0; i < pathSplitByDirectory.Count; i++)
         {
-            currentPath += p + "/";
+            // If current iteration is the last path part and the last path part didn't originally end in a /, add as a
+            // file.
+            if (i == pathSplitByDirectory.Count - 1 && !path.EndsWith("/"))
+            {
+                currentPath += pathSplitByDirectory[i];
+            }
+            // Otherwise, add as a directory.
+            else
+            {
+                currentPath += pathSplitByDirectory[i] + '/';
+            }
+
             yield return currentPath.AsBaselineFilesystemPath();
         }
     }
