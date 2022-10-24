@@ -57,6 +57,9 @@ internal static class PathRepresentationExtensions
         }
     }
 
+    /// <summary>
+    /// Given a path, replaces the first occurrence of the original directory with the replacement.
+    /// </summary>
     public static PathRepresentation ReplaceDirectoryWithinPath(
         this PathRepresentation path,
         PathRepresentation original,
@@ -66,11 +69,11 @@ internal static class PathRepresentationExtensions
         var replacementPathRepresentation = path.FinalPathPartIsADirectory
             ? (path.NormalisedPath + "/").ReplaceFirstOccurrence(
                 original.NormalisedPath + "/",
-                replacement == null ? string.Empty : replacement?.NormalisedPath + "/"
+                replacement == null ? string.Empty : replacement.NormalisedPath + "/"
             )
             : path.NormalisedPath.ReplaceFirstOccurrence(
                 original.NormalisedPath + "/",
-                replacement == null ? string.Empty : replacement?.NormalisedPath + "/"
+                replacement == null ? string.Empty : replacement.NormalisedPath + "/"
             );
 
         return string.IsNullOrWhiteSpace(replacementPathRepresentation)
