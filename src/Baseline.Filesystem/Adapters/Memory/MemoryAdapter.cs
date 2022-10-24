@@ -19,6 +19,11 @@ public partial class MemoryAdapter : IAdapter
     /// </summary>
     public MemoryAdapter(MemoryAdapterConfiguration configuration)
     {
+        if (string.IsNullOrWhiteSpace(configuration.PublicUrlToReturn))
+        {
+            throw new ArgumentException(nameof(configuration.PublicUrlToReturn));
+        }
+
         _configuration = configuration;
     }
 
