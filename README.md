@@ -1,6 +1,6 @@
 # 👋 Baseline.Filesystem
 
-A storage and filesystem abstraction layer for modern .NET projects. Save yourself the pain of writing an IFileStore over and over again and use this tried, tested, well documented and super extensible one instead.
+A storage and filesystem abstraction layer for modern .NET projects. Save yourself the pain of writing an IFileStore over and over again and use this tried, tested, well documented and super extensible one instead. Use numerous filesystems (S3, memory, disk) via a common API.
 
 ```csharp
 var storeManager = new StoreManager();
