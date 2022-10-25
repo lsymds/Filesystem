@@ -1,6 +1,41 @@
 # 👋 Baseline.Filesystem
 
-A storage and filesystem abstraction layer for modern .NET projects. Save yourself the pain of writing an IFileStore over and over again and use this tried, tested, well documented and super extensible one instead. 
+A storage and filesystem abstraction layer for modern .NET projects. Save yourself the pain of writing an IFileStore over and over again and use this tried, tested, well documented and super extensible one instead.
+
+```csharp
+var storeManager = new StoreManager();
+var fileManager = new FileManager(storeManager);
+var directoryManager = new DirectoryManager(directoryManager);
+
+// Register a store for certificates.
+storeManager.Register(new StoreRegistration
+{
+    Name = "certificates",
+    RootPath = "student-information/certificates/".AsBaselineFilesystemPath(),
+    Adapter = new S3Adapter(new S3AdapterConfiguration
+    {
+        // ...
+    })
+});
+
+// Register a store for identification.
+storeManager.Register(new StoreRegistration
+{
+    Name = "identification",
+    RootPath = "student-information/identification/".AsBaselineFilesystemPath(),
+    Adapter = new S3Adapter(new S3AdapterConfiguration
+    {
+        // ...
+    })
+});
+
+// Create an empty file at b-smith/graduation_certificate within the certificates adapter (true
+// path will be student-information/certificates/b-smith/graduation_certificate).
+await fileManager.TouchFileAsync(
+    new TouchFileRequest { Path = "b-smith/graduation_certificate" },
+    "certificates"
+);
+```
 
 ## 👥 Contributing
 
