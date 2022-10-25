@@ -19,12 +19,11 @@ storeManager.Register(new StoreRegistration
     })
 });
 
-// Register a store for identification.
+// Store temporary log files in memory.
 storeManager.Register(new StoreRegistration
 {
-    Name = "identification",
-    RootPath = "student-information/identification/".AsBaselineFilesystemPath(),
-    Adapter = new S3Adapter(new S3AdapterConfiguration
+    Name = "temporary_logs",
+    Adapter = new MemoryAdapter(new MemoryConfiguration
     {
         // ...
     })
