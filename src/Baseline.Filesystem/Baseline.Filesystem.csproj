@@ -8,9 +8,10 @@
     <PackageId>Baseline.Filesystem</PackageId>
     <PackageTags>file system;file system abstractions;files;fileserver;s3;file store; file abstractions;file store abstractions;blob;baseline;baseline filesystem</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Authors>lsymonds</Authors>
+    <Authors>lsymds</Authors>
     <RepositoryUrl>https://github.com/baseline-project/Baseline.Filesystem</RepositoryUrl>
-    <PackageDescription>A storage and filesystem abstraction layer for modern .NET projects. Save yourself the pain of writing an `IFileStore` over and over again and use this tried, tested, well documented and super extensible one instead.</PackageDescription>
+    <PackageDescription>Filesystem abstractions for modern .NET projects. Interact with numerous filesystems (S3, memory, disk) at once via a single abstraction.</PackageDescription>
+    <PackageReadmeFile>../../README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
@@ -18,5 +19,5 @@
     <PackageReference Include="AWSSDK.S3" Version="3.7.101.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
   </ItemGroup>
-  
+
 </Project>
