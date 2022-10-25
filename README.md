@@ -5,7 +5,7 @@ A storage and filesystem abstraction layer for modern .NET projects. Save yourse
 ```csharp
 var storeManager = new StoreManager();
 var fileManager = new FileManager(storeManager);
-var directoryManager = new DirectoryManager(directoryManager);
+var directoryManager = new DirectoryManager(storeManager);
 
 // Register a store for certificates.
 storeManager.Register(new StoreRegistration
