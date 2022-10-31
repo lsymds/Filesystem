@@ -211,9 +211,7 @@ public partial class MemoryAdapter
     )
     {
         using var _ = await LockFilesystemAsync().ConfigureAwait(false);
-
-        ThrowIfFileExists(writeStreamToFileRequest.FilePath);
-
+        
         var parentDirectory = _configuration.MemoryFilesystem.GetOrCreateParentDirectoryOf(
             writeStreamToFileRequest.FilePath
         );
@@ -243,8 +241,6 @@ public partial class MemoryAdapter
     )
     {
         using var _ = await LockFilesystemAsync().ConfigureAwait(false);
-
-        ThrowIfFileExists(writeTextToFileRequest.FilePath);
 
         var parentDirectory = _configuration.MemoryFilesystem.GetOrCreateParentDirectoryOf(
             writeTextToFileRequest.FilePath
