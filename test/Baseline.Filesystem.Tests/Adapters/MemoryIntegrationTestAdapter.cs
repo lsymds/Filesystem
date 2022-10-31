@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Baseline.Filesystem.Tests.Adapters;
@@ -36,7 +38,7 @@ public class MemoryIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegra
             .GetOrCreateParentDirectoryOf(workingPath)
             .Files.Add(
                 workingPath,
-                new MemoryFileRepresentation(Content: contents, ContentType: "text/plain")
+                new MemoryFileRepresentation(Content: new MemoryStream(Encoding.UTF8.GetBytes(contents)), ContentType: "text/plain")
             );
 
         return ValueTask.CompletedTask;
@@ -67,12 +69,12 @@ public class MemoryIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegra
         return ValueTask.FromResult(_memoryFilesystem.DirectoryExists(workingPath));
     }
 
-    public ValueTask<string> ReadFileAsStringAsync(PathRepresentation path)
+    public async ValueTask<string> ReadFileAsStringAsync(PathRepresentation path)
     {
         var workingPath = CombineRootPathWith(path);
 
         var parentDirectory = _memoryFilesystem.GetOrCreateParentDirectoryOf(workingPath);
-        return ValueTask.FromResult(parentDirectory.Files[workingPath].Content);
+        return await new StreamReader(parentDirectory.Files[workingPath].Content).ReadToEndAsync();
     }
 
     public ValueTask<IReadOnlyCollection<string>> TextThatShouldBeInPublicUrlForPathAsync(

@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace Baseline.Filesystem;
 
 /// <summary>
@@ -5,4 +7,4 @@ namespace Baseline.Filesystem;
 /// </summary>
 /// <param name="ContentType">Gets the content type of the file.</param>
 /// <param name="Content">Gets the content of the file.</param>
-public record MemoryFileRepresentation(string ContentType, string Content);
+public record MemoryFileRepresentation(string ContentType, Stream Content);

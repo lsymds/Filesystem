@@ -22,4 +22,10 @@
     <ProjectReference Include="..\..\src\Baseline.Filesystem\Baseline.Filesystem.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestFiles\Pug.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

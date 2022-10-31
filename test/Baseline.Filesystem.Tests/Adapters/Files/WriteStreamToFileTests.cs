@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -90,5 +92,29 @@ public class WriteStreamToFileTests : BaseIntegrationTest
         var fileContents = await TestAdapter.ReadFileAsStringAsync(_filePath);
         fileContents.Should().Be("hello stream my old friend");
         _stream.CanRead.Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(RunOnAllProvidersConfiguration))]
+    public async Task It_Can_Write_And_Then_Read_A_Non_Text_Based_File(Adapter adapter)
+    {
+        // Arrange.
+        await ConfigureTestAsync(adapter);
+
+        await using var fileStream = File.OpenRead("TestFiles/Pug.jpg");
+        
+        // Act.
+        await FileManager.WriteStreamAsync(new WriteStreamToFileRequest
+        {
+            FilePath = _filePath,
+            ContentType = "image/jpeg",
+            Stream = fileStream
+        });
+        
+        // Assert.
+        using var md5 = MD5.Create();
+        var file = await FileManager.ReadAsStreamAsync(new ReadFileAsStreamRequest { FilePath = _filePath });
+        var hash = BitConverter.ToString(await md5.ComputeHashAsync(file.FileContents)).Replace("-", "").ToLower();
+        hash.Should().Be("24b6db48289db83887a01c86caa4fd04");
     }
 }
