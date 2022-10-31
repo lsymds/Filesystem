@@ -151,13 +151,11 @@ public partial class MemoryAdapter
             readFileAsStreamRequest.FilePath
         );
 
+        var copiedStream = await CopyStreamAsync(parentDirectory.Files[readFileAsStreamRequest.FilePath].Content);
+        
         return new ReadFileAsStreamResponse
         {
-            FileContents = new MemoryStream(
-                Encoding.UTF8.GetBytes(
-                    parentDirectory.Files[readFileAsStreamRequest.FilePath].Content
-                )
-            )
+            FileContents = copiedStream
         };
     }
 
@@ -175,9 +173,11 @@ public partial class MemoryAdapter
             readFileAsStringRequest.FilePath
         );
 
+        var copiedStream = await CopyStreamAsync(parentDirectory.Files[readFileAsStringRequest.FilePath].Content);
+        
         return new ReadFileAsStringResponse
         {
-            FileContents = parentDirectory.Files[readFileAsStringRequest.FilePath].Content
+            FileContents = await new StreamReader(copiedStream).ReadToEndAsync()
         };
     }
 
@@ -195,7 +195,7 @@ public partial class MemoryAdapter
 
         parentDirectory.Files.Add(
             touchFileRequest.FilePath,
-            new MemoryFileRepresentation(ContentType: "text/plain", "")
+            new MemoryFileRepresentation(ContentType: "text/plain", new MemoryStream(Encoding.UTF8.GetBytes("")))
         );
 
         return new TouchFileResponse
@@ -218,18 +218,13 @@ public partial class MemoryAdapter
             writeStreamToFileRequest.FilePath
         );
 
-        if (
-            writeStreamToFileRequest.Stream.CanSeek && writeStreamToFileRequest.Stream.Position != 0
-        )
-        {
-            writeStreamToFileRequest.Stream.Seek(0, SeekOrigin.Begin);
-        }
+        var copiedStream = await CopyStreamAsync(writeStreamToFileRequest.Stream);
 
         parentDirectory.Files.Add(
             writeStreamToFileRequest.FilePath,
             new MemoryFileRepresentation(
                 ContentType: writeStreamToFileRequest.ContentType,
-                Content: await new StreamReader(writeStreamToFileRequest.Stream).ReadToEndAsync()
+                Content: copiedStream
             )
         );
 
@@ -254,7 +249,7 @@ public partial class MemoryAdapter
             writeTextToFileRequest.FilePath,
             new MemoryFileRepresentation(
                 ContentType: writeTextToFileRequest.ContentType,
-                Content: writeTextToFileRequest.TextToWrite
+                Content: new MemoryStream(Encoding.UTF8.GetBytes(writeTextToFileRequest.TextToWrite))
             )
         );
 
@@ -283,5 +278,27 @@ public partial class MemoryAdapter
         {
             throw new FileAlreadyExistsException(filePath.NormalisedPath);
         }
+    }
+
+    /// <summary>
+    /// Copies a stream to another and sets the current read point of both streams back to the start.
+    /// </summary>
+    private static async Task<Stream> CopyStreamAsync(Stream toCopy)
+    {
+        var copiedStream = new MemoryStream();
+        
+        if (toCopy.CanSeek && toCopy.Position != 0)
+        {
+            toCopy.Seek(0, SeekOrigin.Begin);
+        }
+        
+        await toCopy.CopyToAsync(copiedStream);
+
+        if (copiedStream.CanSeek && copiedStream.Position != 0)
+        {
+            copiedStream.Seek(0, SeekOrigin.Begin);
+        }
+
+        return copiedStream;
     }
 }
