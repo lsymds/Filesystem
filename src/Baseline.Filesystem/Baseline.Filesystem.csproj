@@ -11,7 +11,6 @@
     <Authors>lsymds</Authors>
     <RepositoryUrl>https://github.com/baseline-project/Baseline.Filesystem</RepositoryUrl>
     <PackageDescription>Filesystem abstractions for modern .NET projects. Interact with numerous filesystems (S3, memory, disk) at once via a single abstraction.</PackageDescription>
-    <PackageReadmeFile>../../README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
