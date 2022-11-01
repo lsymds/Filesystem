@@ -19,6 +19,8 @@ public partial class LocalAdapter
         ThrowIfFileDoesNotExist(copyFileRequest.SourceFilePath);
         ThrowIfFileExists(copyFileRequest.DestinationFilePath);
 
+        CreateParentDirectoryForPathIfNotExists(copyFileRequest.DestinationFilePath);
+
         File.Copy(
             copyFileRequest.SourceFilePath.NormalisedPath,
             copyFileRequest.DestinationFilePath.NormalisedPath
@@ -96,6 +98,8 @@ public partial class LocalAdapter
         ThrowIfFileDoesNotExist(moveFileRequest.SourceFilePath);
         ThrowIfFileExists(moveFileRequest.DestinationFilePath);
 
+        CreateParentDirectoryForPathIfNotExists(moveFileRequest.DestinationFilePath);
+
         File.Move(
             moveFileRequest.SourceFilePath.NormalisedPath,
             moveFileRequest.DestinationFilePath.NormalisedPath
@@ -153,6 +157,8 @@ public partial class LocalAdapter
     {
         ThrowIfFileExists(touchFileRequest.FilePath);
 
+        CreateParentDirectoryForPathIfNotExists(touchFileRequest.FilePath);
+
         await File.WriteAllTextAsync(
             touchFileRequest.FilePath.NormalisedPath,
             "",
@@ -171,6 +177,13 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
+        CreateParentDirectoryForPathIfNotExists(writeStreamToFileRequest.FilePath);
+
+        if (writeStreamToFileRequest.Stream.CanSeek)
+        {
+            writeStreamToFileRequest.Stream.Seek(0, SeekOrigin.Begin);
+        }
+
         await using var destinationFile = File.OpenWrite(
             writeStreamToFileRequest.FilePath.NormalisedPath
         );
@@ -188,6 +201,8 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
+        CreateParentDirectoryForPathIfNotExists(writeTextToFileRequest.FilePath);
+
         await File.WriteAllTextAsync(
             writeTextToFileRequest.FilePath.NormalisedPath,
             writeTextToFileRequest.TextToWrite,

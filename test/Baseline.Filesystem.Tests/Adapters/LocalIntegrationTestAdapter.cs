@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,38 +39,54 @@ public class LocalIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegrat
         CreateParentDirectoryForPathIfNotExists(workingPath);
 
         await File.WriteAllTextAsync(workingPath.NormalisedPath, contents);
-     }
+    }
 
     public ValueTask<bool> HasFilesOrDirectoriesUnderPathAsync(PathRepresentation path)
     {
-        throw new System.NotImplementedException();
+        var workingPath = CombineRootPathWith(path);
+
+        return ValueTask.FromResult(
+            Directory.Exists(workingPath.NormalisedPath)
+                && (
+                    Directory.EnumerateDirectories(workingPath.NormalisedPath).Any()
+                    || Directory.EnumerateFiles(workingPath.NormalisedPath).Any()
+                )
+        );
     }
 
     public ValueTask<bool> FileExistsAsync(PathRepresentation path)
     {
-        throw new System.NotImplementedException();
+        return ValueTask.FromResult(File.Exists(CombineRootPathWith(path).NormalisedPath));
     }
 
     public ValueTask<bool> DirectoryExistsAsync(PathRepresentation path)
     {
-        throw new System.NotImplementedException();
+        return ValueTask.FromResult(Directory.Exists(CombineRootPathWith(path).NormalisedPath));
     }
 
-    public ValueTask<string> ReadFileAsStringAsync(PathRepresentation path)
+    public async ValueTask<string> ReadFileAsStringAsync(PathRepresentation path)
     {
-        throw new System.NotImplementedException();
+        return await File.ReadAllTextAsync(CombineRootPathWith(path).NormalisedPath);
     }
 
     public ValueTask<IReadOnlyCollection<string>> TextThatShouldBeInPublicUrlForPathAsync(
         PathRepresentation path
     )
     {
-        throw new System.NotImplementedException();
+        return ValueTask.FromResult(new[] { "" } as IReadOnlyCollection<string>);
     }
 
-    private void CreateParentDirectoryForPathIfNotExists(PathRepresentation path)
+    private static void CreateParentDirectoryForPathIfNotExists(PathRepresentation path)
     {
-        var parentDirectory = path.GetPathTree().ToList()[^2];
+        var pathTree = path.GetPathTree().ToList();
+
+        // If only the file is in the path, then the directory it is in MUST exist.
+        if (pathTree.Count == 1)
+        {
+            return;
+        }
+
+        var parentDirectory = pathTree[^2];
         Directory.CreateDirectory(parentDirectory.NormalisedPath);
     }
 }

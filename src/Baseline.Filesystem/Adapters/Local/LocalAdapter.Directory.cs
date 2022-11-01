@@ -88,6 +88,8 @@ public partial class LocalAdapter
         ThrowIfDirectoryDoesNotExist(moveDirectoryRequest.SourceDirectoryPath);
         ThrowIfDirectoryExists(moveDirectoryRequest.DestinationDirectoryPath);
 
+        CreateParentDirectoryForPathIfNotExists(moveDirectoryRequest.DestinationDirectoryPath);
+
         Directory.Move(
             moveDirectoryRequest.SourceDirectoryPath.NormalisedPath,
             moveDirectoryRequest.DestinationDirectoryPath.NormalisedPath
@@ -109,7 +111,15 @@ public partial class LocalAdapter
     /// </summary>
     private static void CreateParentDirectoryForPathIfNotExists(PathRepresentation path)
     {
-        var parentDirectory = path.GetPathTree().ToList()[^2];
+        var pathTree = path.GetPathTree().ToList();
+
+        // If only the file is in the path, then the directory it is in MUST exist.
+        if (pathTree.Count == 1)
+        {
+            return;
+        }
+
+        var parentDirectory = pathTree[^2];
         Directory.CreateDirectory(parentDirectory.NormalisedPath);
     }
 
