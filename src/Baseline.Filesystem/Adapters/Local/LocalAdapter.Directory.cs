@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Baseline.Filesystem;
@@ -61,5 +63,11 @@ public partial class LocalAdapter
     )
     {
         throw new System.NotImplementedException();
+    }
+
+    private void CreateParentDirectoryForPathIfNotExists(PathRepresentation path)
+    {
+        var parentDirectory = path.GetPathTree().ToList()[^2];
+        Directory.CreateDirectory(parentDirectory.NormalisedPath);
     }
 }

@@ -1,28 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Baseline.Filesystem.Tests.Adapters;
 
 public class LocalIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegrationTestAdapter
 {
-    public LocalIntegrationTestAdapter(PathRepresentation rootPath = null)
-        : base(
-            rootPath == null
-                ? $"{Guid.NewGuid().ToString().Replace("-", "")}/".AsBaselineFilesystemPath()
-                : $"{rootPath.NormalisedPath}/{Guid.NewGuid().ToString().Replace("-", "")}/".AsBaselineFilesystemPath()
-        ) { }
+    public LocalIntegrationTestAdapter(PathRepresentation rootPath = null) : base(rootPath) { }
 
     public ValueTask DisposeAsync()
     {
-        Directory.Delete(RootPath.NormalisedPath);
+        if (RootPath != null)
+        {
+            Directory.Delete(RootPath.NormalisedPath);
+        }
+
         return ValueTask.CompletedTask;
     }
 
     public ValueTask<IAdapter> BootstrapAsync()
     {
-        Directory.CreateDirectory(RootPath.NormalisedPath);
+        if (RootPath != null)
+        {
+            Directory.CreateDirectory(RootPath.NormalisedPath);
+        }
+
         return ValueTask.FromResult(new LocalAdapter() as IAdapter);
     }
 
@@ -31,8 +35,12 @@ public class LocalIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegrat
         string contents = ""
     )
     {
-        await File.WriteAllTextAsync(CombineRootPathWith(path).NormalisedPath, contents);
-    }
+        var workingPath = CombineRootPathWith(path);
+
+        CreateParentDirectoryForPathIfNotExists(workingPath);
+
+        await File.WriteAllTextAsync(workingPath.NormalisedPath, contents);
+     }
 
     public ValueTask<bool> HasFilesOrDirectoriesUnderPathAsync(PathRepresentation path)
     {
@@ -59,5 +67,11 @@ public class LocalIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegrat
     )
     {
         throw new System.NotImplementedException();
+    }
+
+    private void CreateParentDirectoryForPathIfNotExists(PathRepresentation path)
+    {
+        var parentDirectory = path.GetPathTree().ToList()[^2];
+        Directory.CreateDirectory(parentDirectory.NormalisedPath);
     }
 }

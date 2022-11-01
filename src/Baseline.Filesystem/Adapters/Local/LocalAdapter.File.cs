@@ -69,12 +69,12 @@ public partial class LocalAdapter
     )
     {
         return Task.FromResult(
-            new GetFileResponse
-            {
-                File = FileExists(getFileRequest.FilePath)
-                    ? new FileRepresentation { Path = getFileRequest.FilePath }
-                    : null
-            }
+            FileExists(getFileRequest.FilePath)
+                ? new GetFileResponse
+                {
+                    File = new FileRepresentation { Path = getFileRequest.FilePath }
+                }
+                : null
         );
     }
 
