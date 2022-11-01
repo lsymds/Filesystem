@@ -69,6 +69,7 @@ public abstract class BaseIntegrationTest : IAsyncDisposable
         {
             Adapter.S3 => new S3IntegrationTestAdapter(rootPath),
             Adapter.Memory => new MemoryIntegrationTestAdapter(rootPath),
+            Adapter.Local => new LocalIntegrationTestAdapter(rootPath),
             _ => throw new ArgumentOutOfRangeException(nameof(toUse), toUse, null)
         };
 

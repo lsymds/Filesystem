@@ -2,15 +2,15 @@ namespace Baseline.Filesystem.Tests.Adapters;
 
 public abstract class BaseIntegrationTestAdapter
 {
-    private readonly PathRepresentation _rootPath;
+    protected readonly PathRepresentation RootPath;
 
     protected BaseIntegrationTestAdapter(PathRepresentation rootPath)
     {
-        _rootPath = rootPath;
+        RootPath = rootPath;
     }
 
     protected PathRepresentation CombineRootPathWith(PathRepresentation path)
     {
-        return _rootPath == null ? path : new PathCombinationBuilder(_rootPath, path).Build();
+        return RootPath == null ? path : new PathCombinationBuilder(RootPath, path).Build();
     }
 }

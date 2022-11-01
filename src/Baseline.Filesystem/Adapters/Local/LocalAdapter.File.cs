@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Baseline.Filesystem;
@@ -15,7 +16,23 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        ThrowIfFileDoesNotExist(copyFileRequest.SourceFilePath);
+        ThrowIfFileExists(copyFileRequest.DestinationFilePath);
+
+        File.Copy(
+            copyFileRequest.SourceFilePath.NormalisedPath,
+            copyFileRequest.DestinationFilePath.NormalisedPath
+        );
+
+        return Task.FromResult(
+            new CopyFileResponse
+            {
+                DestinationFile = new FileRepresentation
+                {
+                    Path = copyFileRequest.DestinationFilePath
+                }
+            }
+        );
     }
 
     /// <inheritdoc />
@@ -24,7 +41,11 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        ThrowIfFileDoesNotExist(deleteFileRequest.FilePath);
+
+        File.Delete(deleteFileRequest.FilePath.NormalisedPath);
+
+        return Task.FromResult(new DeleteFileResponse());
     }
 
     /// <inheritdoc />
@@ -33,7 +54,12 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        return Task.FromResult(
+            new FileExistsResponse
+            {
+                FileExists = File.Exists(fileExistsRequest.FilePath.NormalisedPath)
+            }
+        );
     }
 
     /// <inheritdoc />
@@ -42,7 +68,14 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        return Task.FromResult(
+            new GetFileResponse
+            {
+                File = FileExists(getFileRequest.FilePath)
+                    ? new FileRepresentation { Path = getFileRequest.FilePath }
+                    : null
+            }
+        );
     }
 
     /// <inheritdoc />
@@ -60,7 +93,23 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        ThrowIfFileDoesNotExist(moveFileRequest.SourceFilePath);
+        ThrowIfFileExists(moveFileRequest.DestinationFilePath);
+
+        File.Move(
+            moveFileRequest.SourceFilePath.NormalisedPath,
+            moveFileRequest.DestinationFilePath.NormalisedPath
+        );
+
+        return Task.FromResult(
+            new MoveFileResponse
+            {
+                DestinationFile = new FileRepresentation
+                {
+                    Path = moveFileRequest.DestinationFilePath
+                }
+            }
+        );
     }
 
     /// <inheritdoc />
@@ -69,42 +118,112 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        ThrowIfFileDoesNotExist(readFileAsStreamRequest.FilePath);
+
+        return Task.FromResult(
+            new ReadFileAsStreamResponse
+            {
+                FileContents = File.OpenRead(readFileAsStreamRequest.FilePath.NormalisedPath)
+            }
+        );
     }
 
     /// <inheritdoc />
-    public Task<ReadFileAsStringResponse> ReadFileAsStringAsync(
+    public async Task<ReadFileAsStringResponse> ReadFileAsStringAsync(
         ReadFileAsStringRequest readFileAsStringRequest,
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        ThrowIfFileDoesNotExist(readFileAsStringRequest.FilePath);
+
+        return new ReadFileAsStringResponse
+        {
+            FileContents = await File.ReadAllTextAsync(
+                readFileAsStringRequest.FilePath.NormalisedPath,
+                cancellationToken
+            )
+        };
     }
 
     /// <inheritdoc />
-    public Task<TouchFileResponse> TouchFileAsync(
+    public async Task<TouchFileResponse> TouchFileAsync(
         TouchFileRequest touchFileRequest,
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        ThrowIfFileExists(touchFileRequest.FilePath);
+
+        await File.WriteAllTextAsync(
+            touchFileRequest.FilePath.NormalisedPath,
+            "",
+            cancellationToken
+        );
+
+        return new TouchFileResponse
+        {
+            File = new FileRepresentation { Path = touchFileRequest.FilePath }
+        };
     }
 
     /// <inheritdoc />
-    public Task<WriteStreamToFileResponse> WriteStreamToFileAsync(
+    public async Task<WriteStreamToFileResponse> WriteStreamToFileAsync(
         WriteStreamToFileRequest writeStreamToFileRequest,
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        await using var destinationFile = File.OpenWrite(
+            writeStreamToFileRequest.FilePath.NormalisedPath
+        );
+
+        await writeStreamToFileRequest.Stream.CopyToAsync(destinationFile, cancellationToken);
+
+        await destinationFile.FlushAsync(cancellationToken);
+
+        return new WriteStreamToFileResponse();
     }
 
     /// <inheritdoc />
-    public Task<WriteTextToFileResponse> WriteTextToFileAsync(
+    public async Task<WriteTextToFileResponse> WriteTextToFileAsync(
         WriteTextToFileRequest writeTextToFileRequest,
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        await File.WriteAllTextAsync(
+            writeTextToFileRequest.FilePath.NormalisedPath,
+            writeTextToFileRequest.TextToWrite,
+            cancellationToken
+        );
+
+        return new WriteTextToFileResponse();
+    }
+
+    /// <summary>
+    /// Returns whether or not the given file exists.
+    /// </summary>
+    private static bool FileExists(PathRepresentation filePath)
+    {
+        return File.Exists(filePath.NormalisedPath);
+    }
+
+    /// <summary>
+    /// Throws a <see cref="FileAlreadyExistsException"/> if the given path already exists.
+    /// </summary>
+    private static void ThrowIfFileExists(PathRepresentation filePath)
+    {
+        if (FileExists(filePath))
+        {
+            throw new FileAlreadyExistsException(filePath.NormalisedPath);
+        }
+    }
+
+    /// <summary>
+    /// Throws a <see cref="FileNotFoundException"/> if the given path does not exist.
+    /// </summary>
+    private static void ThrowIfFileDoesNotExist(PathRepresentation filePath)
+    {
+        if (!FileExists(filePath))
+        {
+            throw new FileNotFoundException(filePath.NormalisedPath);
+        }
     }
 }

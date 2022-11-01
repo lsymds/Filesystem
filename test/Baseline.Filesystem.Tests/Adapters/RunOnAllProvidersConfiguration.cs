@@ -9,8 +9,9 @@ public class RunOnAllProvidersConfiguration : IEnumerable<object[]>
     {
         return new List<object[]>
         {
-            new object[] { Adapter.Memory },
-            new object[] { Adapter.S3 }
+            //new object[] { Adapter.Memory },
+            //new object[] { Adapter.S3 },
+            new object[] { Adapter.Local },
         }.GetEnumerator();
     }
 
