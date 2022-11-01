@@ -26,7 +26,9 @@ public class LocalIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegrat
             Directory.CreateDirectory(RootPath.NormalisedPath);
         }
 
-        return ValueTask.FromResult(new LocalAdapter() as IAdapter);
+        return ValueTask.FromResult(
+            new LocalAdapter(new LocalAdapterConfiguration(_ => "https://google.com")) as IAdapter
+        );
     }
 
     public async ValueTask CreateFileAndWriteTextAsync(
@@ -73,7 +75,7 @@ public class LocalIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegrat
         PathRepresentation path
     )
     {
-        return ValueTask.FromResult(new[] { "" } as IReadOnlyCollection<string>);
+        return ValueTask.FromResult(new[] { "https://google.com" } as IReadOnlyCollection<string>);
     }
 
     private static void CreateParentDirectoryForPathIfNotExists(PathRepresentation path)

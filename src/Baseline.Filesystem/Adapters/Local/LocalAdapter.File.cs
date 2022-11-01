@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -86,7 +87,15 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        ThrowIfFileDoesNotExist(getFilePublicUrlRequest.FilePath);
+
+        return Task.FromResult(
+            new GetFilePublicUrlResponse
+            {
+                Expiry = getFilePublicUrlRequest.Expiry ?? DateTime.Now.AddDays(1),
+                Url = _configuration.GetPublicUrlForPath(getFilePublicUrlRequest.FilePath)
+            }
+        );
     }
 
     /// <inheritdoc />
