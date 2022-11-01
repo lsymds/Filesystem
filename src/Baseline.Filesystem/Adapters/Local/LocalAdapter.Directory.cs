@@ -17,6 +17,9 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
+        ThrowIfDirectoryDoesNotExist(copyDirectoryRequest.SourceDirectoryPath);
+        ThrowIfDirectoryExists(copyDirectoryRequest.DestinationDirectoryPath);
+
         throw new System.NotImplementedException();
     }
 
@@ -26,7 +29,19 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        ThrowIfDirectoryExists(createDirectoryRequest.DirectoryPath);
+
+        Directory.CreateDirectory(createDirectoryRequest.DirectoryPath.NormalisedPath);
+
+        return Task.FromResult(
+            new CreateDirectoryResponse
+            {
+                Directory = new DirectoryRepresentation
+                {
+                    Path = createDirectoryRequest.DirectoryPath
+                }
+            }
+        );
     }
 
     /// <inheritdoc />
@@ -35,7 +50,11 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        ThrowIfDirectoryDoesNotExist(deleteDirectoryRequest.DirectoryPath);
+
+        Directory.Delete(deleteDirectoryRequest.DirectoryPath.NormalisedPath, true);
+
+        return Task.FromResult(new DeleteDirectoryResponse());
     }
 
     /// <inheritdoc />
@@ -44,6 +63,8 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
+        ThrowIfDirectoryDoesNotExist(iterateDirectoryContentsRequest.DirectoryPath);
+
         throw new System.NotImplementedException();
     }
 
@@ -53,6 +74,8 @@ public partial class LocalAdapter
         CancellationToken cancellationToken = default
     )
     {
+        ThrowIfDirectoryDoesNotExist(listDirectoryContentsRequest.DirectoryPath);
+
         throw new System.NotImplementedException();
     }
 
@@ -62,12 +85,53 @@ public partial class LocalAdapter
         CancellationToken cancellationToken
     )
     {
-        throw new System.NotImplementedException();
+        ThrowIfDirectoryDoesNotExist(moveDirectoryRequest.SourceDirectoryPath);
+        ThrowIfDirectoryExists(moveDirectoryRequest.DestinationDirectoryPath);
+
+        Directory.Move(
+            moveDirectoryRequest.SourceDirectoryPath.NormalisedPath,
+            moveDirectoryRequest.DestinationDirectoryPath.NormalisedPath
+        );
+
+        return Task.FromResult(
+            new MoveDirectoryResponse
+            {
+                DestinationDirectory = new DirectoryRepresentation
+                {
+                    Path = moveDirectoryRequest.DestinationDirectoryPath
+                }
+            }
+        );
     }
 
-    private void CreateParentDirectoryForPathIfNotExists(PathRepresentation path)
+    /// <summary>
+    /// Creates the parent directory and any of its parent directories for a given path.
+    /// </summary>
+    private static void CreateParentDirectoryForPathIfNotExists(PathRepresentation path)
     {
         var parentDirectory = path.GetPathTree().ToList()[^2];
         Directory.CreateDirectory(parentDirectory.NormalisedPath);
+    }
+
+    /// <summary>
+    /// Throws a <see cref="DirectoryAlreadyExistsException"/> if a given directory path exists.
+    /// </summary>
+    private static void ThrowIfDirectoryExists(PathRepresentation path)
+    {
+        if (Directory.Exists(path.NormalisedPath))
+        {
+            throw new DirectoryAlreadyExistsException(path.NormalisedPath);
+        }
+    }
+
+    /// <summary>
+    /// Throws a <see cref="DirectoryNotFoundException"/> if a given directory path does not exist.
+    /// </summary>
+    private static void ThrowIfDirectoryDoesNotExist(PathRepresentation path)
+    {
+        if (!Directory.Exists(path.NormalisedPath))
+        {
+            throw new DirectoryNotFoundException(path.NormalisedPath);
+        }
     }
 }
