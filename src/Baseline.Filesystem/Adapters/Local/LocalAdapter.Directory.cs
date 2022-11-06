@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -58,25 +61,41 @@ public partial class LocalAdapter
     }
 
     /// <inheritdoc />
-    public Task<IterateDirectoryContentsResponse> IterateDirectoryContentsAsync(
+    public async Task<IterateDirectoryContentsResponse> IterateDirectoryContentsAsync(
         IterateDirectoryContentsRequest iterateDirectoryContentsRequest,
         CancellationToken cancellationToken
     )
     {
         ThrowIfDirectoryDoesNotExist(iterateDirectoryContentsRequest.DirectoryPath);
 
-        throw new System.NotImplementedException();
+        await ListContentsUnderPathAndPerformActionUntilCompleteAsync(
+            iterateDirectoryContentsRequest.DirectoryPath,
+            iterateDirectoryContentsRequest.Action
+        );
+
+        return new IterateDirectoryContentsResponse();
     }
 
     /// <inheritdoc />
-    public Task<ListDirectoryContentsResponse> ListDirectoryContentsAsync(
+    public async Task<ListDirectoryContentsResponse> ListDirectoryContentsAsync(
         ListDirectoryContentsRequest listDirectoryContentsRequest,
         CancellationToken cancellationToken = default
     )
     {
         ThrowIfDirectoryDoesNotExist(listDirectoryContentsRequest.DirectoryPath);
 
-        throw new System.NotImplementedException();
+        var contents = new HashSet<PathRepresentation>();
+
+        await ListContentsUnderPathAndPerformActionUntilCompleteAsync(
+            listDirectoryContentsRequest.DirectoryPath,
+            p =>
+            {
+                contents.Add(p);
+                return Task.FromResult(true);
+            }
+        );
+
+        return new ListDirectoryContentsResponse { Contents = contents.ToList() };
     }
 
     /// <inheritdoc />
@@ -143,5 +162,61 @@ public partial class LocalAdapter
         {
             throw new DirectoryNotFoundException(path.NormalisedPath);
         }
+    }
+
+    /// <summary>
+    /// Lists all of the contents under a path (including the provided path itself) and performs a provided action
+    /// until either a) all contents have been actioned or b) an action returns false indicating the listing should
+    /// stop.
+    /// </summary>
+    private async Task ListContentsUnderPathAndPerformActionUntilCompleteAsync(
+        PathRepresentation path,
+        Func<PathRepresentation, Task<bool>> action
+    )
+    {
+        // Recursive function to traverse a directory and add its path, all of its file paths and the results of all of
+        // its descendants to the result list.
+        async Task TraverseDirectory(PathRepresentation directory)
+        {
+            var @continue = await action(directory).ConfigureAwait(false);
+            if (!@continue)
+            {
+                return;
+            }
+
+            foreach (var file in Directory.EnumerateFiles(directory.NormalisedPath))
+            {
+                @continue = await action(SanitiseWindowsPaths(file, false)).ConfigureAwait(false);
+                if (!@continue)
+                {
+                    return;
+                }
+            }
+
+            foreach (var childDirectory in Directory.EnumerateDirectories(directory.NormalisedPath))
+            {
+                await TraverseDirectory(SanitiseWindowsPaths(childDirectory, true));
+            }
+        }
+
+        await TraverseDirectory(path);
+    }
+
+    /// <summary>
+    /// Windows paths are often returned with backwards slashes in the directory names instead of forward slashes.
+    /// This sanitises them to ensure they all work the same.
+    /// </summary>
+    private PathRepresentation SanitiseWindowsPaths(string path, bool isDirectory)
+    {
+        var workingPath = new StringBuilder(path);
+
+        workingPath.Replace("\\", "/");
+
+        if (isDirectory)
+        {
+            workingPath.Append('/');
+        }
+
+        return workingPath.ToString().AsBaselineFilesystemPath();
     }
 }

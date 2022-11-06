@@ -13,17 +13,21 @@ public class ListDirectoryContentsTests : BaseIntegrationTest
         // Arrange.
         await ConfigureTestAsync(adapter);
 
-        await TestAdapter.CreateFileAndWriteTextAsync("simple/file.txt".AsBaselineFilesystemPath());
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "simple/another-file.txt".AsBaselineFilesystemPath()
+            "simple-list/file.txt".AsBaselineFilesystemPath()
         );
-        await TestAdapter.CreateFileAndWriteTextAsync("simple/.config".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync(
+            "simple-list/another-file.txt".AsBaselineFilesystemPath()
+        );
+        await TestAdapter.CreateFileAndWriteTextAsync(
+            "simple-list/.config".AsBaselineFilesystemPath()
+        );
 
         // Act.
         var contents = await DirectoryManager.ListContentsAsync(
             new ListDirectoryContentsRequest
             {
-                DirectoryPath = "simple/".AsBaselineFilesystemPath()
+                DirectoryPath = "simple-list/".AsBaselineFilesystemPath()
             }
         );
 
@@ -31,14 +35,12 @@ public class ListDirectoryContentsTests : BaseIntegrationTest
         contents.Contents.Should().HaveCount(4);
         contents.Contents
             .Should()
-            .ContainSingle(
-                x => x.NormalisedPath == "simple" && x.FinalPathPartIsADirectory
-            );
-        contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/file.txt");
+            .ContainSingle(x => x.NormalisedPath == "simple-list" && x.FinalPathPartIsADirectory);
+        contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple-list/file.txt");
         contents.Contents
             .Should()
-            .ContainSingle(x => x.NormalisedPath == "simple/another-file.txt");
-        contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/.config");
+            .ContainSingle(x => x.NormalisedPath == "simple-list/another-file.txt");
+        contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple-list/.config");
     }
 
     [Theory]
@@ -46,64 +48,89 @@ public class ListDirectoryContentsTests : BaseIntegrationTest
     public async Task It_Lists_The_Contents_Of_A_More_Complex_Directory(Adapter adapter)
     {
         // Arrange.
-        await ConfigureTestAsync(adapter);
+        await ConfigureTestAsync(adapter, true);
 
-        await TestAdapter.CreateFileAndWriteTextAsync("a/file.txt".AsBaselineFilesystemPath());
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "a/another-file.txt".AsBaselineFilesystemPath()
+            "list-complex/a/file.txt".AsBaselineFilesystemPath()
         );
-        await TestAdapter.CreateFileAndWriteTextAsync("a/b/.config".AsBaselineFilesystemPath());
-        await TestAdapter.CreateFileAndWriteTextAsync("a/b/c/.keep".AsBaselineFilesystemPath());
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "a/c/d/e/f/g/.keep".AsBaselineFilesystemPath()
+            "list-complex/a/another-file.txt".AsBaselineFilesystemPath()
+        );
+        await TestAdapter.CreateFileAndWriteTextAsync(
+            "list-complex/a/b/.config".AsBaselineFilesystemPath()
+        );
+        await TestAdapter.CreateFileAndWriteTextAsync(
+            "list-complex/a/b/c/.keep".AsBaselineFilesystemPath()
+        );
+        await TestAdapter.CreateFileAndWriteTextAsync(
+            "list-complex/a/c/d/e/f/g/.keep".AsBaselineFilesystemPath()
         );
 
         // Act.
         var contents = await DirectoryManager.ListContentsAsync(
-            new ListDirectoryContentsRequest { DirectoryPath = "a/".AsBaselineFilesystemPath() }
+            new ListDirectoryContentsRequest
+            {
+                DirectoryPath = "list-complex/a/".AsBaselineFilesystemPath()
+            }
         );
 
         // Assert.
         contents.Contents.Should().HaveCount(13);
         contents.Contents
             .Should()
-            .ContainSingle(x => x.NormalisedPath == "a" && x.FinalPathPartIsADirectory);
-        contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/file.txt");
-        contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/another-file.txt");
-        contents.Contents
-            .Should()
-            .ContainSingle(x => x.NormalisedPath == "a/b" && x.FinalPathPartIsADirectory);
-        contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/.config");
-        contents.Contents
-            .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/b/c" && x.FinalPathPartIsADirectory
-            );
-        contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/c/.keep");
-        contents.Contents
-            .Should()
-            .ContainSingle(x => x.NormalisedPath == "a/c" && x.FinalPathPartIsADirectory);
-        contents.Contents
-            .Should()
-            .ContainSingle(
-                x => x.NormalisedPath == "a/c/d" && x.FinalPathPartIsADirectory
+                x => x.NormalisedPath == "list-complex/a" && x.FinalPathPartIsADirectory
             );
         contents.Contents
             .Should()
+            .ContainSingle(x => x.NormalisedPath == "list-complex/a/file.txt");
+        contents.Contents
+            .Should()
+            .ContainSingle(x => x.NormalisedPath == "list-complex/a/another-file.txt");
+        contents.Contents
+            .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/c/d/e" && x.FinalPathPartIsADirectory
+                x => x.NormalisedPath == "list-complex/a/b" && x.FinalPathPartIsADirectory
+            );
+        contents.Contents
+            .Should()
+            .ContainSingle(x => x.NormalisedPath == "list-complex/a/b/.config");
+        contents.Contents
+            .Should()
+            .ContainSingle(
+                x => x.NormalisedPath == "list-complex/a/b/c" && x.FinalPathPartIsADirectory
+            );
+        contents.Contents
+            .Should()
+            .ContainSingle(x => x.NormalisedPath == "list-complex/a/b/c/.keep");
+        contents.Contents
+            .Should()
+            .ContainSingle(
+                x => x.NormalisedPath == "list-complex/a/c" && x.FinalPathPartIsADirectory
             );
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/c/d/e/f" && x.FinalPathPartIsADirectory
+                x => x.NormalisedPath == "list-complex/a/c/d" && x.FinalPathPartIsADirectory
             );
         contents.Contents
             .Should()
             .ContainSingle(
-                x => x.NormalisedPath == "a/c/d/e/f/g" && x.FinalPathPartIsADirectory
+                x => x.NormalisedPath == "list-complex/a/c/d/e" && x.FinalPathPartIsADirectory
             );
-        contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g/.keep");
+        contents.Contents
+            .Should()
+            .ContainSingle(
+                x => x.NormalisedPath == "list-complex/a/c/d/e/f" && x.FinalPathPartIsADirectory
+            );
+        contents.Contents
+            .Should()
+            .ContainSingle(
+                x => x.NormalisedPath == "list-complex/a/c/d/e/f/g" && x.FinalPathPartIsADirectory
+            );
+        contents.Contents
+            .Should()
+            .ContainSingle(x => x.NormalisedPath == "list-complex/a/c/d/e/f/g/.keep");
     }
 
     [Theory]
@@ -160,9 +187,7 @@ public class ListDirectoryContentsTests : BaseIntegrationTest
         contents.Contents.Should().HaveCount(4);
         contents.Contents
             .Should()
-            .ContainSingle(
-                x => x.NormalisedPath == "simple" && x.FinalPathPartIsADirectory
-            );
+            .ContainSingle(x => x.NormalisedPath == "simple" && x.FinalPathPartIsADirectory);
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "simple/file.txt");
         contents.Contents
             .Should()
@@ -207,33 +232,23 @@ public class ListDirectoryContentsTests : BaseIntegrationTest
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/.config");
         contents.Contents
             .Should()
-            .ContainSingle(
-                x => x.NormalisedPath == "a/b/c" && x.FinalPathPartIsADirectory
-            );
+            .ContainSingle(x => x.NormalisedPath == "a/b/c" && x.FinalPathPartIsADirectory);
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/b/c/.keep");
         contents.Contents
             .Should()
             .ContainSingle(x => x.NormalisedPath == "a/c" && x.FinalPathPartIsADirectory);
         contents.Contents
             .Should()
-            .ContainSingle(
-                x => x.NormalisedPath == "a/c/d" && x.FinalPathPartIsADirectory
-            );
+            .ContainSingle(x => x.NormalisedPath == "a/c/d" && x.FinalPathPartIsADirectory);
         contents.Contents
             .Should()
-            .ContainSingle(
-                x => x.NormalisedPath == "a/c/d/e" && x.FinalPathPartIsADirectory
-            );
+            .ContainSingle(x => x.NormalisedPath == "a/c/d/e" && x.FinalPathPartIsADirectory);
         contents.Contents
             .Should()
-            .ContainSingle(
-                x => x.NormalisedPath == "a/c/d/e/f" && x.FinalPathPartIsADirectory
-            );
+            .ContainSingle(x => x.NormalisedPath == "a/c/d/e/f" && x.FinalPathPartIsADirectory);
         contents.Contents
             .Should()
-            .ContainSingle(
-                x => x.NormalisedPath == "a/c/d/e/f/g" && x.FinalPathPartIsADirectory
-            );
+            .ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g" && x.FinalPathPartIsADirectory);
         contents.Contents.Should().ContainSingle(x => x.NormalisedPath == "a/c/d/e/f/g/.keep");
     }
 }
