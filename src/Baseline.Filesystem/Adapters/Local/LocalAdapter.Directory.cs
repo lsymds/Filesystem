@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Baseline.Filesystem.Internal.Extensions;
 
 namespace Baseline.Filesystem;
 
@@ -15,7 +16,7 @@ namespace Baseline.Filesystem;
 public partial class LocalAdapter
 {
     /// <inheritdoc />
-    public Task<CopyDirectoryResponse> CopyDirectoryAsync(
+    public async Task<CopyDirectoryResponse> CopyDirectoryAsync(
         CopyDirectoryRequest copyDirectoryRequest,
         CancellationToken cancellationToken
     )
@@ -23,7 +24,44 @@ public partial class LocalAdapter
         ThrowIfDirectoryDoesNotExist(copyDirectoryRequest.SourceDirectoryPath);
         ThrowIfDirectoryExists(copyDirectoryRequest.DestinationDirectoryPath);
 
-        throw new System.NotImplementedException();
+        await ListContentsUnderPathAndPerformActionUntilCompleteAsync(
+            copyDirectoryRequest.SourceDirectoryPath,
+            pathToCopy =>
+            {
+                if (pathToCopy.FinalPathPartIsADirectory)
+                {
+                    Directory.CreateDirectory(
+                        pathToCopy
+                            .ReplaceDirectoryWithinPath(
+                                copyDirectoryRequest.SourceDirectoryPath,
+                                copyDirectoryRequest.DestinationDirectoryPath
+                            )
+                            .NormalisedPath
+                    );
+                }
+                else
+                {
+                    var pathToCopyTo = pathToCopy.ReplaceDirectoryWithinPath(
+                        copyDirectoryRequest.SourceDirectoryPath,
+                        copyDirectoryRequest.DestinationDirectoryPath
+                    );
+
+                    CreateParentDirectoryForPathIfNotExists(pathToCopyTo);
+
+                    File.Copy(pathToCopy.NormalisedPath, pathToCopyTo.NormalisedPath);
+                }
+
+                return Task.FromResult(true);
+            }
+        );
+
+        return new CopyDirectoryResponse
+        {
+            DestinationDirectory = new DirectoryRepresentation
+            {
+                Path = copyDirectoryRequest.DestinationDirectoryPath
+            }
+        };
     }
 
     /// <inheritdoc />
