@@ -246,9 +246,14 @@ public partial class LocalAdapter
     /// </summary>
     private PathRepresentation SanitiseWindowsPaths(string path, bool isDirectory)
     {
-        var workingPath = new StringBuilder(path);
+        if (Path.DirectorySeparatorChar != '\\')
+        {
+            return isDirectory
+                ? $"{path}/".AsBaselineFilesystemPath()
+                : path.AsBaselineFilesystemPath();
+        }
 
-        workingPath.Replace("\\", "/");
+        var workingPath = new StringBuilder(path).Replace("\\", "/");
 
         if (isDirectory)
         {
