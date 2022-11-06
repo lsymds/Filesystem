@@ -207,7 +207,7 @@ public partial class LocalAdapter
     /// until either a) all contents have been actioned or b) an action returns false indicating the listing should
     /// stop.
     /// </summary>
-    private async Task ListContentsUnderPathAndPerformActionUntilCompleteAsync(
+    private static async Task ListContentsUnderPathAndPerformActionUntilCompleteAsync(
         PathRepresentation path,
         Func<PathRepresentation, Task<bool>> action
     )
@@ -244,7 +244,7 @@ public partial class LocalAdapter
     /// Windows paths are often returned with backwards slashes in the directory names instead of forward slashes.
     /// This sanitises them to ensure they all work the same.
     /// </summary>
-    private PathRepresentation SanitiseWindowsPaths(string path, bool isDirectory)
+    private static PathRepresentation SanitiseWindowsPaths(string path, bool isDirectory)
     {
         if (Path.DirectorySeparatorChar != '\\')
         {
