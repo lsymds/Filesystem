@@ -117,6 +117,7 @@ public partial class S3Adapter
 
         var pathTracker = new HashSet<PathRepresentation>();
 
+        // TODO: This should only return the path tree under the requested directory. Currently, it's returning all levels!
         await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 iterateDirectoryContentsRequest.DirectoryPath,
                 async listObjectsResponse =>
