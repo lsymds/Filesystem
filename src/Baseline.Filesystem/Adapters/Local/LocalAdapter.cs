@@ -1,4 +1,6 @@
-﻿namespace Baseline.Filesystem;
+﻿using System;
+
+namespace Baseline.Filesystem;
 
 /// <summary>
 /// An <see cref="IAdapter"/> implementation for interacting with files and directories on a local disk (or one
@@ -13,6 +15,14 @@ public partial class LocalAdapter : IAdapter
     /// </summary>
     public LocalAdapter(LocalAdapterConfiguration configuration)
     {
+        if (configuration.GetPublicUrlForPath is null)
+        {
+            throw new ArgumentNullException(
+                nameof(configuration.GetPublicUrlForPath),
+                "A delegate that retrieves public URLs to return for a given path is required. It can be anything, we just don't want to make any assumptions for you!"
+            );
+        }
+
         _configuration = configuration;
     }
 }
