@@ -68,4 +68,29 @@ public class PathRepresentationTests
         // Assert.
         equal.Should().Be(outcome);
     }
+
+    [Theory]
+    [InlineData("a/b", "a/b", true)]
+    [InlineData("a/b/", "a/b/", true)]
+    [InlineData("a/b/c/", "a/b/", true)]
+    [InlineData("a/b/c", "a", false)]
+    [InlineData("a/b/c/", "a/b/c", false)]
+    [InlineData("a/b/c/", null, false)]
+    [InlineData("a/b/c/", "a/b/c/d", false)]
+    public void It_Correct_Identifies_If_A_Path_Starts_With_Another_Path(
+        string left,
+        string right,
+        bool outcome
+    )
+    {
+        // Arrange.
+        var leftRepresentation = left.AsBaselineFilesystemPath();
+        var rightRepresentation = right?.AsBaselineFilesystemPath();
+
+        // Act.
+        var startsWith = leftRepresentation.StartsWith(rightRepresentation);
+
+        // Assert.
+        startsWith.Should().Be(outcome);
+    }
 }

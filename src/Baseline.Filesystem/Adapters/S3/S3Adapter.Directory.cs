@@ -117,7 +117,6 @@ public partial class S3Adapter
 
         var pathTracker = new HashSet<PathRepresentation>();
 
-        // TODO: This should only return the path tree under the requested directory. Currently, it's returning all levels!
         await ListPaginatedFilesUnderPathAndPerformActionUntilCompleteAsync(
                 iterateDirectoryContentsRequest.DirectoryPath,
                 async listObjectsResponse =>
@@ -126,7 +125,12 @@ public partial class S3Adapter
                     {
                         foreach (var treeItem in file.Key.AsBaselineFilesystemPath().GetPathTree())
                         {
-                            if (pathTracker.Contains(treeItem))
+                            if (
+                                pathTracker.Contains(treeItem)
+                                || !treeItem.StartsWith(
+                                    iterateDirectoryContentsRequest.DirectoryPath
+                                )
+                            )
                             {
                                 continue;
                             }
@@ -173,6 +177,9 @@ public partial class S3Adapter
                             @object.Key
                                 .AsBaselineFilesystemPath()
                                 .GetPathTree()
+                                .Where(
+                                    p => p.StartsWith(listDirectoryContentsRequest.DirectoryPath)
+                                )
                                 .ToList()
                                 .ForEach(p => directoryContents.Add(p))
                     );
