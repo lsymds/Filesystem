@@ -15,11 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< Updated upstream
-    <PackageReference Include="AWSSDK.S3" Version="3.7.101.8" />
-=======
     <PackageReference Include="AWSSDK.S3" Version="3.7.101.16" />
->>>>>>> Stashed changes
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
