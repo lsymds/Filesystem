@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Amazon.Runtime;
 using Amazon.S3;
 using FluentAssertions;
@@ -116,6 +117,17 @@ public class SimpleDependencyInjectionTests
                     .UsingMemoryAdapter(c =>
                     {
                         c.PublicUrlToReturn = "https://www.google.com";
+                    });
+            });
+
+            baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
+            {
+                storeRegistrationBuilder
+                    .WithName("third")
+                    .WithRootPath("abc/".AsBaselineFilesystemPath())
+                    .UsingLocalAdapter(c =>
+                    {
+                        c.GetPublicUrlForPath = _ => "https://www.google.com";
                     });
             });
         });

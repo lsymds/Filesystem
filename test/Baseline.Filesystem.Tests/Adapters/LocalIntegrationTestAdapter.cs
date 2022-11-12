@@ -27,7 +27,9 @@ public class LocalIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegrat
         }
 
         return ValueTask.FromResult(
-            new LocalAdapter(new LocalAdapterConfiguration(_ => "https://google.com")) as IAdapter
+            new LocalAdapter(
+                new LocalAdapterConfiguration { GetPublicUrlForPath = _ => "https://google.com" }
+            ) as IAdapter
         );
     }
 
