@@ -38,7 +38,7 @@ public static class TestUtilities
             $"{RandomString()}.{extensions[Random.Next(extensions.Length)]}"
         };
 
-        return $"{RandomDirectoryPath(true)}{fileNames[Random.Next(fileNames.Length)]}".AsBaselineFilesystemPath();
+        return $"{RandomDirectoryPath(true)}/{fileNames[Random.Next(fileNames.Length)]}".AsBaselineFilesystemPath();
     }
 
     public static PathRepresentation RandomFilePathRepresentationWithPrefix(string prefix)

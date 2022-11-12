@@ -23,7 +23,17 @@ storeManager.Register(new StoreRegistration
 storeManager.Register(new StoreRegistration
 {
     Name = "temporary_logs",
-    Adapter = new MemoryAdapter(new MemoryConfiguration
+    Adapter = new MemoryAdapter(new MemoryAdapterConfiguration
+    {
+        // ...
+    })
+});
+
+// Store SSH keys on disk.
+storeManager.register(new StoreRegistration
+{
+    Name = "ssh_keys",
+    Adapter = new LocalAdapter(new LocalAdapterConfiguration
     {
         // ...
     })

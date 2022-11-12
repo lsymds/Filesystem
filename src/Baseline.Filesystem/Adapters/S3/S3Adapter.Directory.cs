@@ -125,7 +125,12 @@ public partial class S3Adapter
                     {
                         foreach (var treeItem in file.Key.AsBaselineFilesystemPath().GetPathTree())
                         {
-                            if (pathTracker.Contains(treeItem))
+                            if (
+                                pathTracker.Contains(treeItem)
+                                || !treeItem.StartsWith(
+                                    iterateDirectoryContentsRequest.DirectoryPath
+                                )
+                            )
                             {
                                 continue;
                             }
@@ -172,6 +177,9 @@ public partial class S3Adapter
                             @object.Key
                                 .AsBaselineFilesystemPath()
                                 .GetPathTree()
+                                .Where(
+                                    p => p.StartsWith(listDirectoryContentsRequest.DirectoryPath)
+                                )
                                 .ToList()
                                 .ForEach(p => directoryContents.Add(p))
                     );

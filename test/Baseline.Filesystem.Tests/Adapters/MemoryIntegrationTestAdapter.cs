@@ -38,7 +38,10 @@ public class MemoryIntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegra
             .GetOrCreateParentDirectoryOf(workingPath)
             .Files.Add(
                 workingPath,
-                new MemoryFileRepresentation(Content: new MemoryStream(Encoding.UTF8.GetBytes(contents)), ContentType: "text/plain")
+                new MemoryFileRepresentation(
+                    Content: new MemoryStream(Encoding.UTF8.GetBytes(contents)),
+                    ContentType: "text/plain"
+                )
             );
 
         return ValueTask.CompletedTask;

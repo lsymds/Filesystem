@@ -125,13 +125,13 @@ public class CopyDirectoryTests : BaseIntegrationTest
             new CopyDirectoryRequest
             {
                 SourceDirectoryPath = originalDirectory,
-                DestinationDirectoryPath = "food/".AsBaselineFilesystemPath()
+                DestinationDirectoryPath = _destinationDirectory
             }
         );
 
         // Assert.
         await ExpectFileToExistAsync(
-            "food/cheese/more-cheese/my-favourite-cheesestring.jpeg".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/cheese/more-cheese/my-favourite-cheesestring.jpeg".AsBaselineFilesystemPath()
         );
     }
 
@@ -163,18 +163,22 @@ public class CopyDirectoryTests : BaseIntegrationTest
             {
                 SourceDirectoryPath =
                     "a/more/complex/directory/structure/".AsBaselineFilesystemPath(),
-                DestinationDirectoryPath = "b/".AsBaselineFilesystemPath()
+                DestinationDirectoryPath = _destinationDirectory
             }
         );
 
         // Assert.
-        await ExpectFileToExistAsync("b/.keep".AsBaselineFilesystemPath());
-        await ExpectFileToExistAsync("b/with/a/nested/file.jpeg".AsBaselineFilesystemPath());
         await ExpectFileToExistAsync(
-            "b/with/an/even/more/complex/file/structure.txt".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
         );
         await ExpectFileToExistAsync(
-            "b/with/an/even/more/complex/file/structure.config".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/with/a/nested/file.jpeg".AsBaselineFilesystemPath()
+        );
+        await ExpectFileToExistAsync(
+            $"{_destinationDirectory.NormalisedPath}/with/an/even/more/complex/file/structure.txt".AsBaselineFilesystemPath()
+        );
+        await ExpectFileToExistAsync(
+            $"{_destinationDirectory.NormalisedPath}/with/an/even/more/complex/file/structure.config".AsBaselineFilesystemPath()
         );
     }
 

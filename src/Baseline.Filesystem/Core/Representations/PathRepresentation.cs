@@ -157,6 +157,40 @@ public class PathRepresentation
     }
 
     /// <summary>
+    /// Returns whether the current path starts with another path.
+    /// </summary>
+    public bool StartsWith(PathRepresentation other)
+    {
+        if (other == null)
+        {
+            return false;
+        }
+
+        // Slightly more complex than comparing the paths as we need to compare whether they're of the same type (i.e.
+        // a directory, too).
+        var pathTree = GetPathTree().ToList();
+        var otherPathTree = other.GetPathTree().ToList();
+
+        if (otherPathTree.Count > pathTree.Count)
+        {
+            return false;
+        }
+
+        for (var i = 0; i < otherPathTree.Count; i++)
+        {
+            var left = pathTree[i];
+            var right = otherPathTree[i];
+
+            if (left != right)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
     /// Compares two paths and identifies if they're equal.
     /// </summary>
     /// <param name="left">The left hand side of the == comparison.</param>
