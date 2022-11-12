@@ -12,19 +12,6 @@ public static class MemoryAdapterDependencyInjectionExtensions
     /// Configures the store registration builder to use the memory adapter.
     /// </summary>
     /// <param name="storeRegistrationBuilder">The current store registration builder instance.</param>
-    public static StoreRegistrationBuilder UsingMemoryAdapter(
-        this StoreRegistrationBuilder storeRegistrationBuilder
-    )
-    {
-        var configuration = new MemoryAdapterConfiguration();
-
-        return storeRegistrationBuilder.WithAdapter(() => new MemoryAdapter(configuration));
-    }
-
-    /// <summary>
-    /// Configures the store registration builder to use the memory adapter.
-    /// </summary>
-    /// <param name="storeRegistrationBuilder">The current store registration builder instance.</param>
     /// <param name="configurationBuilder">A delegate used to configure the memory adapter.</param>
     public static StoreRegistrationBuilder UsingMemoryAdapter(
         this StoreRegistrationBuilder storeRegistrationBuilder,
