@@ -21,7 +21,10 @@ public partial class MemoryAdapter : IAdapter
     {
         if (string.IsNullOrWhiteSpace(configuration.PublicUrlToReturn))
         {
-            throw new ArgumentException(nameof(configuration.PublicUrlToReturn));
+            throw new ArgumentNullException(
+                nameof(configuration.PublicUrlToReturn),
+                "A public URL to return is required. It can be anything, we just don't want to make any assumptions for you!"
+            );
         }
 
         _configuration = configuration;
