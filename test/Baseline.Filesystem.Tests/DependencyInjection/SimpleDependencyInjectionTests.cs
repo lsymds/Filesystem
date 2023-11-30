@@ -27,7 +27,7 @@ public class SimpleDependencyInjectionTests
                             new BasicAWSCredentials("abc", "def"),
                             new AmazonS3Config
                             {
-                                AuthenticationRegion = "eu-west-1",
+                                AuthenticationRegion = "eu-west-2",
                                 ServiceURL = "http://localhost:4566",
                                 ForcePathStyle = true,
                             }
@@ -52,7 +52,7 @@ public class SimpleDependencyInjectionTests
                 new BasicAWSCredentials("abc", "def"),
                 new AmazonS3Config
                 {
-                    AuthenticationRegion = "eu-west-1",
+                    AuthenticationRegion = "eu-west-2",
                     ServiceURL = "http://localhost:4566",
                     ForcePathStyle = true,
                 }
@@ -88,7 +88,7 @@ public class SimpleDependencyInjectionTests
             new BasicAWSCredentials("abc", "def"),
             new AmazonS3Config
             {
-                AuthenticationRegion = "eu-west-1",
+                AuthenticationRegion = "eu-west-2",
                 ServiceURL = "http://localhost:4566",
                 ForcePathStyle = true,
             }

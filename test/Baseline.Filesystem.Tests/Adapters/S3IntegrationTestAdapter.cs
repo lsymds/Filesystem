@@ -21,7 +21,7 @@ public class S3IntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegration
             new BasicAWSCredentials("abc", "def"),
             new AmazonS3Config
             {
-                AuthenticationRegion = "eu-west-1",
+                AuthenticationRegion = "eu-west-2",
                 ServiceURL = "http://localhost:4566",
                 ForcePathStyle = true,
             }
@@ -38,7 +38,7 @@ public class S3IntegrationTestAdapter : BaseIntegrationTestAdapter, IIntegration
         await _s3Client.PutBucketAsync(
             new PutBucketRequest
             {
-                BucketRegion = S3Region.EUWest1,
+                BucketRegion = S3Region.EUWest2,
                 BucketName = _generatedBucketName
             }
         );
