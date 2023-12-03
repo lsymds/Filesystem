@@ -53,7 +53,7 @@ We accept contributions in the form of feature requests, bug reports and suggest
 
 ## 📕 Documentation
 
-Documentation for this project is available in the [docs/ folder within this repository](https://docs.getbaseline.net/filesystem/).
+Documentation for this project is available in the [docs/ folder within this repository](docs/index.md).
 
 ## 🗿 Licensing
 
