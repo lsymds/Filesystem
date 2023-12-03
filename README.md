@@ -58,4 +58,4 @@ Documentation for this project is available in the [docs/ folder within this rep
 ## 🗿 Licensing
 
 Baseline.Filesystem is licensed under the permissive MIT license. More information is available within this repository's
-LICENSE file located here: [https://github.com/getbaseline/Baseline.Filesystem/blob/main/LICENSE](https://github.com/getbaseline/Baseline.Filesystem/blob/main/LICENSE)
+LICENSE file located [HERE](LICENSE).
