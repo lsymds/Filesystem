@@ -49,11 +49,11 @@ await fileManager.TouchFileAsync(
 
 ## 👥 Contributing
 
-To learn more about contributing to the project, please read our contribution guidelines available at the documentation link below.
+We accept contributions in the form of feature requests, bug reports and suggestions. We do not accept code contributions.
 
 ## 📕 Documentation
 
-Documentation for this project is available on our project documentation site: [https://docs.getbaseline.net/filesystem/](https://docs.getbaseline.net/filesystem/).
+Documentation for this project is available in the [docs/ folder within this repository](https://docs.getbaseline.net/filesystem/).
 
 ## 🗿 Licensing
 
