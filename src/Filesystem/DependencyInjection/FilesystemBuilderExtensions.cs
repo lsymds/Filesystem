@@ -3,9 +3,9 @@ using System;
 namespace LSymds.Filesystem;
 
 /// <summary>
-/// Extension methods for the <see cref="BaselineFilesystemBuilder" /> class.
+/// Extension methods for the <see cref="FilesystemBuilder" /> class.
 /// </summary>
-public static class BaselineFilesystemBuilderExtensions
+public static class FilesystemBuilderExtensions
 {
     /// <summary>
     /// Adds a store registration to be included in the built <see cref="IStoreManager"/> class. The name of
@@ -15,8 +15,8 @@ public static class BaselineFilesystemBuilderExtensions
     /// <param name="storeRegistrationBuilder">
     /// A lambda function used to modify a new store registration builder.
     /// </param>
-    public static BaselineFilesystemBuilder AddStoreRegistration(
-        this BaselineFilesystemBuilder builder,
+    public static FilesystemBuilder AddStoreRegistration(
+        this FilesystemBuilder builder,
         Action<StoreRegistrationBuilder> storeRegistrationBuilder
     )
     {

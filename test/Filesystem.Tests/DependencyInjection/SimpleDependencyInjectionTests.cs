@@ -13,9 +13,9 @@ public class SimpleDependencyInjectionTests
     {
         // Act.
         var serviceCollection = new ServiceCollection();
-        serviceCollection.UseBaselineFilesystem(baselineFilesystemBuilder =>
+        serviceCollection.UseFilesystem(filesystemBuilder =>
         {
-            baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
+            filesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
             {
                 storeRegistrationBuilder
                     .WithName("default")
@@ -57,10 +57,10 @@ public class SimpleDependencyInjectionTests
                 }
             )
         );
-        serviceCollection.UseBaselineFilesystem(
-            (services, baselineFilesystemBuilder) =>
+        serviceCollection.UseFilesystem(
+            (services, filesystemBuilder) =>
             {
-                baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
+                filesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
                 {
                     storeRegistrationBuilder
                         .WithName("default")
@@ -95,9 +95,9 @@ public class SimpleDependencyInjectionTests
 
         // Act.
         var serviceCollection = new ServiceCollection();
-        serviceCollection.UseBaselineFilesystem(baselineFilesystemBuilder =>
+        serviceCollection.UseFilesystem(filesystemBuilder =>
         {
-            baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
+            filesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
             {
                 storeRegistrationBuilder
                     .WithName("default")
@@ -108,7 +108,7 @@ public class SimpleDependencyInjectionTests
                     });
             });
 
-            baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
+            filesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
             {
                 storeRegistrationBuilder
                     .WithName("second")
@@ -119,7 +119,7 @@ public class SimpleDependencyInjectionTests
                     });
             });
 
-            baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
+            filesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
             {
                 storeRegistrationBuilder
                     .WithName("third")

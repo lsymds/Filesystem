@@ -18,12 +18,12 @@ public static class DependencyInjectionExtensions
     /// A lambda function used to fluently configure the Baseline.Filesystem dependencies, adding stores and
     /// default configurations.
     /// </param>
-    public static IServiceCollection UseBaselineFilesystem(
+    public static IServiceCollection UseFilesystem(
         this IServiceCollection serviceCollection,
-        Action<BaselineFilesystemBuilder> builder
+        Action<FilesystemBuilder> builder
     )
     {
-        return serviceCollection.UseBaselineFilesystem(
+        return serviceCollection.UseFilesystem(
             (_, filesystemBuilder) => builder(filesystemBuilder)
         );
     }
@@ -38,15 +38,15 @@ public static class DependencyInjectionExtensions
     /// A lambda function used to fluently configure the Baseline.Filesystem dependencies, adding stores and
     /// default configurations.
     /// </param>
-    public static IServiceCollection UseBaselineFilesystem(
+    public static IServiceCollection UseFilesystem(
         this IServiceCollection serviceCollection,
-        Action<IServiceProvider, BaselineFilesystemBuilder> builder
+        Action<IServiceProvider, FilesystemBuilder> builder
     )
     {
         return serviceCollection
             .AddSingleton<IStoreManager>(serviceProvider =>
             {
-                var filesystemBuilder = new BaselineFilesystemBuilder();
+                var filesystemBuilder = new FilesystemBuilder();
                 builder(serviceProvider, filesystemBuilder);
 
                 var storeManager = new StoreManager();
