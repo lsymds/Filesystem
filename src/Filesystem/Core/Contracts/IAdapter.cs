@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace LSymds.Filesystem;
 
 /// <summary>
-/// Provides an interface for all Baseline.Filesystem adapters that back individual stores. Implementations are not
+/// Provides an interface for all LSymds.Filesystem adapters that back individual stores. Implementations are not
 /// aware that there may be more than one store within the parent store manager.
 /// </summary>
 public interface IAdapter

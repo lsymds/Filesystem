@@ -9,7 +9,7 @@ namespace LSymds.Filesystem.Internal.Extensions;
 internal static class ExternalExceptionExtensions
 {
     /// <summary>
-    /// Wraps any external exceptions thrown from the task and, if it's a Baseline exception rethrows it, but if
+    /// Wraps any external exceptions thrown from the task and, if it's a LSymds.Filesystem exception rethrows it, but if
     /// it's an unmanaged exception wraps it.
     /// </summary>
     /// <param name="task">The asynchronous task that could potentially throw an external exception.</param>
@@ -32,7 +32,7 @@ internal static class ExternalExceptionExtensions
     }
 
     /// <summary>
-    /// Wraps any external exceptions thrown from the task and, if it's a Baseline exception rethrows it, but if
+    /// Wraps any external exceptions thrown from the task and, if it's a LSymds.Filesystem exception rethrows it, but if
     /// it's an unmanaged exception wraps it.
     /// </summary>
     /// <param name="task">The asynchronous task that could potentially throw an external exception.</param>

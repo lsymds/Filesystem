@@ -4,7 +4,7 @@ namespace LSymds.Filesystem;
 
 /// <summary>
 /// Wrapped, generic exception that is thrown when a store's adapter throws an exception during
-/// an operation (i.e. writing a file) that isn't otherwise handled by Baseline.Filesystem (i.e. files not
+/// an operation (i.e. writing a file) that isn't otherwise handled by LSymds.Filesystem (i.e. files not
 /// being found throwing a FileNotFoundException). Prevents you from having to reference the provider's
 /// SDK just to catch any exceptions.
 /// </summary>

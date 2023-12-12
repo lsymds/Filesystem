@@ -14,6 +14,6 @@ public class PathIsRelativeException : InvalidPathException
     public PathIsRelativeException(string path)
         : base(
             path,
-            "Relative paths are not supported in Baseline.Filesystem. Read the documentation to learn more."
+            "Relative paths are not supported in LSymds.Filesystem. Read the documentation to learn more."
         ) { }
 }

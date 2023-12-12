@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace LSymds.Filesystem;
 
 /// <summary>
-/// Extension methods that add the Baseline.Filesystem project to an <see cref="IServiceCollection"/> implementation.
+/// Extension methods that add the LSymds.Filesystem project to an <see cref="IServiceCollection"/> implementation.
 /// </summary>
 public static class DependencyInjectionExtensions
 {

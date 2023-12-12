@@ -1,9 +1,10 @@
 namespace LSymds.Filesystem;
 
 /// <summary>
-/// Base request containing functionality that all Baseline.Filesystem requests must implement.
+/// Base request containing functionality that all LSymds.Filesystem requests must implement.
 /// </summary>
-public abstract class BaseRequest<T> where T : BaseRequest<T>, new()
+public abstract class BaseRequest<T>
+    where T : BaseRequest<T>, new()
 {
     /// <summary>
     /// Clones the current instance into a new instance ready for the paths to be updated. Only the references for

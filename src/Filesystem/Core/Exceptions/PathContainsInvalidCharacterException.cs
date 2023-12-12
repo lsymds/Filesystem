@@ -15,7 +15,7 @@ public class PathContainsInvalidCharacterException : InvalidPathException
     public PathContainsInvalidCharacterException(string originalPath)
         : base(
             originalPath,
-            $"The path '{originalPath}' contains an invalid character which is not allowed in Baseline.Filesystem. For more "
-            + "information, see the documentation."
+            $"The path '{originalPath}' contains an invalid character which is not allowed in LSymds.Filesystem. For more "
+                + "information, see the documentation."
         ) { }
 }

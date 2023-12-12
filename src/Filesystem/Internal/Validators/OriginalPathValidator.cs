@@ -30,7 +30,7 @@ internal static class OriginalPathValidator
     }
 
     /// <summary>
-    /// Checks the path for Baseline.Filesystem-invalid characters and throws a validation exception if any are found.
+    /// Checks the path for LSymds.Filesystem-invalid characters and throws a validation exception if any are found.
     /// </summary>
     /// <param name="path">The path to check for invalid characters.</param>
     /// <exception cref="PathContainsInvalidCharacterException" />
@@ -44,7 +44,7 @@ internal static class OriginalPathValidator
     }
 
     /// <summary>
-    /// Checks the path to see if it is relative. As per the documentation, paths in Baseline.Filesystem are required to be
+    /// Checks the path to see if it is relative. As per the documentation, paths in LSymds.Filesystem are required to be
     /// absolute to ensure maximum transferability between the different adapters.
     /// </summary>
     /// <param name="path">The path to check to see if it is relative.</param>

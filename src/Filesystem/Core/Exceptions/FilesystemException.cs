@@ -3,7 +3,7 @@ using System;
 namespace LSymds.Filesystem;
 
 /// <summary>
-/// Base exception that is inherited by all Baseline thrown exceptions.
+/// Base exception that is inherited by all LSymds.Filesystem thrown exceptions.
 /// </summary>
 public abstract class FilesystemException : Exception
 {

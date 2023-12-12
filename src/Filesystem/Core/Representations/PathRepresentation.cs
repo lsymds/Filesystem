@@ -53,7 +53,7 @@ public class PathRepresentation
     public string FinalPathPart { get; internal set; }
 
     /// <summary>
-    /// Gets the normalised version of the path used throughout Baseline.Filesystem.
+    /// Gets the normalised version of the path used throughout LSymds.Filesystem.
     /// </summary>
     public string NormalisedPath { get; internal set; }
 
