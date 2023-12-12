@@ -17,20 +17,20 @@ public class IterateDirectoryContentsTests : BaseIntegrationTest
         var contents = new List<PathRepresentation>();
 
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "iterate-simple/file.txt".AsBaselineFilesystemPath()
+            "iterate-simple/file.txt".AsFilesystemPath()
         );
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "iterate-simple/another-file.txt".AsBaselineFilesystemPath()
+            "iterate-simple/another-file.txt".AsFilesystemPath()
         );
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "iterate-simple/.config".AsBaselineFilesystemPath()
+            "iterate-simple/.config".AsFilesystemPath()
         );
 
         // Act.
         await DirectoryManager.IterateContentsAsync(
             new IterateDirectoryContentsRequest
             {
-                DirectoryPath = "iterate-simple/".AsBaselineFilesystemPath(),
+                DirectoryPath = "iterate-simple/".AsFilesystemPath(),
                 Action = paths =>
                 {
                     contents.Add(paths);
@@ -61,26 +61,26 @@ public class IterateDirectoryContentsTests : BaseIntegrationTest
         var contents = new List<PathRepresentation>();
 
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "iterate-complex/a/file.txt".AsBaselineFilesystemPath()
+            "iterate-complex/a/file.txt".AsFilesystemPath()
         );
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "iterate-complex/a/another-file.txt".AsBaselineFilesystemPath()
+            "iterate-complex/a/another-file.txt".AsFilesystemPath()
         );
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "iterate-complex/a/b/.config".AsBaselineFilesystemPath()
+            "iterate-complex/a/b/.config".AsFilesystemPath()
         );
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "iterate-complex/a/b/c/.keep".AsBaselineFilesystemPath()
+            "iterate-complex/a/b/c/.keep".AsFilesystemPath()
         );
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "iterate-complex/a/c/d/e/f/g/.keep".AsBaselineFilesystemPath()
+            "iterate-complex/a/c/d/e/f/g/.keep".AsFilesystemPath()
         );
 
         // Act.
         await DirectoryManager.IterateContentsAsync(
             new IterateDirectoryContentsRequest
             {
-                DirectoryPath = "iterate-complex/a/".AsBaselineFilesystemPath(),
+                DirectoryPath = "iterate-complex/a/".AsFilesystemPath(),
                 Action = paths =>
                 {
                     contents.Add(paths);
@@ -157,7 +157,7 @@ public class IterateDirectoryContentsTests : BaseIntegrationTest
         for (int i = 0; i < 1000; i++)
         {
             await TestAdapter.CreateFileAndWriteTextAsync(
-                $"iterate-large/{i}.txt".AsBaselineFilesystemPath()
+                $"iterate-large/{i}.txt".AsFilesystemPath()
             );
         }
 
@@ -165,7 +165,7 @@ public class IterateDirectoryContentsTests : BaseIntegrationTest
         await DirectoryManager.IterateContentsAsync(
             new IterateDirectoryContentsRequest
             {
-                DirectoryPath = "iterate-large/".AsBaselineFilesystemPath(),
+                DirectoryPath = "iterate-large/".AsFilesystemPath(),
                 Action = p =>
                 {
                     contents.Add(p);
@@ -191,17 +191,17 @@ public class IterateDirectoryContentsTests : BaseIntegrationTest
 
         var contents = new List<PathRepresentation>();
 
-        await TestAdapter.CreateFileAndWriteTextAsync("simple/file.txt".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync("simple/file.txt".AsFilesystemPath());
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "simple/another-file.txt".AsBaselineFilesystemPath()
+            "simple/another-file.txt".AsFilesystemPath()
         );
-        await TestAdapter.CreateFileAndWriteTextAsync("simple/.config".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync("simple/.config".AsFilesystemPath());
 
         // Act.
         await DirectoryManager.IterateContentsAsync(
             new IterateDirectoryContentsRequest
             {
-                DirectoryPath = "simple/".AsBaselineFilesystemPath(),
+                DirectoryPath = "simple/".AsFilesystemPath(),
                 Action = p =>
                 {
                     contents.Add(p);
@@ -231,21 +231,21 @@ public class IterateDirectoryContentsTests : BaseIntegrationTest
 
         var contents = new List<PathRepresentation>();
 
-        await TestAdapter.CreateFileAndWriteTextAsync("a/file.txt".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync("a/file.txt".AsFilesystemPath());
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "a/another-file.txt".AsBaselineFilesystemPath()
+            "a/another-file.txt".AsFilesystemPath()
         );
-        await TestAdapter.CreateFileAndWriteTextAsync("a/b/.config".AsBaselineFilesystemPath());
-        await TestAdapter.CreateFileAndWriteTextAsync("a/b/c/.keep".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync("a/b/.config".AsFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync("a/b/c/.keep".AsFilesystemPath());
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "a/c/d/e/f/g/.keep".AsBaselineFilesystemPath()
+            "a/c/d/e/f/g/.keep".AsFilesystemPath()
         );
 
         // Act.
         await DirectoryManager.IterateContentsAsync(
             new IterateDirectoryContentsRequest
             {
-                DirectoryPath = "a/".AsBaselineFilesystemPath(),
+                DirectoryPath = "a/".AsFilesystemPath(),
                 Action = p =>
                 {
                     contents.Add(p);
@@ -296,19 +296,19 @@ public class IterateDirectoryContentsTests : BaseIntegrationTest
 
         var count = 0;
 
-        await TestAdapter.CreateFileAndWriteTextAsync("a/file.txt".AsBaselineFilesystemPath());
+        await TestAdapter.CreateFileAndWriteTextAsync("a/file.txt".AsFilesystemPath());
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "a/another-file.txt".AsBaselineFilesystemPath()
+            "a/another-file.txt".AsFilesystemPath()
         );
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "a/third-file.txt".AsBaselineFilesystemPath()
+            "a/third-file.txt".AsFilesystemPath()
         );
 
         // Act.
         await DirectoryManager.IterateContentsAsync(
             new IterateDirectoryContentsRequest
             {
-                DirectoryPath = "a/".AsBaselineFilesystemPath(),
+                DirectoryPath = "a/".AsFilesystemPath(),
                 Action = _ =>
                 {
                     count += 1;

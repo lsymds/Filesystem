@@ -15,7 +15,7 @@ public class GetPublicUrlTests : BaseManagerUsageTest
         // Act.
         Func<Task> func = async () =>
             await FileManager.GetPublicUrlAsync(
-                new GetFilePublicUrlRequest { FilePath = "a".AsBaselineFilesystemPath() },
+                new GetFilePublicUrlRequest { FilePath = "a".AsFilesystemPath() },
                 "foo"
             );
 
@@ -48,7 +48,7 @@ public class GetPublicUrlTests : BaseManagerUsageTest
     public async Task It_Throws_An_Exception_If_The_Path_Was_Obviously_Intended_As_A_Directory()
     {
         // Arrange.
-        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
+        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsFilesystemPath();
 
         // Act.
         Func<Task> func = async () =>
@@ -64,7 +64,7 @@ public class GetPublicUrlTests : BaseManagerUsageTest
     public async Task It_Throws_An_Exception_If_The_Expiry_Date_Was_Not_Far_Enough_Away()
     {
         // Arrange.
-        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO.txt".AsBaselineFilesystemPath();
+        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO.txt".AsFilesystemPath();
 
         // Act.
         Func<Task> func = async () =>
@@ -97,7 +97,7 @@ public class GetPublicUrlTests : BaseManagerUsageTest
 
         // Act.
         var response = await FileManager.GetPublicUrlAsync(
-            new GetFilePublicUrlRequest { FilePath = "a".AsBaselineFilesystemPath() }
+            new GetFilePublicUrlRequest { FilePath = "a".AsFilesystemPath() }
         );
 
         // Assert.

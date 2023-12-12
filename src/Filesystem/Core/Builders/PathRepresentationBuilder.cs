@@ -58,7 +58,7 @@ public class PathRepresentationBuilder
     {
         if (!path.Contains("/"))
         {
-            yield return path.AsBaselineFilesystemPath();
+            yield return path.AsFilesystemPath();
             yield break;
         }
 
@@ -81,7 +81,7 @@ public class PathRepresentationBuilder
                 currentPath += pathSplitByDirectory[i] + '/';
             }
 
-            yield return currentPath.AsBaselineFilesystemPath();
+            yield return currentPath.AsFilesystemPath();
         }
     }
 

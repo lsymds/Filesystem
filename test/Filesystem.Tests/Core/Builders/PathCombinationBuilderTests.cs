@@ -47,9 +47,9 @@ public class PathCombinationBuilderTests
     {
         // Act.
         var combinedPath = new PathCombinationBuilder(
-            "a".AsBaselineFilesystemPath(),
-            "b/c/d".AsBaselineFilesystemPath(),
-            "e/f/g/".AsBaselineFilesystemPath()
+            "a".AsFilesystemPath(),
+            "b/c/d".AsFilesystemPath(),
+            "e/f/g/".AsFilesystemPath()
         ).Build();
 
         // Assert.

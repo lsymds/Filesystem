@@ -17,7 +17,7 @@ public class CreateTests : BaseManagerUsageTest
             DirectoryManager.CreateAsync(
                 new CreateDirectoryRequest
                 {
-                    DirectoryPath = "i/am/a/directory/".AsBaselineFilesystemPath()
+                    DirectoryPath = "i/am/a/directory/".AsFilesystemPath()
                 },
                 "non-existent"
             );
@@ -55,7 +55,7 @@ public class CreateTests : BaseManagerUsageTest
                 new CreateDirectoryRequest
                 {
                     DirectoryPath =
-                        "i/am/not/a/directory/but-a-path.jpeg".AsBaselineFilesystemPath()
+                        "i/am/not/a/directory/but-a-path.jpeg".AsFilesystemPath()
                 }
             );
 
@@ -71,7 +71,7 @@ public class CreateTests : BaseManagerUsageTest
             DirectoryManager.CreateAsync(
                 new CreateDirectoryRequest
                 {
-                    DirectoryPath = "i/am/not/a/directory/or/am/i".AsBaselineFilesystemPath()
+                    DirectoryPath = "i/am/not/a/directory/or/am/i".AsFilesystemPath()
                 }
             );
 
@@ -98,14 +98,14 @@ public class CreateTests : BaseManagerUsageTest
                 {
                     Directory = new DirectoryRepresentation
                     {
-                        Path = $"root/a/b/".AsBaselineFilesystemPath()
+                        Path = $"root/a/b/".AsFilesystemPath()
                     }
                 }
             );
 
         // Act.
         var response = await DirectoryManager.CreateAsync(
-            new CreateDirectoryRequest { DirectoryPath = "a/b/".AsBaselineFilesystemPath() }
+            new CreateDirectoryRequest { DirectoryPath = "a/b/".AsFilesystemPath() }
         );
 
         // Assert.

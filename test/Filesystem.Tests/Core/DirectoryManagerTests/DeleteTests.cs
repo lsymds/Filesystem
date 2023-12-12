@@ -15,7 +15,7 @@ public class DeleteTests : BaseManagerUsageTest
             DirectoryManager.DeleteAsync(
                 new DeleteDirectoryRequest
                 {
-                    DirectoryPath = "i/am/a/directory/".AsBaselineFilesystemPath()
+                    DirectoryPath = "i/am/a/directory/".AsFilesystemPath()
                 },
                 "non-existent"
             );
@@ -53,7 +53,7 @@ public class DeleteTests : BaseManagerUsageTest
                 new DeleteDirectoryRequest
                 {
                     DirectoryPath =
-                        "i/am/not/a/directory/but-a-path.jpeg".AsBaselineFilesystemPath()
+                        "i/am/not/a/directory/but-a-path.jpeg".AsFilesystemPath()
                 }
             );
 

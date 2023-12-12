@@ -76,7 +76,7 @@ public class RegisterTests : BaseStoreManagerTest
                 new StoreRegistration
                 {
                     Adapter = new SuccessfulOutcomeAdapter(),
-                    RootPath = "not/an/obvious/directory".AsBaselineFilesystemPath()
+                    RootPath = "not/an/obvious/directory".AsFilesystemPath()
                 }
             );
 

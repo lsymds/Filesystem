@@ -21,7 +21,7 @@ public class GeneralTests : BaseManagerUsageTest
         // Act.
         Func<Task> act = async () =>
             await FileManager.GetAsync(
-                new GetFileRequest { FilePath = "abc".AsBaselineFilesystemPath(), },
+                new GetFileRequest { FilePath = "abc".AsFilesystemPath(), },
                 "default",
                 CancellationToken.None
             );
@@ -41,7 +41,7 @@ public class GeneralTests : BaseManagerUsageTest
         // Arrange.
         Reconfigure(true);
 
-        var filePath = "abc".AsBaselineFilesystemPath();
+        var filePath = "abc".AsFilesystemPath();
 
         var request = new FileExistsRequest { FilePath = filePath };
 

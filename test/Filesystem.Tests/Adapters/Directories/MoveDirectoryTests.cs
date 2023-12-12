@@ -41,10 +41,10 @@ public class MoveDirectoryTests : BaseIntegrationTest
         await ConfigureTestAsync(adapter);
 
         await TestAdapter.CreateFileAndWriteTextAsync(
-            $"{_sourceDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
+            $"{_sourceDirectory.NormalisedPath}/.keep".AsFilesystemPath()
         );
         await TestAdapter.CreateFileAndWriteTextAsync(
-            $"{_destinationDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/.keep".AsFilesystemPath()
         );
 
         // Act.
@@ -71,9 +71,9 @@ public class MoveDirectoryTests : BaseIntegrationTest
         await ConfigureTestAsync(adapter);
 
         var originalFirstFilePath =
-            $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath();
+            $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsFilesystemPath();
         var originalSecondFilePath =
-            $"{_sourceDirectory.NormalisedPath}/a/b/c.txt".AsBaselineFilesystemPath();
+            $"{_sourceDirectory.NormalisedPath}/a/b/c.txt".AsFilesystemPath();
 
         await TestAdapter.CreateFileAndWriteTextAsync(originalFirstFilePath);
         await TestAdapter.CreateFileAndWriteTextAsync(originalSecondFilePath);
@@ -116,7 +116,7 @@ public class MoveDirectoryTests : BaseIntegrationTest
         foreach (var file in files)
         {
             await TestAdapter.CreateFileAndWriteTextAsync(
-                $"{_sourceDirectory.NormalisedPath}/{file}".AsBaselineFilesystemPath()
+                $"{_sourceDirectory.NormalisedPath}/{file}".AsFilesystemPath()
             );
         }
 
@@ -134,7 +134,7 @@ public class MoveDirectoryTests : BaseIntegrationTest
         foreach (var file in files)
         {
             await ExpectFileToExistAsync(
-                $"{_destinationDirectory.NormalisedPath}/{file}".AsBaselineFilesystemPath()
+                $"{_destinationDirectory.NormalisedPath}/{file}".AsFilesystemPath()
             );
         }
     }
@@ -151,7 +151,7 @@ public class MoveDirectoryTests : BaseIntegrationTest
         for (var i = 0; i < 1001; i++)
         {
             await TestAdapter.CreateFileAndWriteTextAsync(
-                $"{_sourceDirectory.NormalisedPath}/{i}/.keep".AsBaselineFilesystemPath()
+                $"{_sourceDirectory.NormalisedPath}/{i}/.keep".AsFilesystemPath()
             );
         }
 
@@ -169,7 +169,7 @@ public class MoveDirectoryTests : BaseIntegrationTest
         for (var i = 0; i < 1001; i++)
         {
             await ExpectFileToExistAsync(
-                $"{_destinationDirectory.NormalisedPath}/{i}/.keep".AsBaselineFilesystemPath()
+                $"{_destinationDirectory.NormalisedPath}/{i}/.keep".AsFilesystemPath()
             );
         }
     }
@@ -184,9 +184,9 @@ public class MoveDirectoryTests : BaseIntegrationTest
         await ConfigureTestAsync(adapter, true);
 
         var originalFirstFilePath =
-            $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath();
+            $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsFilesystemPath();
         var originalSecondFilePath =
-            $"{_sourceDirectory.NormalisedPath}/a/b/c.txt".AsBaselineFilesystemPath();
+            $"{_sourceDirectory.NormalisedPath}/a/b/c.txt".AsFilesystemPath();
 
         await TestAdapter.CreateFileAndWriteTextAsync(originalFirstFilePath);
         await TestAdapter.CreateFileAndWriteTextAsync(originalSecondFilePath);

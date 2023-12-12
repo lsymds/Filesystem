@@ -112,7 +112,7 @@ public class SimpleDependencyInjectionTests
             {
                 storeRegistrationBuilder
                     .WithName("second")
-                    .WithRootPath("abc/".AsBaselineFilesystemPath())
+                    .WithRootPath("abc/".AsFilesystemPath())
                     .UsingMemoryAdapter(c =>
                     {
                         c.PublicUrlToReturn = "https://www.google.com";
@@ -123,7 +123,7 @@ public class SimpleDependencyInjectionTests
             {
                 storeRegistrationBuilder
                     .WithName("third")
-                    .WithRootPath("abc/".AsBaselineFilesystemPath())
+                    .WithRootPath("abc/".AsFilesystemPath())
                     .UsingLocalAdapter(c =>
                     {
                         c.GetPublicUrlForPath = _ => "https://www.google.com";

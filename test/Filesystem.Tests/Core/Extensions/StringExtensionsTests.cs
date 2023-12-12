@@ -12,7 +12,7 @@ public class StringExtensionsTests
         const string originalPath = "/users/foo/bar/xyz/Documents/my-DOCUmenT.xslx";
 
         // Act.
-        var pathRepresentation = originalPath.AsBaselineFilesystemPath();
+        var pathRepresentation = originalPath.AsFilesystemPath();
 
         // Assert.
         pathRepresentation.FinalPathPart.Should().Be("my-DOCUmenT.xslx");

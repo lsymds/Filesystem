@@ -26,7 +26,7 @@ public abstract class BaseManagerUsageTest
             new StoreRegistration
             {
                 Adapter = Adapter.Object,
-                RootPath = useRootPath ? "root/".AsBaselineFilesystemPath() : null
+                RootPath = useRootPath ? "root/".AsFilesystemPath() : null
             }
         );
     }

@@ -14,7 +14,7 @@ public class PathRepresentationBuilderTests
         Action nullCheck = () => new PathRepresentationBuilder(null).Build();
         nullCheck.Should().ThrowExactly<PathIsBlankException>();
 
-        Action paramCheck = () => path.AsBaselineFilesystemPath();
+        Action paramCheck = () => path.AsFilesystemPath();
         paramCheck.Should().ThrowExactly<PathIsBlankException>();
     }
 

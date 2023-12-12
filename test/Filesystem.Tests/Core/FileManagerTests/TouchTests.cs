@@ -15,7 +15,7 @@ public class TouchTests : BaseManagerUsageTest
         // Act.
         Func<Task> func = async () =>
             await FileManager.TouchAsync(
-                new TouchFileRequest { FilePath = "a".AsBaselineFilesystemPath() },
+                new TouchFileRequest { FilePath = "a".AsFilesystemPath() },
                 "foo"
             );
 
@@ -47,7 +47,7 @@ public class TouchTests : BaseManagerUsageTest
     public async Task It_Throws_An_Exception_If_The_Path_Was_Obviously_Intended_As_A_Directory()
     {
         // Arrange.
-        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
+        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsFilesystemPath();
 
         // Act.
         Func<Task> func = async () =>
@@ -79,7 +79,7 @@ public class TouchTests : BaseManagerUsageTest
 
         // Act.
         await FileManager.TouchAsync(
-            new TouchFileRequest { FilePath = "a".AsBaselineFilesystemPath() }
+            new TouchFileRequest { FilePath = "a".AsFilesystemPath() }
         );
 
         // Assert.
@@ -99,14 +99,14 @@ public class TouchTests : BaseManagerUsageTest
                 {
                     File = new FileRepresentation
                     {
-                        Path = $"root/a/b/c.txt".AsBaselineFilesystemPath()
+                        Path = $"root/a/b/c.txt".AsFilesystemPath()
                     }
                 }
             );
 
         // Act.
         var response = await FileManager.TouchAsync(
-            new TouchFileRequest { FilePath = "a/b/c.txt".AsBaselineFilesystemPath(), }
+            new TouchFileRequest { FilePath = "a/b/c.txt".AsFilesystemPath(), }
         );
 
         // Assert.

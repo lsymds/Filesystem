@@ -78,6 +78,6 @@ internal static class PathRepresentationExtensions
 
         return string.IsNullOrWhiteSpace(replacementPathRepresentation)
             ? null
-            : replacementPathRepresentation.AsBaselineFilesystemPath();
+            : replacementPathRepresentation.AsFilesystemPath();
     }
 }

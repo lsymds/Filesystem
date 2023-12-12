@@ -249,8 +249,8 @@ public partial class LocalAdapter
         if (Path.DirectorySeparatorChar != '\\')
         {
             return isDirectory
-                ? $"{path}/".AsBaselineFilesystemPath()
-                : path.AsBaselineFilesystemPath();
+                ? $"{path}/".AsFilesystemPath()
+                : path.AsFilesystemPath();
         }
 
         var workingPath = new StringBuilder(path).Replace("\\", "/");
@@ -260,6 +260,6 @@ public partial class LocalAdapter
             workingPath.Append('/');
         }
 
-        return workingPath.ToString().AsBaselineFilesystemPath();
+        return workingPath.ToString().AsFilesystemPath();
     }
 }

@@ -61,7 +61,7 @@ public partial class S3Adapter
 
         var pathToCreate = new PathCombinationBuilder(
             createDirectoryRequest.DirectoryPath,
-            ".keep".AsBaselineFilesystemPath()
+            ".keep".AsFilesystemPath()
         ).Build();
 
         await TouchFileInternalAsync(pathToCreate, cancellationToken).ConfigureAwait(false);
@@ -123,7 +123,7 @@ public partial class S3Adapter
                 {
                     foreach (var file in listObjectsResponse.S3Objects)
                     {
-                        foreach (var treeItem in file.Key.AsBaselineFilesystemPath().GetPathTree())
+                        foreach (var treeItem in file.Key.AsFilesystemPath().GetPathTree())
                         {
                             if (
                                 pathTracker.Contains(treeItem)
@@ -175,7 +175,7 @@ public partial class S3Adapter
                     listObjectsResponse.S3Objects.ForEach(
                         @object =>
                             @object.Key
-                                .AsBaselineFilesystemPath()
+                                .AsFilesystemPath()
                                 .GetPathTree()
                                 .Where(
                                     p => p.StartsWith(listDirectoryContentsRequest.DirectoryPath)

@@ -18,7 +18,7 @@ public class ListContentsTests : BaseManagerUsageTest
             DirectoryManager.ListContentsAsync(
                 new ListDirectoryContentsRequest
                 {
-                    DirectoryPath = "i/am/a/directory/".AsBaselineFilesystemPath()
+                    DirectoryPath = "i/am/a/directory/".AsFilesystemPath()
                 },
                 "non-existent"
             );
@@ -57,7 +57,7 @@ public class ListContentsTests : BaseManagerUsageTest
                 new ListDirectoryContentsRequest
                 {
                     DirectoryPath =
-                        "i/am/not/a/directory/but-a-path.jpeg".AsBaselineFilesystemPath()
+                        "i/am/not/a/directory/but-a-path.jpeg".AsFilesystemPath()
                 }
             );
 
@@ -84,15 +84,15 @@ public class ListContentsTests : BaseManagerUsageTest
                 {
                     Contents = new List<PathRepresentation>
                     {
-                        "root/a/b/".AsBaselineFilesystemPath(),
-                        "root/a/b/c.txt".AsBaselineFilesystemPath()
+                        "root/a/b/".AsFilesystemPath(),
+                        "root/a/b/c.txt".AsFilesystemPath()
                     }
                 }
             );
 
         // Act.
         var response = await DirectoryManager.ListContentsAsync(
-            new ListDirectoryContentsRequest { DirectoryPath = "a/".AsBaselineFilesystemPath() }
+            new ListDirectoryContentsRequest { DirectoryPath = "a/".AsFilesystemPath() }
         );
 
         // Assert.

@@ -41,10 +41,10 @@ public class CopyDirectoryTests : BaseIntegrationTest
         await ConfigureTestAsync(adapter);
 
         await TestAdapter.CreateFileAndWriteTextAsync(
-            $"{_sourceDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
+            $"{_sourceDirectory.NormalisedPath}/.keep".AsFilesystemPath()
         );
         await TestAdapter.CreateFileAndWriteTextAsync(
-            $"{_destinationDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/.keep".AsFilesystemPath()
         );
 
         // Act.
@@ -101,7 +101,7 @@ public class CopyDirectoryTests : BaseIntegrationTest
                 _destinationDirectory.NormalisedPath
             );
 
-            await ExpectFileToExistAsync(newDirectoryPath.AsBaselineFilesystemPath());
+            await ExpectFileToExistAsync(newDirectoryPath.AsFilesystemPath());
         }
     }
 
@@ -114,9 +114,9 @@ public class CopyDirectoryTests : BaseIntegrationTest
         // Arrange.
         await ConfigureTestAsync(adapter);
 
-        var originalDirectory = "cheese/".AsBaselineFilesystemPath();
+        var originalDirectory = "cheese/".AsFilesystemPath();
         var originalFile =
-            "cheese/cheese/more-cheese/my-favourite-cheesestring.jpeg".AsBaselineFilesystemPath();
+            "cheese/cheese/more-cheese/my-favourite-cheesestring.jpeg".AsFilesystemPath();
 
         await TestAdapter.CreateFileAndWriteTextAsync(originalFile);
 
@@ -131,7 +131,7 @@ public class CopyDirectoryTests : BaseIntegrationTest
 
         // Assert.
         await ExpectFileToExistAsync(
-            $"{_destinationDirectory.NormalisedPath}/cheese/more-cheese/my-favourite-cheesestring.jpeg".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/cheese/more-cheese/my-favourite-cheesestring.jpeg".AsFilesystemPath()
         );
     }
 
@@ -145,16 +145,16 @@ public class CopyDirectoryTests : BaseIntegrationTest
         await ConfigureTestAsync(adapter);
 
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "a/more/complex/directory/structure/.keep".AsBaselineFilesystemPath()
+            "a/more/complex/directory/structure/.keep".AsFilesystemPath()
         );
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "a/more/complex/directory/structure/with/a/nested/file.jpeg".AsBaselineFilesystemPath()
+            "a/more/complex/directory/structure/with/a/nested/file.jpeg".AsFilesystemPath()
         );
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "a/more/complex/directory/structure/with/an/even/more/complex/file/structure.txt".AsBaselineFilesystemPath()
+            "a/more/complex/directory/structure/with/an/even/more/complex/file/structure.txt".AsFilesystemPath()
         );
         await TestAdapter.CreateFileAndWriteTextAsync(
-            "a/more/complex/directory/structure/with/an/even/more/complex/file/structure.config".AsBaselineFilesystemPath()
+            "a/more/complex/directory/structure/with/an/even/more/complex/file/structure.config".AsFilesystemPath()
         );
 
         // Act.
@@ -162,23 +162,23 @@ public class CopyDirectoryTests : BaseIntegrationTest
             new CopyDirectoryRequest()
             {
                 SourceDirectoryPath =
-                    "a/more/complex/directory/structure/".AsBaselineFilesystemPath(),
+                    "a/more/complex/directory/structure/".AsFilesystemPath(),
                 DestinationDirectoryPath = _destinationDirectory
             }
         );
 
         // Assert.
         await ExpectFileToExistAsync(
-            $"{_destinationDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/.keep".AsFilesystemPath()
         );
         await ExpectFileToExistAsync(
-            $"{_destinationDirectory.NormalisedPath}/with/a/nested/file.jpeg".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/with/a/nested/file.jpeg".AsFilesystemPath()
         );
         await ExpectFileToExistAsync(
-            $"{_destinationDirectory.NormalisedPath}/with/an/even/more/complex/file/structure.txt".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/with/an/even/more/complex/file/structure.txt".AsFilesystemPath()
         );
         await ExpectFileToExistAsync(
-            $"{_destinationDirectory.NormalisedPath}/with/an/even/more/complex/file/structure.config".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/with/an/even/more/complex/file/structure.config".AsFilesystemPath()
         );
     }
 
@@ -194,7 +194,7 @@ public class CopyDirectoryTests : BaseIntegrationTest
         for (var i = 0; i < 1001; i++)
         {
             await TestAdapter.CreateFileAndWriteTextAsync(
-                $"{_sourceDirectory.NormalisedPath}/{i}/.keep".AsBaselineFilesystemPath()
+                $"{_sourceDirectory.NormalisedPath}/{i}/.keep".AsFilesystemPath()
             );
         }
 
@@ -211,7 +211,7 @@ public class CopyDirectoryTests : BaseIntegrationTest
         for (var i = 0; i < 1001; i++)
         {
             await ExpectFileToExistAsync(
-                $"{_destinationDirectory.NormalisedPath}/{i}/.keep".AsBaselineFilesystemPath()
+                $"{_destinationDirectory.NormalisedPath}/{i}/.keep".AsFilesystemPath()
             );
         }
     }
@@ -226,9 +226,9 @@ public class CopyDirectoryTests : BaseIntegrationTest
         await ConfigureTestAsync(adapter, true);
 
         var originalFirstFilePath =
-            $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath();
+            $"{_sourceDirectory.NormalisedPath}/a/b.txt".AsFilesystemPath();
         var originalSecondFilePath =
-            $"{_sourceDirectory.NormalisedPath}/a/b/c.txt".AsBaselineFilesystemPath();
+            $"{_sourceDirectory.NormalisedPath}/a/b/c.txt".AsFilesystemPath();
 
         await TestAdapter.CreateFileAndWriteTextAsync(originalFirstFilePath);
         await TestAdapter.CreateFileAndWriteTextAsync(originalSecondFilePath);
@@ -242,7 +242,7 @@ public class CopyDirectoryTests : BaseIntegrationTest
         );
 
         var afterTheFactThirdFilePath =
-            $"{_sourceDirectory.NormalisedPath}/a/b/d.txt".AsBaselineFilesystemPath();
+            $"{_sourceDirectory.NormalisedPath}/a/b/d.txt".AsFilesystemPath();
 
         // Act.
         await TestAdapter.CreateFileAndWriteTextAsync(afterTheFactThirdFilePath);
@@ -252,13 +252,13 @@ public class CopyDirectoryTests : BaseIntegrationTest
         await ExpectFileToExistAsync(originalSecondFilePath);
         await ExpectFileToExistAsync(afterTheFactThirdFilePath);
         await ExpectFileToExistAsync(
-            $"{_destinationDirectory.NormalisedPath}/a/b.txt".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/a/b.txt".AsFilesystemPath()
         );
         await ExpectFileToExistAsync(
-            $"{_destinationDirectory.NormalisedPath}/a/b/c.txt".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/a/b/c.txt".AsFilesystemPath()
         );
         await ExpectFileNotToExistAsync(
-            $"{_destinationDirectory.NormalisedPath}/a/b/d.txt".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/a/b/d.txt".AsFilesystemPath()
         );
     }
 
@@ -270,7 +270,7 @@ public class CopyDirectoryTests : BaseIntegrationTest
         await ConfigureTestAsync(adapter, true);
 
         await TestAdapter.CreateFileAndWriteTextAsync(
-            $"{_sourceDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
+            $"{_sourceDirectory.NormalisedPath}/.keep".AsFilesystemPath()
         );
 
         // Act.
@@ -284,7 +284,7 @@ public class CopyDirectoryTests : BaseIntegrationTest
 
         // Assert.
         await ExpectFileToExistAsync(
-            $"{_destinationDirectory.NormalisedPath}/.keep".AsBaselineFilesystemPath()
+            $"{_destinationDirectory.NormalisedPath}/.keep".AsFilesystemPath()
         );
     }
 }

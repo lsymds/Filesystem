@@ -15,7 +15,7 @@ public class DeleteTests : BaseManagerUsageTest
         // Act.
         Func<Task> func = async () =>
             await FileManager.DeleteAsync(
-                new DeleteFileRequest { FilePath = "a".AsBaselineFilesystemPath() },
+                new DeleteFileRequest { FilePath = "a".AsFilesystemPath() },
                 "foo"
             );
 
@@ -47,7 +47,7 @@ public class DeleteTests : BaseManagerUsageTest
     public async Task It_Throws_An_Exception_If_The_Path_Was_Obviously_Intended_As_A_Directory()
     {
         // Arrange.
-        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
+        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsFilesystemPath();
 
         // Act.
         Func<Task> func = async () =>
@@ -73,7 +73,7 @@ public class DeleteTests : BaseManagerUsageTest
 
         // Act.
         await FileManager.DeleteAsync(
-            new DeleteFileRequest { FilePath = "a".AsBaselineFilesystemPath() }
+            new DeleteFileRequest { FilePath = "a".AsFilesystemPath() }
         );
 
         // Assert.

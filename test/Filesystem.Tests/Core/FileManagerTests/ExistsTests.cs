@@ -15,7 +15,7 @@ public class ExistsTests : BaseManagerUsageTest
         // Act.
         Func<Task> func = async () =>
             await FileManager.ExistsAsync(
-                new FileExistsRequest { FilePath = "a".AsBaselineFilesystemPath() },
+                new FileExistsRequest { FilePath = "a".AsFilesystemPath() },
                 "foo"
             );
 
@@ -47,7 +47,7 @@ public class ExistsTests : BaseManagerUsageTest
     public async Task It_Throws_An_Exception_If_The_Path_Was_Obviously_Intended_As_A_Directory()
     {
         // Arrange.
-        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
+        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsFilesystemPath();
 
         // Act.
         Func<Task> func = async () =>
@@ -74,7 +74,7 @@ public class ExistsTests : BaseManagerUsageTest
 
         // Act.
         var response = await FileManager.ExistsAsync(
-            new FileExistsRequest { FilePath = "a".AsBaselineFilesystemPath() }
+            new FileExistsRequest { FilePath = "a".AsFilesystemPath() }
         );
 
         // Assert.

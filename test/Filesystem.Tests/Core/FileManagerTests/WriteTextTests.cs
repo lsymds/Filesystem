@@ -17,7 +17,7 @@ public class WriteTextTests : BaseManagerUsageTest
             await FileManager.WriteTextAsync(
                 new WriteTextToFileRequest
                 {
-                    FilePath = "a".AsBaselineFilesystemPath(),
+                    FilePath = "a".AsFilesystemPath(),
                     TextToWrite = string.Empty
                 },
                 "foo"
@@ -56,7 +56,7 @@ public class WriteTextTests : BaseManagerUsageTest
         // Act.
         Func<Task> func = async () =>
             await FileManager.WriteTextAsync(
-                new WriteTextToFileRequest { FilePath = "a".AsBaselineFilesystemPath() }
+                new WriteTextToFileRequest { FilePath = "a".AsFilesystemPath() }
             );
 
         // Assert.
@@ -67,7 +67,7 @@ public class WriteTextTests : BaseManagerUsageTest
     public async Task It_Throws_An_Exception_If_The_Path_Was_Obviously_Intended_As_A_Directory()
     {
         // Arrange.
-        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
+        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsFilesystemPath();
 
         // Act.
         Func<Task> func = async () =>
@@ -97,7 +97,7 @@ public class WriteTextTests : BaseManagerUsageTest
         await FileManager.WriteTextAsync(
             new WriteTextToFileRequest
             {
-                FilePath = "a".AsBaselineFilesystemPath(),
+                FilePath = "a".AsFilesystemPath(),
                 TextToWrite = "abc"
             }
         );

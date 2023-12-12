@@ -14,19 +14,19 @@ public class DeleteDirectoryTests : BaseIntegrationTest
         // Arrange.
         await ConfigureTestAsync(adapter);
 
-        var firstFile = "simples/file.txt".AsBaselineFilesystemPath();
-        var secondFile = "simples/nother-file.txt".AsBaselineFilesystemPath();
+        var firstFile = "simples/file.txt".AsFilesystemPath();
+        var secondFile = "simples/nother-file.txt".AsFilesystemPath();
 
         await TestAdapter.CreateFileAndWriteTextAsync(firstFile);
         await TestAdapter.CreateFileAndWriteTextAsync(secondFile);
 
         // Act.
         await DirectoryManager.DeleteAsync(
-            new DeleteDirectoryRequest { DirectoryPath = "simples/".AsBaselineFilesystemPath() }
+            new DeleteDirectoryRequest { DirectoryPath = "simples/".AsFilesystemPath() }
         );
 
         // Assert.
-        await ExpectDirectoryNotToExistAsync("simples".AsBaselineFilesystemPath());
+        await ExpectDirectoryNotToExistAsync("simples".AsFilesystemPath());
     }
 
     [Theory]
@@ -49,16 +49,16 @@ public class DeleteDirectoryTests : BaseIntegrationTest
 
         foreach (var file in files)
         {
-            await TestAdapter.CreateFileAndWriteTextAsync(file.AsBaselineFilesystemPath());
+            await TestAdapter.CreateFileAndWriteTextAsync(file.AsFilesystemPath());
         }
 
         // Act.
         await DirectoryManager.DeleteAsync(
-            new DeleteDirectoryRequest { DirectoryPath = "prefixed/".AsBaselineFilesystemPath() }
+            new DeleteDirectoryRequest { DirectoryPath = "prefixed/".AsFilesystemPath() }
         );
 
         // Assert.
-        await ExpectDirectoryNotToExistAsync("prefixed".AsBaselineFilesystemPath());
+        await ExpectDirectoryNotToExistAsync("prefixed".AsFilesystemPath());
     }
 
     [Theory]
@@ -73,18 +73,18 @@ public class DeleteDirectoryTests : BaseIntegrationTest
         for (int i = 0; i < 1001; i++)
         {
             await TestAdapter.CreateFileAndWriteTextAsync(
-                $"prefixed/{i}.txt".AsBaselineFilesystemPath()
+                $"prefixed/{i}.txt".AsFilesystemPath()
             );
         }
 
         // Act.
         await DirectoryManager.DeleteAsync(
-            new DeleteDirectoryRequest { DirectoryPath = "prefixed/".AsBaselineFilesystemPath() }
+            new DeleteDirectoryRequest { DirectoryPath = "prefixed/".AsFilesystemPath() }
         );
 
         // Assert.
         var has = await TestAdapter.HasFilesOrDirectoriesUnderPathAsync(
-            "prefixed/".AsBaselineFilesystemPath()
+            "prefixed/".AsFilesystemPath()
         );
         has.Should().BeFalse();
     }
@@ -118,8 +118,8 @@ public class DeleteDirectoryTests : BaseIntegrationTest
         // Arrange.
         await ConfigureTestAsync(adapter, true);
 
-        var firstFile = "simples-root/file.txt".AsBaselineFilesystemPath();
-        var secondFile = "simples-root/nother-file.txt".AsBaselineFilesystemPath();
+        var firstFile = "simples-root/file.txt".AsFilesystemPath();
+        var secondFile = "simples-root/nother-file.txt".AsFilesystemPath();
 
         await TestAdapter.CreateFileAndWriteTextAsync(firstFile);
         await TestAdapter.CreateFileAndWriteTextAsync(secondFile);
@@ -128,7 +128,7 @@ public class DeleteDirectoryTests : BaseIntegrationTest
         await DirectoryManager.DeleteAsync(
             new DeleteDirectoryRequest
             {
-                DirectoryPath = "simples-root/".AsBaselineFilesystemPath()
+                DirectoryPath = "simples-root/".AsFilesystemPath()
             }
         );
 

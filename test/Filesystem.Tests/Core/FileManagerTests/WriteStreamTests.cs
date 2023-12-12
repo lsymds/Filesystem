@@ -19,7 +19,7 @@ public class WriteStreamTests : BaseManagerUsageTest
             await FileManager.WriteStreamAsync(
                 new WriteStreamToFileRequest
                 {
-                    FilePath = "a".AsBaselineFilesystemPath(),
+                    FilePath = "a".AsFilesystemPath(),
                     Stream = new MemoryStream(Encoding.UTF8.GetBytes("hello"))
                 },
                 "foo"
@@ -61,7 +61,7 @@ public class WriteStreamTests : BaseManagerUsageTest
         // Act.
         Func<Task> func = async () =>
             await FileManager.WriteStreamAsync(
-                new WriteStreamToFileRequest { FilePath = "a".AsBaselineFilesystemPath() }
+                new WriteStreamToFileRequest { FilePath = "a".AsFilesystemPath() }
             );
 
         // Assert.
@@ -72,7 +72,7 @@ public class WriteStreamTests : BaseManagerUsageTest
     public async Task It_Throws_An_Exception_If_The_Path_Was_Obviously_Intended_As_A_Directory()
     {
         // Arrange.
-        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
+        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsFilesystemPath();
 
         // Act.
         Func<Task> func = async () =>
@@ -106,7 +106,7 @@ public class WriteStreamTests : BaseManagerUsageTest
         await FileManager.WriteStreamAsync(
             new WriteStreamToFileRequest
             {
-                FilePath = "a".AsBaselineFilesystemPath(),
+                FilePath = "a".AsFilesystemPath(),
                 Stream = new MemoryStream(Encoding.UTF8.GetBytes("hello"))
             }
         );

@@ -66,14 +66,14 @@ public abstract class BaseIntegrationTest : IAsyncDisposable
         if (useRootPath)
         {
             rootPath =
-                $"{TestUtilities.RandomString(6)}/{TestUtilities.RandomString(2)}/".AsBaselineFilesystemPath();
+                $"{TestUtilities.RandomString(6)}/{TestUtilities.RandomString(2)}/".AsFilesystemPath();
 
             if (toUse == Adapter.Local)
             {
                 // Use a full windows or Linux based path to emulate real world scenarios of a root path for
                 // this adapter.
                 rootPath =
-                    $"{AppDomain.CurrentDomain.BaseDirectory.Replace("\\", "/")}{rootPath.NormalisedPath}/".AsBaselineFilesystemPath();
+                    $"{AppDomain.CurrentDomain.BaseDirectory.Replace("\\", "/")}{rootPath.NormalisedPath}/".AsFilesystemPath();
             }
         }
 

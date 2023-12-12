@@ -17,8 +17,8 @@ public class MoveTests : BaseManagerUsageTest
             await FileManager.MoveAsync(
                 new MoveFileRequest
                 {
-                    SourceFilePath = "a".AsBaselineFilesystemPath(),
-                    DestinationFilePath = "a".AsBaselineFilesystemPath()
+                    SourceFilePath = "a".AsFilesystemPath(),
+                    DestinationFilePath = "a".AsFilesystemPath()
                 },
                 "foo"
             );
@@ -46,7 +46,7 @@ public class MoveTests : BaseManagerUsageTest
                 new MoveFileRequest
                 {
                     SourceFilePath = null,
-                    DestinationFilePath = "a".AsBaselineFilesystemPath()
+                    DestinationFilePath = "a".AsFilesystemPath()
                 }
             );
 
@@ -62,7 +62,7 @@ public class MoveTests : BaseManagerUsageTest
             await FileManager.MoveAsync(
                 new MoveFileRequest
                 {
-                    SourceFilePath = "a".AsBaselineFilesystemPath(),
+                    SourceFilePath = "a".AsFilesystemPath(),
                     DestinationFilePath = null
                 }
             );
@@ -75,7 +75,7 @@ public class MoveTests : BaseManagerUsageTest
     public async Task It_Throws_An_Exception_If_The_Source_Path_Was_Obviously_Intended_As_A_Directory()
     {
         // Arrange.
-        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
+        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsFilesystemPath();
 
         // Act.
         Func<Task> func = async () =>
@@ -83,7 +83,7 @@ public class MoveTests : BaseManagerUsageTest
                 new MoveFileRequest
                 {
                     SourceFilePath = path,
-                    DestinationFilePath = "a".AsBaselineFilesystemPath()
+                    DestinationFilePath = "a".AsFilesystemPath()
                 }
             );
 
@@ -95,14 +95,14 @@ public class MoveTests : BaseManagerUsageTest
     public async Task It_Throws_An_Exception_If_The_Destination_Path_Was_Obviously_Intended_As_A_Directory()
     {
         // Arrange.
-        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsBaselineFilesystemPath();
+        var path = "/users/Foo/bar/Destiny/XYZ/BARTINO/".AsFilesystemPath();
 
         // Act.
         Func<Task> func = async () =>
             await FileManager.MoveAsync(
                 new MoveFileRequest
                 {
-                    SourceFilePath = "a".AsBaselineFilesystemPath(),
+                    SourceFilePath = "a".AsFilesystemPath(),
                     DestinationFilePath = path
                 }
             );
@@ -126,8 +126,8 @@ public class MoveTests : BaseManagerUsageTest
         await FileManager.MoveAsync(
             new MoveFileRequest
             {
-                SourceFilePath = "a".AsBaselineFilesystemPath(),
-                DestinationFilePath = "a".AsBaselineFilesystemPath()
+                SourceFilePath = "a".AsFilesystemPath(),
+                DestinationFilePath = "a".AsFilesystemPath()
             }
         );
 
@@ -148,7 +148,7 @@ public class MoveTests : BaseManagerUsageTest
                 {
                     DestinationFile = new FileRepresentation
                     {
-                        Path = $"root/a/b/c.txt".AsBaselineFilesystemPath()
+                        Path = $"root/a/b/c.txt".AsFilesystemPath()
                     }
                 }
             );
@@ -157,8 +157,8 @@ public class MoveTests : BaseManagerUsageTest
         var response = await FileManager.MoveAsync(
             new MoveFileRequest
             {
-                SourceFilePath = "a/b/a.txt".AsBaselineFilesystemPath(),
-                DestinationFilePath = "a/b/c.txt".AsBaselineFilesystemPath(),
+                SourceFilePath = "a/b/a.txt".AsFilesystemPath(),
+                DestinationFilePath = "a/b/c.txt".AsFilesystemPath(),
             }
         );
 

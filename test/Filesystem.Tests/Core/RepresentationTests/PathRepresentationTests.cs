@@ -17,7 +17,7 @@ public class PathRepresentationTests
     )
     {
         // Arrange.
-        var pathRepresentation = path.AsBaselineFilesystemPath();
+        var pathRepresentation = path.AsFilesystemPath();
 
         // Act.
         var extension = pathRepresentation.Extension;
@@ -35,7 +35,7 @@ public class PathRepresentationTests
     public void It_Correctly_Retrieves_The_File_Name_If_There_Is_One(string path, string outcome)
     {
         // Arrange.
-        var pathRepresentation = path.AsBaselineFilesystemPath();
+        var pathRepresentation = path.AsFilesystemPath();
 
         // Act.
         var fileName = pathRepresentation.FileNameWithoutExtension;
@@ -59,8 +59,8 @@ public class PathRepresentationTests
     )
     {
         // Arrange.
-        var leftRepresentation = left?.AsBaselineFilesystemPath();
-        var rightRepresentation = right?.AsBaselineFilesystemPath();
+        var leftRepresentation = left?.AsFilesystemPath();
+        var rightRepresentation = right?.AsFilesystemPath();
 
         // Act.
         var equal = leftRepresentation == rightRepresentation;
@@ -84,8 +84,8 @@ public class PathRepresentationTests
     )
     {
         // Arrange.
-        var leftRepresentation = left.AsBaselineFilesystemPath();
-        var rightRepresentation = right?.AsBaselineFilesystemPath();
+        var leftRepresentation = left.AsFilesystemPath();
+        var rightRepresentation = right?.AsFilesystemPath();
 
         // Act.
         var startsWith = leftRepresentation.StartsWith(rightRepresentation);

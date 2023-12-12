@@ -15,7 +15,7 @@ public class IterateContentsTests : BaseManagerUsageTest
             DirectoryManager.IterateContentsAsync(
                 new IterateDirectoryContentsRequest
                 {
-                    DirectoryPath = "i/am/a/directory/".AsBaselineFilesystemPath(),
+                    DirectoryPath = "i/am/a/directory/".AsFilesystemPath(),
                     Action = (_) => null
                 },
                 "non-existent"
@@ -57,7 +57,7 @@ public class IterateContentsTests : BaseManagerUsageTest
                 new IterateDirectoryContentsRequest()
                 {
                     DirectoryPath =
-                        "i/am/not/a/directory/but-a-path.jpeg".AsBaselineFilesystemPath(),
+                        "i/am/not/a/directory/but-a-path.jpeg".AsFilesystemPath(),
                     Action = (_) => null
                 }
             );
@@ -74,7 +74,7 @@ public class IterateContentsTests : BaseManagerUsageTest
             DirectoryManager.IterateContentsAsync(
                 new IterateDirectoryContentsRequest()
                 {
-                    DirectoryPath = "i/am/a/directory/".AsBaselineFilesystemPath()
+                    DirectoryPath = "i/am/a/directory/".AsFilesystemPath()
                 }
             );
 

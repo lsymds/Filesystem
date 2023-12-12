@@ -17,8 +17,8 @@ public class MoveTests : BaseManagerUsageTest
             DirectoryManager.MoveAsync(
                 new MoveDirectoryRequest
                 {
-                    SourceDirectoryPath = "i/am/a/directory/".AsBaselineFilesystemPath(),
-                    DestinationDirectoryPath = "i/am/a/directory/".AsBaselineFilesystemPath()
+                    SourceDirectoryPath = "i/am/a/directory/".AsFilesystemPath(),
+                    DestinationDirectoryPath = "i/am/a/directory/".AsFilesystemPath()
                 },
                 "non-existent"
             );
@@ -55,7 +55,7 @@ public class MoveTests : BaseManagerUsageTest
             DirectoryManager.MoveAsync(
                 new MoveDirectoryRequest
                 {
-                    SourceDirectoryPath = "/foo/".AsBaselineFilesystemPath()
+                    SourceDirectoryPath = "/foo/".AsFilesystemPath()
                 }
             );
 
@@ -72,8 +72,8 @@ public class MoveTests : BaseManagerUsageTest
                 new MoveDirectoryRequest
                 {
                     SourceDirectoryPath =
-                        "i/am/not/a/directory/but-a-path.jpeg".AsBaselineFilesystemPath(),
-                    DestinationDirectoryPath = "/i/am/a/directory/".AsBaselineFilesystemPath(),
+                        "i/am/not/a/directory/but-a-path.jpeg".AsFilesystemPath(),
+                    DestinationDirectoryPath = "/i/am/a/directory/".AsFilesystemPath(),
                 }
             );
 
@@ -89,9 +89,9 @@ public class MoveTests : BaseManagerUsageTest
             DirectoryManager.MoveAsync(
                 new MoveDirectoryRequest
                 {
-                    SourceDirectoryPath = "/i/am/a/directory/".AsBaselineFilesystemPath(),
+                    SourceDirectoryPath = "/i/am/a/directory/".AsFilesystemPath(),
                     DestinationDirectoryPath =
-                        "i/am/not/a/directory/but-a-path.jpeg".AsBaselineFilesystemPath(),
+                        "i/am/not/a/directory/but-a-path.jpeg".AsFilesystemPath(),
                 }
             );
 
@@ -118,7 +118,7 @@ public class MoveTests : BaseManagerUsageTest
                 {
                     DestinationDirectory = new DirectoryRepresentation
                     {
-                        Path = $"root/a/b/".AsBaselineFilesystemPath()
+                        Path = $"root/a/b/".AsFilesystemPath()
                     }
                 }
             );
@@ -127,8 +127,8 @@ public class MoveTests : BaseManagerUsageTest
         var response = await DirectoryManager.MoveAsync(
             new MoveDirectoryRequest
             {
-                SourceDirectoryPath = "a/a/".AsBaselineFilesystemPath(),
-                DestinationDirectoryPath = "a/b/".AsBaselineFilesystemPath()
+                SourceDirectoryPath = "a/a/".AsFilesystemPath(),
+                DestinationDirectoryPath = "a/b/".AsFilesystemPath()
             }
         );
 

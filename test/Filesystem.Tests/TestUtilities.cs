@@ -25,7 +25,7 @@ public static class TestUtilities
 
     public static PathRepresentation RandomDirectoryPathRepresentation()
     {
-        return RandomDirectoryPath().AsBaselineFilesystemPath();
+        return RandomDirectoryPath().AsFilesystemPath();
     }
 
     public static PathRepresentation RandomFilePathRepresentation()
@@ -38,12 +38,12 @@ public static class TestUtilities
             $"{RandomString()}.{extensions[Random.Next(extensions.Length)]}"
         };
 
-        return $"{RandomDirectoryPath(true)}/{fileNames[Random.Next(fileNames.Length)]}".AsBaselineFilesystemPath();
+        return $"{RandomDirectoryPath(true)}/{fileNames[Random.Next(fileNames.Length)]}".AsFilesystemPath();
     }
 
     public static PathRepresentation RandomFilePathRepresentationWithPrefix(string prefix)
     {
-        return $"{prefix}/{RandomFilePathRepresentation().OriginalPath}".AsBaselineFilesystemPath();
+        return $"{prefix}/{RandomFilePathRepresentation().OriginalPath}".AsFilesystemPath();
     }
 
     public static string RandomString(int length = 8)
