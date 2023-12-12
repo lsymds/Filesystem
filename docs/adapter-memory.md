@@ -2,7 +2,7 @@
 
 # Memory Adapter
 
-Baseline.Filesystem ships with an in memory filesystem adapter. It implements the standard API of the project and
+LSymds.Filesystem ships with an in memory filesystem adapter. It implements the standard API of the project and
 adheres to all of its principles around pathing, stores and so on. It is very, very fast and is well suited to
 test projects or projects requiring ephemeral storage.
 
@@ -11,7 +11,7 @@ There are a few things you should be aware of when using this adapter, which are
 
 ## Getting started
 
-This adapter is included in the standard `Baseline.Filesystem` package.
+This adapter is included in the standard `LSymds.Filesystem` package.
 
 The memory adapter's constructor expects a configuration object which contains the following properties:
 
@@ -21,19 +21,19 @@ Failure to provide a valid configuration option will result in an exception bein
 
 ### Using the adapter when setting up via dependency injection
 
-When setting up Baseline via dependency injection, call the `UsingMemoryAdapter` on the `StoreRegistrationBuilder`
+When setting up LSymds.Filesystem via dependency injection, call the `UsingMemoryAdapter` on the `StoreRegistrationBuilder`
 instance passed as a parameter to your configuration delegate.
 
 ```csharp
 public void Configure(IServiceCollection serviceCollection)
 {
-    serviceCollection.UseBaselineFilesystem(baselineFilesystemBuilder =>
+    serviceCollection.UseFilesystem(filesystemBuilder =>
     {
-        baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
+        filesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
         {
             storeRegistrationBuilder
                 .WithName("certificates")
-                .WithRootPath("student-information/certificates/".AsBaselineFilesystemPath())
+                .WithRootPath("student-information/certificates/".AsFilesystemPath())
                 .UsingMemoryAdapter(c =>
                 {
                     c.PublicUrlToReturn = "https://www.google.com";
@@ -54,7 +54,7 @@ var storeManager = new StoreManager();
 storeManager.Register(new StoreRegistration
 {
     Name = "certificates",
-    RootPath = "student-information/certificates/".AsBaselineFilesystemPath(),
+    RootPath = "student-information/certificates/".AsFilesystemPath(),
     Adapter = new MemoryAdapter(new MemoryAdapterConfiguration
     {
         PublicUrlToReturn = "https://www.google.com"

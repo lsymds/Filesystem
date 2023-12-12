@@ -68,7 +68,7 @@ var certificatePaths = new List<PathRepresentation>();
 await DirectoryManager.IterateContentsAsync(
     new IterateDirectoryContentsRequest
     {
-        Directory = "tim-berners-lee/".AsBaselineFilesystemPath(),
+        Directory = "tim-berners-lee/".AsFilesystemPath(),
         Action = async path =>
         {
             certificatePaths.Add(path);

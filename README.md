@@ -1,4 +1,4 @@
-# 👋 Baseline.Filesystem
+# 👋 Filesystem
 
 Filesystem abstractions for modern .NET projects. Interact with numerous filesystems (S3, memory, disk) at once via a
 single abstraction.
@@ -12,7 +12,7 @@ var directoryManager = new DirectoryManager(storeManager);
 storeManager.Register(new StoreRegistration
 {
     Name = "certificates",
-    RootPath = "student-information/certificates/".AsBaselineFilesystemPath(),
+    RootPath = "student-information/certificates/".AsFilesystemPath(),
     Adapter = new S3Adapter(new S3AdapterConfiguration
     {
         // ...
@@ -57,5 +57,5 @@ Documentation for this project is available in the [docs/ folder within this rep
 
 ## 🗿 Licensing
 
-Baseline.Filesystem is licensed under the permissive MIT license. More information is available within this repository's
+LSymds.Filesystem is licensed under the permissive MIT license. More information is available within this repository's
 LICENSE file located [HERE](LICENSE).

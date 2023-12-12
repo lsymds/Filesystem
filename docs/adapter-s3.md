@@ -2,7 +2,7 @@
 
 # AWS Simple Storage Service (S3) Adapter
 
-Baseline.Filesystem ships with an AWS Simple Storage Service adapter. It implements the standard API of the project and
+LSymds.Filesystem ships with an AWS Simple Storage Service adapter. It implements the standard API of the project and
 adheres to all of its principles around pathing, stores and so on.
 
 There are a few things you should be aware of when using this adapter, which are detailed under the
@@ -10,7 +10,7 @@ There are a few things you should be aware of when using this adapter, which are
 
 ## Getting started
 
-This adapter is included in the standard `Baseline.Filesystem` package.
+This adapter is included in the standard `LSymds.Filesystem` package.
 
 The S3 adapter's constructor expects a configuration object which contains the following properties:
 
@@ -21,19 +21,19 @@ Failure to provide a valid configuration option will result in an exception bein
 
 ### Using the adapter when setting up via dependency injection
 
-When setting up Baseline via dependency injection, call the `UsingS3Adapter` on the `StoreRegistrationBuilder` instance
+When setting up LSymds.Filesystem via dependency injection, call the `UsingS3Adapter` on the `StoreRegistrationBuilder` instance
 passed as a parameter to your configuration delegate.
 
 ```csharp
 public void Configure(IServiceCollection serviceCollection)
 {
-    serviceCollection.UseBaselineFilesystem(baselineFilesystemBuilder =>
+    serviceCollection.UseFilesystem(filesystemBuilder =>
     {
-        baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
+        filesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
         {
             storeRegistrationBuilder
                 .WithName("certificates")
-                .WithRootPath("student-information/certificates/".AsBaselineFilesystemPath())
+                .WithRootPath("student-information/certificates/".AsFilesystemPath())
                 .UsingS3Adapter(c =>
                 {
                     c.S3Client = new S3Client();
@@ -45,19 +45,19 @@ public void Configure(IServiceCollection serviceCollection)
 ```
 
 If you wish to resolve your `IAmazonS3` instance or any other service from the dependency injection container you can
-use the alternative `UseBaselineFilesystem` overload which provides you with an `IServiceProvider` instance as the first
+use the alternative `UseFilesystem` overload which provides you with an `IServiceProvider` instance as the first
 parameter:
 
 ```csharp
 public void Configure(IServiceCollection serviceCollection)
 {
-    serviceCollection.UseBaselineFilesystem((serviceProvider, baselineFilesystemBuilder) =>
+    serviceCollection.UseFilesystem((serviceProvider, filesystemBuilder) =>
     {
-        baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
+        filesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
         {
             storeRegistrationBuilder
                 .WithName("certificates")
-                .WithRootPath("student-information/certificates/".AsBaselineFilesystemPath())
+                .WithRootPath("student-information/certificates/".AsFilesystemPath())
                 .UsingS3Adapter(c =>
                 {
                     var s3Options = serviceProvider.GetService<IOptions<S3Configuration>>();
@@ -81,7 +81,7 @@ var storeManager = new StoreManager();
 storeManager.Register(new StoreRegistration
 {
     Name = "certificates",
-    RootPath = "student-information/certificates/".AsBaselineFilesystemPath(),
+    RootPath = "student-information/certificates/".AsFilesystemPath(),
     Adapter = new S3Adapter(new S3AdapterConfiguration
     {
         Client = new S3Client(),
