@@ -2,7 +2,7 @@
 
 # Local Adapter
 
-Baseline.Filesystem ships with an local filesystem adapter. It implements the standard API of the project and
+LSymds.Filesystem ships with an local filesystem adapter. It implements the standard API of the project and
 adheres to all of its principles around pathing, stores and so on.
 
 There are a few things you should be aware of when using this adapter, which are detailed under the
@@ -10,7 +10,7 @@ There are a few things you should be aware of when using this adapter, which are
 
 ## Getting started
 
-This adapter is included in the standard `Baseline.Filesystem` package.
+This adapter is included in the standard `LSymds.Filesystem` package.
 
 The local adapter's constructor expects a configuration object which contains the following properties:
 
@@ -20,19 +20,19 @@ Failure to provide a valid configuration option will result in an exception bein
 
 ### Using the adapter when setting up via dependency injection
 
-When setting up Baseline via dependency injection, call the `UsingLocalAdapter` on the `StoreRegistrationBuilder`
+When setting up LSymds.Filesystem via dependency injection, call the `UsingLocalAdapter` on the `StoreRegistrationBuilder`
 instance passed as a parameter to your configuration delegate.
 
 ```csharp
 public void Configure(IServiceCollection serviceCollection)
 {
-    serviceCollection.UseBaselineFilesystem(baselineFilesystemBuilder =>
+    serviceCollection.UseFilesystem(filesystemBuilder =>
     {
-        baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
+        filesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
         {
             storeRegistrationBuilder
                 .WithName("certificates")
-                .WithRootPath("/root/student-information/certificates/".AsBaselineFilesystemPath())
+                .WithRootPath("/root/student-information/certificates/".AsFilesystemPath())
                 .UsingLocalAdapter(c =>
                 {
                     c.GetPublicUrlToReturn = file => "https://www.google.com";
@@ -53,7 +53,7 @@ var storeManager = new StoreManager();
 storeManager.Register(new StoreRegistration
 {
     Name = "certificates",
-    RootPath = "D:/student-information/certificates/".AsBaselineFilesystemPath(),
+    RootPath = "D:/student-information/certificates/".AsFilesystemPath(),
     Adapter = new LocalAdapter(new LocalAdapterConfiguration
     {
         GetPublicUrlToReturn = file => "https://www.google.com"
@@ -65,6 +65,6 @@ storeManager.Register(new StoreRegistration
 
 ### Path formats
 
-Baseline.Filesystem only supports unix-like path formats (i.e. C:/path/to/file.txt). Windows, and your applications if you
+LSymds.Filesystem only supports unix-like path formats (i.e. C:/path/to/file.txt). Windows, and your applications if you
 have previously persisted any paths, are likely in the format of C:\path\to\file.txt. You will need to convert the path
-before Baseline.Filesystem accepts it.
+before LSymds.Filesystem accepts it.

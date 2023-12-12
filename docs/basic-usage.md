@@ -4,8 +4,8 @@
 
 ## Installation
 
-Installation of the project is quick and easy thanks to the NuGet package manager. Search for `Baseline.Filesystem` and
-install the `Baseline.Filesystem` package. This package includes all of the default adapters as well as support for
+Installation of the project is quick and easy thanks to the NuGet package manager. Search for `LSymds.Filesystem` and
+install the `LSymds.Filesystem` package. This package includes all of the default adapters as well as support for
 dependency injection via the `Microsoft.Extensions.DependencyInjection` package.
 
 ## Configuring
@@ -17,10 +17,10 @@ options backing it.
 ### Configuring via dependency injection
 
 > [!TIP]
-> All services within Baseline.Filesystem are registered as singletons.
+> All services within LSymds.Filesystem are registered as singletons.
 
 Given an `IServiceCollection` that can be modified (in your `Startup.cs` file for example), call the
-`UseBaselineFilesystem` method on the service collection.
+`UseFilesystem` method on the service collection.
 
 This method accepts a delegate with either a single parameter which is a builder object or two parameters where the
 first is an `IServiceProvider` instance used to resolve additional service and the second is a
@@ -29,14 +29,14 @@ builder object.
 ```csharp
 public void Configure(IServiceCollection serviceCollection)
 {
-    serviceCollection.UseBaselineFilesystem(baselineFilesystemBuilder =>
+    serviceCollection.UseFilesystem(filesystemBuilder =>
     {
         // ...
     });
 
     // or...
 
-    serviceCollection.UseBaselineFilesystem((serviceProvider, baselineFilesystemBuilder) =>
+    serviceCollection.UseFilesystem((serviceProvider, filesystemBuilder) =>
     {
         // ...
     });
@@ -50,9 +50,9 @@ object.
 ```csharp
 public void Configure(IServiceCollection serviceCollection)
 {
-    serviceCollection.UseBaselineFilesystem(baselineFilesystemBuilder =>
+    serviceCollection.UseFilesystem(filesystemBuilder =>
     {
-        baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
+        filesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
         {
             // ...
         });
@@ -70,13 +70,13 @@ naming convention of `UsingXAdapter` with one or more configuration options/dele
 ```csharp
 public void Configure(IServiceCollection serviceCollection)
 {
-    serviceCollection.UseBaselineFilesystem(baselineFilesystemBuilder =>
+    serviceCollection.UseFilesystem(filesystemBuilder =>
     {
-        baselineFilesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
+        filesystemBuilder.AddStoreRegistration(storeRegistrationBuilder =>
         {
             storeRegistrationBuilder
                 .WithName("certificates")
-                .WithRootPath("student-information/certificates/".AsBaselineFilesystemPath())
+                .WithRootPath("student-information/certificates/".AsFilesystemPath())
                 .UsingS3Adapter(c =>
                 {
                     //...
@@ -108,7 +108,7 @@ var storeManager = new StoreManager();
 storeManager.Register(new StoreRegistration
 {
     Name = "certificates",
-    RootPath = "student-information/certificates/".AsBaselineFilesystemPath(),
+    RootPath = "student-information/certificates/".AsFilesystemPath(),
     Adapter = new S3Adapter(new S3AdapterConfiguration
     {
         // ...
@@ -128,7 +128,7 @@ var storeManager = new StoreManager();
 storeManager.Register(new StoreRegistration
 {
     Name = "certificates",
-    RootPath = "student-information/certificates/".AsBaselineFilesystemPath(),
+    RootPath = "student-information/certificates/".AsFilesystemPath(),
     Adapter = new S3Adapter(new S3AdapterConfiguration
     {
         // ...
@@ -161,10 +161,10 @@ Task<DoSomethingResponse> DoSomethingAsync(
 
 ## Exception handling
 
-By default, Baseline.Filesystem will wrap any non-Baseline-managed exception to make it easier to distinguish in your
+By default, LSymds.Filesystem will wrap any non-managed exception to make it easier to distinguish in your
 codebase what exceptions have been thrown by the library and what exceptions have been thrown by your application code
 or other dependencies. The wrapping exception is named `StoreAdapterOperationException`. If you wish to access the
 true exception that was thrown then that is assigned to the `InnerException` property.
 
-If you wish to catch any Baseline.Filesystem related exceptions then you can catch the base class:
-`BaselineFilesystemException`.
+If you wish to catch any LSymds.Filesystem related exceptions then you can catch the base class:
+`FilesystemException`.

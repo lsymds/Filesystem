@@ -13,11 +13,11 @@ Filesystem abstractions for modern .NET projects. Interact with numerous filesys
 
 ## Architecture
 
-The project and all of its dependencies are contained within one easy to use package named `Baseline.Filesystem`.
+The project and all of its dependencies are contained within one easy to use package named `LSymds.Filesystem`.
 Previous versions contained numerous assemblies with all of the dependencies split but this a) increased management
 b) increased cognitive overload and c) increased the barrier to entry of using the package.
 
-All public facing code is available under the `Baseline.Filesystem` namespace.
+All public facing code is available under the `LSymds.Filesystem` namespace.
 
 ### Stores
 
@@ -42,5 +42,5 @@ For example, if I had a 'certificates' store that I used to manage storage of st
 path exists. This leads to hugely flexible code that doesn't rely on a filesystem that your application has no knowledge
 of and instead manages files and directories that it knows how to manage.
 
-Baseline.Filesystem will automatically handle stripping out this root path before it reaches your application, ensuring
+LSymds.Filesystem will automatically handle stripping out this root path before it reaches your application, ensuring
 your storage implementation details are never leaked where they shouldn't be.

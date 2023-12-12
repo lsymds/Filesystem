@@ -13,10 +13,10 @@ instantiating an instance of the `PathRepresentation` object from scratch.
 
 ### Creating a path from a string
 
-To create a path from a string call the `AsBaselinePathRepresentation` extension method. For example:
+To create a path from a string call the `AsFilesystemPath` extension method. For example:
 
 ```csharp
-var path = "path/to/my/file.txt".AsBaselinePathRepresentation();
+var path = "path/to/my/file.txt".AsFilesystemPath();
 ```
 
 ### Instantiating a path instance directly

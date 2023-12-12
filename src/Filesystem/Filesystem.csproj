@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>LSymds.Filesystem</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>LSymds.Filesystem</PackageId>
+    <PackageTags>file system;file system abstractions;files;fileserver;s3;file store; file abstractions;file store abstractions;blob</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>lsymds</Authors>
+    <RepositoryUrl>https://github.com/lsymds/Filesystem</RepositoryUrl>
+    <PackageDescription>Filesystem abstractions for modern .NET projects. Interact with numerous filesystems (S3, memory, disk) at once via a single abstraction.</PackageDescription>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.7.304.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>
