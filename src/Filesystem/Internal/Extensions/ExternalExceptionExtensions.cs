@@ -22,7 +22,7 @@ internal static class ExternalExceptionExtensions
         }
         catch (Exception exception)
         {
-            if (exception is BaselineFilesystemException)
+            if (exception is FilesystemException)
             {
                 throw;
             }
@@ -48,7 +48,7 @@ internal static class ExternalExceptionExtensions
         }
         catch (Exception exception)
         {
-            if (exception is BaselineFilesystemException)
+            if (exception is FilesystemException)
             {
                 throw;
             }

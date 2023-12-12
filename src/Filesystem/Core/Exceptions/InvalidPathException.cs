@@ -3,7 +3,7 @@ namespace LSymds.Filesystem;
 /// <summary>
 /// Base exception class used to provide a base exception class consuming applications can use.
 /// </summary>
-public abstract class InvalidPathException : BaselineFilesystemException
+public abstract class InvalidPathException : FilesystemException
 {
     /// <summary>
     /// The path specified that is invalid.

@@ -3,7 +3,7 @@ namespace LSymds.Filesystem;
 /// <summary>
 /// Thrown when a store is not found by a specified store name.
 /// </summary>
-public class StoreNotFoundException : BaselineFilesystemException
+public class StoreNotFoundException : FilesystemException
 {
     /// <summary>
     /// Gets the name of the store that could not be found.

@@ -3,7 +3,7 @@ namespace LSymds.Filesystem;
 /// <summary>
 /// Thrown when a store with the same normalised (lowercased) name has been registered.
 /// </summary>
-public class StoreAlreadyRegisteredException : BaselineFilesystemException
+public class StoreAlreadyRegisteredException : FilesystemException
 {
     /// <summary>
     /// The name of the store that has previously been registered.

@@ -3,7 +3,7 @@
 /// <summary>
 /// Thrown when an operation is performed (or attempted) on a file that already exists.
 /// </summary>
-public class FileAlreadyExistsException : BaselineFilesystemException
+public class FileAlreadyExistsException : FilesystemException
 {
     /// <summary>
     /// Initialises a new instance of the <see cref="FileAlreadyExistsException" /> class.

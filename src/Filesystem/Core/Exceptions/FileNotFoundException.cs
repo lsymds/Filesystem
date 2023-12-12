@@ -3,7 +3,7 @@
 /// <summary>
 /// Thrown when an operation that requires a file to be present is performed on a file that isn't present.
 /// </summary>
-public class FileNotFoundException : BaselineFilesystemException
+public class FileNotFoundException : FilesystemException
 {
     /// <summary>
     /// Initialises a new instance of the <see cref="FileNotFoundException" /> class.

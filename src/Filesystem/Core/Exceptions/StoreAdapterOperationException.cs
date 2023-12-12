@@ -8,7 +8,7 @@ namespace LSymds.Filesystem;
 /// being found throwing a FileNotFoundException). Prevents you from having to reference the provider's
 /// SDK just to catch any exceptions.
 /// </summary>
-public class StoreAdapterOperationException : BaselineFilesystemException
+public class StoreAdapterOperationException : FilesystemException
 {
     /// <summary>
     /// Initialises a new instance of the <see cref="StoreAdapterOperationException" />.
