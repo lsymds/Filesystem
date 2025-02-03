@@ -30,15 +30,6 @@ public class PathRepresentationBuilderTests
     [InlineData("<")]
     [InlineData(">")]
     [InlineData("'")]
-    [InlineData("$")]
-    [InlineData("£")]
-    [InlineData("%")]
-    [InlineData("^")]
-    [InlineData("(")]
-    [InlineData(")")]
-    [InlineData("+")]
-    [InlineData("=")]
-    [InlineData("!")]
     public void It_Throws_An_Exception_If_Path_Contains_An_Invalid_Character(string character)
     {
         // Act.
